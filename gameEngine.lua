@@ -4,6 +4,8 @@
 -- Author: Thiago Ramos
 -- Functions:
 --		
+-- RoadMap: missing the check of maxMembers
+--
 -----------------------------------------
 
 
@@ -74,6 +76,9 @@ end
 function objectListener(event,cell)
 	print("listening event of cell "..cell.line.." "..cell.column)
 end
+
+
+
 
 
 --TODO: VIEW LISTENER PART
@@ -183,10 +188,10 @@ end
 --get the start position
 --draw rabbit
 function startGame()
-	--save the first state of the level
-	saveMap(levelMap)
 	local startCellType = mapCreator.getCellTypeByTag(levelMap,"startCell")
-	if startCellType ~= false then
+	--save the first state of the level
+	if  startCellType ~= false  and #startCellType.members > 0 then
+		saveMap(levelMap)
 		gameRunning = true
 		local x = startCellType.members[1].x
 		local y = startCellType.members[1].y
@@ -198,6 +203,7 @@ function startGame()
 		Runtime:addEventListener( "touch", gameClickListener )
 	else
 		print("no start point")
+		return false
 	end
 end
 
@@ -241,6 +247,56 @@ function reloadMap()
 end
 
 
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+---------FOR THE LEVEL BUILDER
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+
+function getMap()
+	return levelMap
+end
+
+function cleanMap()
+	--clean everything
+	for j=1,table.getn(levelMap) do
+		if levelMap[j] ~= nil then
+			for i=1,table.getn(levelMap[j]) do
+				if levelMap[j][i] ~= nil then
+					placeNewObject({x=j,y=i,object="grass"})
+				end
+			end
+		end
+	end
+	if gameRunning then gameRunning = false end
+	--dontforget the rabbit
+	if rabbit.img ~= nil then rabbit.img:removeSelf() rabbit.img = nil end
+end
+
+
+function getObjectByTag(tag)
+	return mapCreator.getCellTypeByTag(levelMap,tag)
+end
+
+function getCellByXY(x,y)
+	return mapCreator.getCellByXY(x,y,levelMap)
+end
+
+
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+
+
+
+
+
+
 function saveMap(map)
 	startingMap =  deepcopy(map)
 	for j=1,#startingMap do
@@ -267,11 +323,6 @@ function saveMap(map)
 
 end
 
-function loadSavedMap()
-	if startingMap ~= nil then
-		
-	end
-end
 
 function deepcopy(object)
     local lookup_table = {}

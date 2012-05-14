@@ -30,6 +30,7 @@ function createHexMap(x,y,w,h,lines,columns,defaultCellType)
 	
 	--create the default cell type
 	levelMap.objects = {}
+	defaultCellType.members = {}
 	table.insert(levelMap.objects,defaultCellType)
 	
 	local cell_h = h/lines
@@ -78,6 +79,7 @@ end
 
 --TODO: missing work with isExit
 function createNewObject(map, params)
+	params.members = {}
 	table.insert(map.objects,params)
 end
 
@@ -179,9 +181,6 @@ function changeCell(cell,toId)
 	end
 	cell.terrainCost = cell.mapRef.objects[toId].terrainCost + terrainClusterCost
 end
-
-
-
 
 
 
@@ -307,29 +306,3 @@ function getCellByXY(x,y,map)
 	end
 	return false
 end
-
---[[
-function createHexagon(hexCell)
-	local tempHexagon = display.newImageRect(hexCell.mapRef.objects[hexCell.id].img,hexCell.hexW,hexCell.hexH)
-	tempHexagon.x = hexCell.hexX
-	tempHexagon.y = hexCell.hexY
-	hexGroup:insert(tempHexagon)
-	hexCell.hex = tempHexagon
-	
-	--add a label
-	if hexCell.text == nil then	hexCell.text = display.newText("",hexCell.hexX,hexCell.hexY,native.systemFont,22) end
-	hexCell.text.text = hexCell.terrainCost
-	numbersGroup:insert(hexCell.text)
-	
-	--add a listener
-	local hexClosure = function(event)
-		if gameRunning then
-			gameUpdater(event,hexCell)
-		else
-			hexListener(event,hexCell) 
-		end
-		return true 
-	end
-	hexCell.hex:addEventListener("touch",hexClosure)
-end
-]]--
