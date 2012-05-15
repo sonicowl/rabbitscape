@@ -217,8 +217,12 @@ function loadButtons()
 	lampButtonOn.xScale = 2; lampButtonOn.yScale = 2
 	lampButtonOff.isVisible = false
 
-	local lampText = display.newText( "  ALLOW\nOBJECTS\nON EXITS", 0,0, native.systemFont,18)
-	lampText.x = _W/6-50; lampText.y = _H-60
+	local lampText = display.newText( "ALLOW", 0,0, native.systemFont,18)
+	lampText.x = _W/6-50; lampText.y = _H-80
+	local lampText2 = display.newText( "OBJECTS", 0,0, native.systemFont,18)
+	lampText2.x = _W/6-50; lampText2.y = _H-60
+	local lampText3 = display.newText( "ON EXITS", 0,0, native.systemFont,18)
+	lampText3.x = _W/6-50; lampText3.y = _H-40
 	
 	
 	
