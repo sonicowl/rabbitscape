@@ -258,7 +258,7 @@ function getMap()
 end
 
 function cleanMap()
-	if gameRunning then stopGame() end
+	--if gameRunning then stopGame() end
 	--clean everything
 	for j=1,table.getn(levelMap) do
 		if levelMap[j] ~= nil then

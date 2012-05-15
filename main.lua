@@ -110,8 +110,10 @@ function loadButtons()
 		if event.phase == "release" then
 			local starter = gameEngine.startGame()
 			if starter ~= false then
-				stopButton.isVisible = true
 				startButton.isVisible = false
+				stopButton.isVisible = true
+				saveMapButton.isVisible = false
+				clearMapButton.isVisible = false
 				Runtime:removeEventListener( "touch", builderClickListener )
 			end
 		end
@@ -119,9 +121,11 @@ function loadButtons()
 	end
 
 	stopGameHandler = function( event )
-		if event.phase == "release" then
+		if event.phase == "release" and gameEngine.gameRunning then
 			gameEngine.stopGame()
 			stopButton.isVisible = false
+			clearMapButton.isVisible = true
+			saveMapButton.isVisible = true
 			startButton.isVisible = true
 			Runtime:removeEventListener( "touch", builderClickListener )
 			Runtime:addEventListener( "touch", builderClickListener )
@@ -139,12 +143,8 @@ function loadButtons()
 	end
 
 	resetMapHandler = function( event )
-		if event.phase == "release" then
+		if event.phase == "release"  then
 			gameEngine.cleanMap()
-			stopButton.isVisible = false
-			startButton.isVisible = true
-			Runtime:removeEventListener( "touch", builderClickListener )
-			Runtime:addEventListener( "touch", builderClickListener )
 		end
 	end
 
@@ -163,14 +163,14 @@ function loadButtons()
 		text = "STOP",
 		emboss = true,	
 	}
-	local button2 = ui.newButton{
+	saveMapButton = ui.newButton{
 		default = "buttonOrange.png",
 		over = "buttonOrangeOver.png",
 		onEvent = saveMapHandler,
 		text = "SAVE MAP",
 		emboss = true
 	}
-	local button3 = ui.newButton{
+	clearMapButton = ui.newButton{
 		default = "buttonOrange.png",
 		over = "buttonOrangeOver.png",
 		onEvent = resetMapHandler,
@@ -180,8 +180,8 @@ function loadButtons()
 
 	startButton.x = _W/6; startButton.y = 80
 	stopButton.x = _W/6; stopButton.y = 80
-	button2.x = _W/6*3; button2.y = 80
-	button3.x = _W/6*5; button3.y = 80
+	saveMapButton.x = _W/6*3; saveMapButton.y = 80
+	clearMapButton.x = _W/6*5; clearMapButton.y = 80
 	stopButton.isVisible = false
 
 
