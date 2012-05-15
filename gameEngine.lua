@@ -273,6 +273,10 @@ function cleanMap()
 	if rabbit.img ~= nil then rabbit.img:removeSelf() rabbit.img = nil end
 end
 
+function setEndCellPuttingPermission(bool)
+  local cell = mapCreator.getCellTypeByTag(levelMap,"endCell")
+  cell.canPutObjects = bool
+end
 
 function getObjectByTag(tag)
 	return mapCreator.getCellTypeByTag(levelMap,tag)

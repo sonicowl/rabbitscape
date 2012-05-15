@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- map Builder Engine
+-- Map Builder Engine
 --
 -----------------------------------------------------------------------------------------
 require ("ui")
@@ -104,6 +104,9 @@ function builderClickListener(event)
 	end
 end
 
+
+
+
 function loadButtons()
 
 	startButHandler = function( event )
@@ -133,7 +136,19 @@ function loadButtons()
 		return true
 	end
 
-
+	lampButtonHandler = function( event )
+		if event.phase == "release" then
+			if lampButtonOff.isVisible then
+				lampButtonOff.isVisible = false
+				lampButtonOn.isVisible = true
+				gameEngine.setEndCellPuttingPermission(true)
+			else
+				lampButtonOff.isVisible = true
+				lampButtonOn.isVisible = false
+				gameEngine.setEndCellPuttingPermission(false)
+			end
+		end
+	end
 
 	saveMapHandler = function( event )
 		if event.phase == "release" then
@@ -184,7 +199,29 @@ function loadButtons()
 	clearMapButton.x = _W/6*5; clearMapButton.y = 80
 	stopButton.isVisible = false
 
+	lampButtonOff = ui.newButton{
+		default = "lamp-off.png",
+		over = "lamp-on.png",
+		onEvent = lampButtonHandler,
+		emboss = true
+	}
+	lampButtonOn = ui.newButton{
+		default = "lamp-on.png",
+		over = "lamp-off.png",
+		onEvent = lampButtonHandler,
+		emboss = true
+	}
+	lampButtonOff.x = _W/6-50; lampButtonOff.y = _H-120
+	lampButtonOn.x = _W/6-50; lampButtonOn.y = _H-120
+	lampButtonOff.xScale = 2; lampButtonOff.yScale = 2
+	lampButtonOn.xScale = 2; lampButtonOn.yScale = 2
+	lampButtonOff.isVisible = false
 
+	local lampText = display.newText( "  ALLOW\nOBJECTS\nON EXITS", 0,0, native.systemFont,18)
+	lampText.x = _W/6-50; lampText.y = _H-60
+	
+	
+	
 end
 
 
