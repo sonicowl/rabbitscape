@@ -202,11 +202,13 @@ end
 
 function restartGame()
 	reloadMap()
+	Runtime:removeEventListener( "touch", gameClickListener )
 	startGame()
 end
 
 function stopGame()
 	gameRunning = false
+	Runtime:removeEventListener( "touch", gameClickListener )
 	reloadMap()
 end
 
@@ -256,6 +258,7 @@ function getMap()
 end
 
 function cleanMap()
+	if gameRunning then stopGame() end
 	--clean everything
 	for j=1,table.getn(levelMap) do
 		if levelMap[j] ~= nil then
@@ -266,7 +269,6 @@ function cleanMap()
 			end
 		end
 	end
-	if gameRunning then gameRunning = false end
 	--dontforget the rabbit
 	if rabbit.img ~= nil then rabbit.img:removeSelf() rabbit.img = nil end
 end

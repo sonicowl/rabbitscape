@@ -123,6 +123,7 @@ function loadButtons()
 			gameEngine.stopGame()
 			stopButton.isVisible = false
 			startButton.isVisible = true
+			Runtime:removeEventListener( "touch", builderClickListener )
 			Runtime:addEventListener( "touch", builderClickListener )
 		end
 		return true
@@ -142,6 +143,7 @@ function loadButtons()
 			gameEngine.cleanMap()
 			stopButton.isVisible = false
 			startButton.isVisible = true
+			Runtime:removeEventListener( "touch", builderClickListener )
 			Runtime:addEventListener( "touch", builderClickListener )
 		end
 	end
