@@ -36,13 +36,13 @@ function main()
 
 	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true, appearingWeight = 0 , isPlaceable = false, isWalkable = true, isExit=false, isFakeExit=false, canPutObjects = true, tag="startCell",img="cell2.png", imgW=stdImgW*1.4, imgH=stdImgH })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true, isExit=true, isFakeExit=false, canPutObjects = true, tag="endCell" ,img="cell3.png", imgW=stdImgW*1.4, imgH=stdImgH })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 50, isPlaceable = true, isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10})
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 10, isPlaceable = true, isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10 })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 30, isPlaceable = true, isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree",img="tree.png", imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 10 })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true, isExit=false, isFakeExit=false, canPutObjects = false, tag="path" ,img="cell5.png", imgW=stdImgW*1.4, imgH=stdImgH })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = 1 , isDynamic = true , appearingWeight = 10, isPlaceable = true, isWalkable = true, isExit=true, isFakeExit=true, canPutObjects = false, tag="carrot" ,img="carrot.png", imgW=stdImgW, imgH=stdImgH })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="cell2.png", imgW=stdImgW*1.4, imgH=stdImgH })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="cell3.png", imgW=stdImgW*1.4, imgH=stdImgH })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10})
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10 })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree",img="tree.png", imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 10 })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = false, tag="path" ,img="cell5.png", imgW=stdImgW*1.4, imgH=stdImgH })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = true , isWalkable = true , isExit=true , isFakeExit=true , canPutObjects = false, tag="carrot" ,img="carrot.png", imgW=stdImgW, imgH=stdImgH })
 	--loadLevel1()
 	--gameEngine.setRabbitSteps(1)
 	--gameEngine.startGame()
@@ -149,6 +149,20 @@ function loadButtons()
 			end
 		end
 	end
+	
+	lampButton2Handler = function( event )
+		if event.phase == "release" then
+			if lampButton2Off.isVisible then
+				lampButton2Off.isVisible = false
+				lampButton2On.isVisible = true
+				gameEngine.setPutCarrots(true)
+			else
+				lampButton2Off.isVisible = true
+				lampButton2On.isVisible = false
+				gameEngine.setPutCarrots(false)
+			end
+		end
+	end
 
 	saveMapHandler = function( event )
 		if event.phase == "release" then
@@ -225,6 +239,28 @@ function loadButtons()
 	lampText3.x = _W/6-50; lampText3.y = _H-40
 	
 	
+	lampButton2Off = ui.newButton{
+		default = "lamp-off.png",
+		over = "lamp-on.png",
+		onEvent = lampButton2Handler,
+		emboss = true
+	}
+	lampButton2On = ui.newButton{
+		default = "lamp-on.png",
+		over = "lamp-off.png",
+		onEvent = lampButton2Handler,
+		emboss = true
+	}
+	lampButton2Off.x = _W-70; lampButton2Off.y = _H-120
+	lampButton2On.x = _W-70; lampButton2On.y = _H-120
+	lampButton2Off.xScale = 2; lampButton2Off.yScale = 2
+	lampButton2On.xScale = 2; lampButton2On.yScale = 2
+	lampButton2On.isVisible = false
+
+	local lampText = display.newText( "PUT", 0,0, native.systemFont,18)
+	lampText.x = _W-70; lampText.y = _H-80
+	local lampText2 = display.newText( "CARROT", 0,0, native.systemFont,18)
+	lampText2.x = _W-70; lampText2.y = _H-60
 	
 end
 

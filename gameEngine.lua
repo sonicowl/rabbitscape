@@ -31,6 +31,7 @@ function newLevel(params)
 	
 	--GAME FLAGS
 	rabbit = {}
+	putCarrot = false
 	rabbit.steps = 1
 	rabbit.actualSteps = 1
 	gameRunning = false
@@ -103,8 +104,13 @@ function gameClickListener(event)
 			return false
 		end
 		if cell.mapRef.objects[cell.id].canPutObjects then
-			print("clicking "..cell.line..","..cell.column)
-			local objTag = mapCreator.getRandomPlaceableObject(levelMap)
+			print("clicking "..cell.line..","..cell.column)			
+			local objTag = nil
+			if putCarrot then
+				objTag = "carrot"
+			else
+				objTag = mapCreator.getRandomPlaceableObject(levelMap)
+			end
 			mapCreator.placeObject(cell, objTag)
 			mapCreator.updateHexGrid(levelMap)
 			timer.performWithDelay(100, moveRabbit )
@@ -284,6 +290,14 @@ end
 
 function getCellByXY(x,y)
 	return mapCreator.getCellByXY(x,y,levelMap)
+end
+
+function setPutCarrots(bool)
+	if bool then
+		putCarrot = true
+	else
+		putCarrot = false
+	end
 end
 
 
