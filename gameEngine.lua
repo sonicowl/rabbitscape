@@ -43,8 +43,9 @@ function newLevel(params)
 	local mapH = _VW*.9
 	
 	
-	local defaultCellType = params.defaultCellType
-	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, defaultCellType)
+	--local defaultCellType = params.defaultCellType
+	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType)
+	
 	
 	if params.sceneBg ~= nil then
 		--display new image... blablabla
@@ -59,22 +60,13 @@ function newLevel(params)
 	HUD.init(restartGame)
 	
 	
-	--updateScene()
 end
 
 
 
---mapCreator.createNewObject(levelMap,{ terrainCost = 10, maxMembers = -1, isWalkable = false, canPutObjects = false, tag="rock" ,img="cell4.png", clusterEffect = 5, members = {} })
---addNewObject params: isDynamic, img, correctionX, correctionY, cellTypeParams, xScale, yScale
 
 function createNewObject(params)
 	mapCreator.createNewObject(levelMap,params) --directly to mapCreator, everything on celltypeparams
-end
-
-
-
-function objectListener(event,cell)
-	print("listening event of cell "..cell.line.." "..cell.column)
 end
 
 
@@ -131,7 +123,7 @@ function moveRabbit()
 			if path == false then
 				path = aStar.pathWithoutExit(rabbit.x,rabbit.y,levelMap)
 				if path == false then
-					print("You got the rabbit")
+					print("YOU GOT THE RABBIT")
 					gameRunning = false
 					HUD.callEndingScreen(true)
 					return false
@@ -147,6 +139,8 @@ function moveRabbit()
 				print("YOU LOOSE")
 				HUD.callEndingScreen(false)
 			end	
+			
+			--BELOW AN IMPLEMENTATION FOR THE FAKE EXITS(E.G. CARROT)
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].isFakeExit then 
 				placeNewObject({x=rabbit.x,y=rabbit.y,object="grass"})
 			end
@@ -167,8 +161,6 @@ function findShorterExit(x0,y0)
 			end
 		end
 	end
---	local endCellType = mapCreator.getCellTypeByTag(levelMap,"endCell")
---	local possiblePaths = aStar.findMultiplePaths( x0, y0 , endCellType.members, levelMap)
 	local possiblePaths = aStar.findMultiplePaths( x0, y0 , endMembers, levelMap)
 	if possiblePaths ~= false then
 		local pathToGo = possiblePaths[1]
@@ -213,6 +205,11 @@ function restartGame()
 	startGame()
 end
 
+function stopGame()
+	gameRunning = false
+	reloadMap()
+end
+
 
 function reloadMap()
 	--clean everything
@@ -234,7 +231,6 @@ function reloadMap()
 			for i=1,table.getn(levelMap[j]) do
 				if levelMap[j][i] ~= nil then
 					local tag = levelMap.objects[levelMap[j][i].id].tag
-					--placeNewObject(j,i,"grass")
 					placeNewObject({x=j,y=i,object=tag})
 				end
 			end
@@ -304,23 +300,10 @@ function saveMap(map)
 			for i=1,#startingMap do
 				if startingMap[j][i] ~= nil then
 					startingMap[j][i].obj = nil
-					--placeNewObject({x=j,y=i,object="grass"})
 				end
 			end
 		end
 	end
---[[	for j=1,table.getn(map) do
-		if map[j] ~= nil then
-			startingMap[j] = {}
-			for i=1,table.getn(map[j]) do
-				if map[j][i] ~= nil then
-					local startingMap[j][i] = map[j][i]
-					
-				end
-			end
-		end
-	end]]--
-
 end
 
 

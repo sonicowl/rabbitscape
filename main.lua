@@ -106,56 +106,81 @@ end
 
 function loadButtons()
 
-buttonHandler = function( event )
-	if event.phase == "release" then
-		local starter = gameEngine.startGame()
-		if starter ~= false then
-			Runtime:removeEventListener( "touch", builderClickListener )
+	startButHandler = function( event )
+		if event.phase == "release" then
+			local starter = gameEngine.startGame()
+			if starter ~= false then
+				stopButton.isVisible = true
+				startButton.isVisible = false
+				Runtime:removeEventListener( "touch", builderClickListener )
+			end
+		end
+		return true
+	end
+
+	stopGameHandler = function( event )
+		if event.phase == "release" then
+			gameEngine.stopGame()
+			stopButton.isVisible = false
+			startButton.isVisible = true
+			Runtime:addEventListener( "touch", builderClickListener )
+		end
+		return true
+	end
+
+
+
+	saveMapHandler = function( event )
+		if event.phase == "release" then
+
+			--stop game
 		end
 	end
-end
 
-
-button2Handler = function( event )
-	if event.phase == "release" then
-
-		--stop game
+	resetMapHandler = function( event )
+		if event.phase == "release" then
+			gameEngine.cleanMap()
+			stopButton.isVisible = false
+			startButton.isVisible = true
+			Runtime:addEventListener( "touch", builderClickListener )
+		end
 	end
-end
-
-resetMapHandler = function( event )
-	if event.phase == "release" then
-		gameEngine.cleanMap()
-		Runtime:addEventListener( "touch", builderClickListener )
-	end
-end
 
 
-local button1 = ui.newButton{
-	default = "buttonGreen.png",
-	over = "buttonGreenOver.png",
-	onEvent = buttonHandler,
-	text = "START",
-	emboss = true
-}
-local button2 = ui.newButton{
-	default = "buttonOrange.png",
-	over = "buttonOrangeOver.png",
-	onEvent = button2Handler,
-	text = "SAVE MAP",
-	emboss = true
-}
-local button3 = ui.newButton{
-	default = "buttonOrange.png",
-	over = "buttonOrangeOver.png",
-	onEvent = resetMapHandler,
-	text = "CLEAN MAP",
-	emboss = true
-}
+	startButton = ui.newButton{
+		default = "buttonGreen.png",
+		over = "buttonGreenOver.png",
+		onEvent = startButHandler,
+		text = "START",
+		emboss = true
+	}
+	stopButton = ui.newButton{
+		default = "buttonRed.png",
+		over = "buttonRedOver.png",
+		onEvent = stopGameHandler,
+		text = "STOP",
+		emboss = true,	
+	}
+	local button2 = ui.newButton{
+		default = "buttonOrange.png",
+		over = "buttonOrangeOver.png",
+		onEvent = saveMapHandler,
+		text = "SAVE MAP",
+		emboss = true
+	}
+	local button3 = ui.newButton{
+		default = "buttonOrange.png",
+		over = "buttonOrangeOver.png",
+		onEvent = resetMapHandler,
+		text = "CLEAN MAP",
+		emboss = true
+	}
 
-button1.x = _W/6; button1.y = 80
-button2.x = _W/6*3; button2.y = 80
-button3.x = _W/6*5; button3.y = 80
+	startButton.x = _W/6; startButton.y = 80
+	stopButton.x = _W/6; stopButton.y = 80
+	button2.x = _W/6*3; button2.y = 80
+	button3.x = _W/6*5; button3.y = 80
+	stopButton.isVisible = false
 
 
 end
