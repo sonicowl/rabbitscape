@@ -74,8 +74,10 @@ function drawTableView(group)
 end
 
 function removeTableView()
-	myList:removeSelf()
-	myList = nil
+	if myList ~= nil then
+		myList:removeSelf()
+		myList = nil
+	end
 end
 
 
