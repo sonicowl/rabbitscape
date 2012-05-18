@@ -70,19 +70,19 @@ function toast(message)
 	toastScreen.alpha = 0
 	HUD:insert(toastScreen)
 	
-	local roundedRect = display.newRoundedRect(_W/2-175, _VH0-150 , 350, 100, 12)
+	local roundedRect = display.newRoundedRect(_W/2-175, _VH0+_VH-300 , 350, 50, 12)
 	roundedRect:setFillColor(20, 20, 20)
 	roundedRect.alpha = .7
 	toastScreen:insert(roundedRect)
 
 	local myText = display.newText(message, 0, 0, native.systemFont, 20)
 	myText.x = _W/2
-	myText.y = roundedRect.y + roundedRect.contentHeight/2
+	myText.y = roundedRect.y
 	myText:setTextColor(255, 255, 255)
-	toastScreen:insert(roundedRect)
+	toastScreen:insert(myText)
 	
 	local transitionClosure2 = function(obj) obj:removeSelf() obj = nil end
-	local transitionClosure = function(obj) transition.to(obj,{onComplete = transitionClosure2, alpha = 0, time = 500, delay = 500}) end
+	local transitionClosure = function(obj) transition.to(obj,{onComplete = transitionClosure2, alpha = 0, time = 500, delay = 1000}) end
 	transition.to(toastScreen,{onComplete = transitionClosure, alpha = 1, time = 500})
 	
 end

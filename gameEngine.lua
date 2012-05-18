@@ -20,6 +20,8 @@ function newLevel(params)
 	jsonLevels.init()
 	storyboard = params.storyBoard
 	lastScene = params.lastScene
+	sceneGroup = params.viewGroup
+	
 	--POSITION VARS
 	_W = display.contentWidth;
 	_H = display.contentHeight;
@@ -48,7 +50,7 @@ function newLevel(params)
 	
 	
 	--local defaultCellType = params.defaultCellType
-	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType,params.viewGroup)
+	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
 	
 	if params.sceneBg ~= nil then
@@ -202,6 +204,7 @@ function startGame()
 		rabbit.img = display.newImageRect("rabbit.png" , levelMap[x][y].hexW*.8, levelMap[x][y].hexH*.8)
 		rabbit.img.x = levelMap[x][y].hexX
 		rabbit.img.y = levelMap[x][y].hexY
+		sceneGroup:insert(rabbit.img)
 		Runtime:addEventListener( "touch", gameClickListener )
 	else
 		print("no start point")

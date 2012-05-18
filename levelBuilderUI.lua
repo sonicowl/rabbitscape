@@ -128,6 +128,7 @@ function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
+		Runtime:removeEventListener( "touch", builderClickListener )
 		gameEngine.quitGame()
 	end	
 
