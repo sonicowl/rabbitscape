@@ -15,12 +15,17 @@ module(..., package.seeall)
 
 
 
-function createHexMap(x,y,w,h,lines,columns,defaultCellType)
+function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 	
 	-------------- DISPLAY GROUPS
 	hexGroup = display.newGroup()
+	rabbitGroup = display.newGroup()
 	objectsGroup = display.newGroup()
 	numbersGroup = display.newGroup()
+	viewGroup:insert(hexGroup)
+	viewGroup:insert(rabbitGroup)
+	viewGroup:insert(objectsGroup)
+	viewGroup:insert(numbersGroup)
 	displayTexts = false
 
 	local coordinatedLines = (columns-columns%2)/2+lines-columns%2
@@ -162,7 +167,7 @@ function changeCell(cell,toId)
 	local actualTerrainCost = cell.terrainCost
 	local terrainClusterCost = cell.terrainCost - cell.mapRef.objects[cell.id].terrainCost
 	local idMember = { x = cell.column, y = cell.line }
-	print("toId "..toId)
+	--print("toId "..toId)
 	table.insert(cell.mapRef.objects[toId].members,idMember)
 	
 	--clean old info from members
@@ -193,7 +198,7 @@ function placeObject(cell, object,listener)
 		cell.obj:removeSelf()
 		cell.obj = nil
 	end
-	print(object.." placing")
+	--print(object.." placing")
 	local objectId = getCellTypeIdByTag(cell.mapRef,object)
 	changeCell(cell,objectId)
 	local objectType = cell.mapRef.objects[cell.id]
@@ -230,6 +235,7 @@ function createHexGrid(map,displayGroup)
 					local tempHexagon = display.newImageRect("cell1.png",hexCell.hexW,hexCell.hexH)
 					tempHexagon.x = hexCell.hexX
 					tempHexagon.y = hexCell.hexY
+					tempHexagon.alpha = .6
 					displayGroup:insert(tempHexagon)
 					
 					--add a label

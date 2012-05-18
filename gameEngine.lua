@@ -16,7 +16,10 @@ function newLevel(params)
 	HUD = require("HUD")
 	aStar = require("aStar")
 	mapCreator = require("mapCreator")
-	
+	jsonLevels = require("jsonLevels")
+	jsonLevels.init()
+	storyboard = params.storyBoard
+	lastScene = params.lastScene
 	--POSITION VARS
 	_W = display.contentWidth;
 	_H = display.contentHeight;
@@ -45,7 +48,7 @@ function newLevel(params)
 	
 	
 	--local defaultCellType = params.defaultCellType
-	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType)
+	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType,params.viewGroup)
 	
 	
 	if params.sceneBg ~= nil then
@@ -58,7 +61,7 @@ function newLevel(params)
 	
 	
 	
-	HUD.init(restartGame)
+	HUD.init(restartGame,params.viewGroup)
 	
 	
 end
@@ -109,7 +112,8 @@ function gameClickListener(event)
 			if putCarrot then
 				objTag = "carrot"
 			else
-				objTag = mapCreator.getRandomPlaceableObject(levelMap)
+				--objTag = mapCreator.getRandomPlaceableObject(levelMap)
+				objTag = "rock"
 			end
 			mapCreator.placeObject(cell, objTag)
 			mapCreator.updateHexGrid(levelMap)
@@ -300,16 +304,23 @@ function setPutCarrots(bool)
 	end
 end
 
-
--------------------------------------------------------------------------
--------------------------------------------------------------------------
--------------------------------------------------------------------------
--------------------------------------------------------------------------
--------------------------------------------------------------------------
--------------------------------------------------------------------------
+function saveJsonMap()
+	jsonLevels.saveMap(levelMap)
+	HUD.toast("Map saved successfully")
+end
 
 
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
+
+function quitGame()
+	storyboard.gotoScene( lastScene, "slideRight", 400 )
+end
 
 
 
@@ -325,6 +336,8 @@ function saveMap(map)
 		end
 	end
 end
+
+
 
 
 function deepcopy(object)
