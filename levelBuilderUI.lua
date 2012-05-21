@@ -33,8 +33,6 @@ function init(engine,builderObjects,viewGroup)
 	loadButtons()
 	loadHeader()
 	
-	start()
-	
 end
 
 
