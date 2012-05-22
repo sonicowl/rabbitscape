@@ -13,60 +13,6 @@ local levelBuilderUI = require ("levelBuilderUI")
 
 
 
-
-function loadLevel1()
-
-	for i = 7 , 18 do
-		gameEngine.placeNewObject({x=1,y=i,object="endCell"})
-		gameEngine.placeNewObject({x=13,y=i-6,object="endCell"})
-	end
-	local lineHelper = 19
-	for i = 1,13 do
-		if i%2==1 then lineHelper = lineHelper-1 end
-		gameEngine.placeNewObject({x=i,y=lineHelper,object="endCell"})
-	end
-
-	gameEngine.placeNewObject({x=4,y=8,object="rock"})
-	gameEngine.placeNewObject({x=4,y=9,object="vase"})
-	gameEngine.placeNewObject({x=5,y=8,object="rock"})
-	gameEngine.placeNewObject({x=6,y=7,object="rock"})
-	gameEngine.placeNewObject({x=5,y=7,object="rock"})
-	
-	gameEngine.placeNewObject({x=11,y=12,object="rock"})
-	gameEngine.placeNewObject({x=10,y=11,object="vase"})
-	gameEngine.placeNewObject({x=10,y=12,object="rock"})
-	gameEngine.placeNewObject({x=9,y=13,object="vase"})
-	gameEngine.placeNewObject({x=9,y=12,object="rock"})
-	gameEngine.placeNewObject({x=10,y=13,object="vase"})
-	gameEngine.placeNewObject({x=9,y=14,object="rock"})
-	gameEngine.placeNewObject({x=10,y=14,object="rock"})
-	
-	gameEngine.placeNewObject({x=13,y=4,object="rock"})
-	gameEngine.placeNewObject({x=13,y=4,object="rock"})
-	gameEngine.placeNewObject({x=13,y=5,object="rock"})
-	gameEngine.placeNewObject({x=13,y=6,object="vase"})
-	
-	gameEngine.placeNewObject({y=12,x=6,object="path"})
-	gameEngine.placeNewObject({y=12,x=5,object="path"})
-	gameEngine.placeNewObject({y=13,x=5,object="path"})
-	gameEngine.placeNewObject({y=13,x=4,object="path"})
-	gameEngine.placeNewObject({y=14,x=4,object="path"})
-	gameEngine.placeNewObject({y=14,x=5,object="path"})
-	gameEngine.placeNewObject({y=13,x=6,object="path"})
-	gameEngine.placeNewObject({y=13,x=7,object="path"})
-	gameEngine.placeNewObject({y=12,x=7,object="path"})
-	gameEngine.placeNewObject({y=14,x=6,object="path"})
-	gameEngine.placeNewObject({y=15,x=4,object="path"})
-	gameEngine.placeNewObject({y=15,x=3,object="path"})
-	gameEngine.placeNewObject({y=14,x=3,object="path"})
-	gameEngine.placeNewObject({y=13,x=3,object="path"})
-
-	gameEngine.placeNewObject({x=7,y=9,object="startCell"})
-end
-
-
-
-
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -101,12 +47,18 @@ function scene:createScene( event )
 	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridWhite.png",imgW=stdImgW*1.4, imgH=stdImgH }
 
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = storyboard.getPrevious()})
-
-	gameEngine.insertBg("BUNNYSCAPE8BIT.jpg")
+	
+	gameEngine.insertBg("ground.png")
+	gameEngine.insertOverLay("objects.png")
+	gameEngine.insertOverLay("shadow.png")
+	gameEngine.insertOverLay("vignete.png")
+	
+	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.7 })
-	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.5 })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.7 })
+	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.5 })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock2" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree",img="tree.png", imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 10 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = false, tag="path" ,img="cell5.png", imgW=stdImgW*1.4, imgH=stdImgH })
@@ -114,11 +66,10 @@ function scene:createScene( event )
 	--loadLevel1() --gameEngine.setRabbitSteps(1) --gameEngine.startGame()
 	
 	listOfBuilderObjects = {"rock","startCell","endCell","path","grass"}
-	
-	levelBuilderUI.init(gameEngine,listOfBuilderObjects,  sceneGroup  )
+	--levelBuilderUI.init(gameEngine,listOfBuilderObjects,  sceneGroup  )
 	
 	if storyboard.levelId ~= nil then
-		local jsonMap = jsonLevels.loadMap(storyboard.levelId)
+		local jsonMap = jsonLevels.loadMap(storyboard.levelId,"levelsList.txt")
 		if jsonMap ~= false then
 			jsonMap = jsonMap.coords
 			for j=1,#jsonMap do
@@ -136,6 +87,7 @@ function scene:createScene( event )
 		end
 	end
 	
+	gameEngine.startGame()
 end
 
 

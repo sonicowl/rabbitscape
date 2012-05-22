@@ -39,7 +39,13 @@ function scene:createScene( event )
 	
 	but1handler = function( event )
 		if event.phase == "release"  then
-			storyboard.gotoScene( "levelsList", "fade", 400 )
+			storyboard.gotoScene( "levelsList", "slideLeft", 400 )
+		end
+	end
+	
+	but2handler = function( event )
+		if event.phase == "release"  then
+			storyboard.gotoScene( "levelsList2", "slideLeft", 400 )
 		end
 	end
 
@@ -47,6 +53,22 @@ function scene:createScene( event )
 	bg.x = _W/2
 	bg.y = _H/2
 	group:insert(bg)
+	
+	gameButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = but2handler,
+		text = "PLAY GAME",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true,
+		size = 22
+	}
+	gameButton.x = display.contentWidth/2
+	gameButton.y = display.contentHeight/2-100
+	gameButton.xScale = 2
+	gameButton.yScale = 2
+	
+	group:insert(gameButton)
 	
 
 	lvlBuilderButton = ui.newButton{
@@ -59,11 +81,12 @@ function scene:createScene( event )
 		size = 22
 	}
 	lvlBuilderButton.x = display.contentWidth/2
-	lvlBuilderButton.y = display.contentHeight/2
+	lvlBuilderButton.y = display.contentHeight/2+100
 	lvlBuilderButton.xScale = 2
 	lvlBuilderButton.yScale = 2
 	
 	group:insert(lvlBuilderButton)
+	
 	
 	
 end

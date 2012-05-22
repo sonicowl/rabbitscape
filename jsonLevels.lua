@@ -92,10 +92,15 @@ function removeLevel(row)
 end
 
 
-function loadMap(row)
+function loadMap(row,fileName)
 	if row ~= nil then
 		print("loading map on row "..row)
-		local path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
+		local path = nil
+		if fileName ~=nil then
+			path = system.pathForFile( fileName, system.ResourceDirectory )
+		else
+			path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
+		end
 		local file = io.open( path, "r" )
 		local lineHelper = 1
 		local level = nil
@@ -129,12 +134,16 @@ function loadMap()
 end
  ]]--
  
-function loadLevelsTable()
+function loadLevelsTable(fileName)
 	local levelsTable = {}
-	local path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
-	 
-	--io.open opens a file at path. returns nil if no file found
+	local path = nil
+	if fileName ~=nil then
+		path = system.pathForFile( fileName, system.ResourceDirectory )
+	else
+		path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
+	end
 	local file = io.open( path )
+	--io.open opens a file at path. returns nil if no file found
 	if file then
 		-- read all contents of file into a string
 		for line in file:lines() do
@@ -143,6 +152,8 @@ function loadLevelsTable()
 		end
 		io.close( file )
 		return levelsTable
+	else
+		print("file not found")
 	end
 	return false
 end

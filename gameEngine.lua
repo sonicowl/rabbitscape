@@ -21,6 +21,8 @@ function newLevel(params)
 	storyboard = params.storyBoard
 	lastScene = params.lastScene
 	sceneGroup = params.viewGroup
+	bgGroup = display.newGroup()
+	sceneGroup:insert(bgGroup)
 	
 	--POSITION VARS
 	_W = display.contentWidth;
@@ -45,25 +47,16 @@ function newLevel(params)
 	levelMap = nil
 	local map_lines = 13
 	local map_cols = 13
-	local mapW = _VW*.9
-	local mapH = _VW*.9
-	
-	if params.sceneBg ~= nil then
-		bg = display.newImageRect(params.sceneBg,_VW,_VH)
-		bg.x = _W/2
-		bg.y = _H/2
-		sceneGroup:insert(bg)
-	end	
+	local mapW = _VW*.93
+	local mapH = _VW*1.05
 	
 	--local defaultCellType = params.defaultCellType
-	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
+	levelMap = mapCreator.createHexMap((_W-mapW)/2+5 , (_H-mapH)/2-30 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
 	
 	
-	if params.overlayBg ~= nil then
-		--display new image... blablabla
-	end
-	
+	overLayGroup = display.newGroup()
+	sceneGroup:insert(overLayGroup)
 	
 	
 	HUD.init(restartGame,params.viewGroup)
@@ -72,7 +65,23 @@ function newLevel(params)
 end
 
 
+function insertBg(file)
 
+	local bg = display.newImageRect(file,_VW,_VH)
+	bg.x = _W/2
+	bg.y = _H/2
+	bgGroup:insert(bg)
+
+end
+
+function insertOverLay(file)
+
+	local bg = display.newImageRect(file,_VW,_VH)
+	bg.x = _W/2
+	bg.y = _H/2
+	overLayGroup:insert(bg)
+
+end
 
 function createNewObject(params)
 	mapCreator.createNewObject(levelMap,params) --directly to mapCreator, everything on celltypeparams
@@ -118,7 +127,11 @@ function gameClickListener(event)
 				objTag = "carrot"
 			else
 				--objTag = mapCreator.getRandomPlaceableObject(levelMap)
-				objTag = "rock"
+				if storyboard.getScene() == "levelBuilder" then
+					objTag = "rock"
+				else
+					objTag = "rock2"
+				end
 			end
 			mapCreator.placeObject(cell, objTag)
 			mapCreator.updateHexGrid(levelMap)

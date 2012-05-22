@@ -23,14 +23,14 @@ function listButtonRelease( event )
 	local id = self.id
 	
 	storyboard.levelId = id
-	storyboard.gotoScene( "levelBuilder", "slideLeft", 400 )
+	storyboard.gotoScene( "gameScene", "slideLeft", 400 )
 	
 end
 
 function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
-	data = jsonLevels.loadLevelsTable()
+	data = jsonLevels.loadLevelsTable("levelsList.txt")
 	local bottomBoundary = display.screenOriginY + 0
 
 	if data ~= false then
@@ -49,20 +49,7 @@ function drawTableView(group)
 					t:setTextColor(255, 255, 255)
 					t.x = math.floor(t.width/2) + 12
 					t.y = 46 
-					local removeButton = ui.newButton{ 
-						default = "remove.png", 
-						over = "removePressed.png",
-						id = levelHelper,
-						onEvent = removeBtnRelease
-					}
-					levelHelper = 1 + levelHelper
-					group:insert(removeButton)
-					removeButton.x = _VW - 30
-					removeButton.y = 46
-					removeButton.xScale = .8
-					removeButton.yScale = .8
 					rowGroup:insert(t)
-					rowGroup:insert(removeButton)
 					group:insert(rowGroup)
 					return rowGroup
 
@@ -80,32 +67,6 @@ function removeTableView()
 	end
 end
 
-
-function removeLevel(row,group)
-	
-	jsonLevels.removeLevel(row)
-	removeTableView()
-	drawTableView(group)
-end
-
-
-
-function removeBtnRelease( event )
-	if ("release" == event.phase) then
-		print("removeBtn released "..event.id)
-		removeLevel(event.id,group)
-	end
-	return true  --SO SIMPLE AND SO CONFUSING.... THIS PREVENTS FROM PROPAGATING TO OTHER BUTTONS	
-	--
-	
-end
-
-function addBtnRelease( event )
-	print("add button released")
-	storyboard.levelId = nil
-	storyboard.gotoScene( "levelBuilder", "slideLeft", 400 )
-	
-end
 
 
 
@@ -127,6 +88,9 @@ end
 
 
 
+
+
+
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -136,12 +100,11 @@ function scene:createScene( event )
 	group = self.view
 	lastScene = storyboard.getPrevious()
 	actions = {}
-
-	local bg = display.newImageRect("BUNNYSCAPE8BIT2.jpg",_VW,_VH)
+	local bg = display.newImageRect("ground.jpg",_VW,_VH)
 	bg.x = _W/2; bg.y = _H/2
 	group:insert(bg)
 	
-	loadActions()
+
 
 
 	
@@ -157,7 +120,9 @@ function scene:createScene( event )
 	navHeader.x = display.contentWidth*.5
 	navHeader.y = navBar.y
 	group:insert(navHeader)
-
+	loadActions()
+	
+	
 	--Setup the back button
 	backBtn = ui.newButton{ 
 		default = "backButton.png", 
@@ -166,21 +131,9 @@ function scene:createScene( event )
 		onEvent = buttonHandler,
 	}
 	group:insert(backBtn)
-	backBtn.x = math.floor(backBtn.width/2) + 10 + screenOffsetW
+	backBtn.x = math.floor(backBtn.width/2) + screenOffsetW+10
 	backBtn.y = navBar.y 
 	backBtn.alpha = 1
-
-	
-	addBtn = ui.newButton{ 
-		default = "add.png", 
-		over = "addPressed.png", 
-		onRelease = addBtnRelease
-	}
-	group:insert(addBtn)
-	addBtn.x = _VW - 30
-	addBtn.y = navBar.y 
-	addBtn.xScale = .6
-	addBtn.yScale = .6
 
 	
 	drawTableView(group)
