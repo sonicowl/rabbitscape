@@ -48,14 +48,17 @@ function newLevel(params)
 	local mapW = _VW*.9
 	local mapH = _VW*.9
 	
+	if params.sceneBg ~= nil then
+		bg = display.newImageRect(params.sceneBg,_VW,_VH)
+		bg.x = _W/2
+		bg.y = _H/2
+		sceneGroup:insert(bg)
+	end	
 	
 	--local defaultCellType = params.defaultCellType
 	levelMap = mapCreator.createHexMap((_W-mapW)/2 , (_H-mapH)/2 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
 	
-	if params.sceneBg ~= nil then
-		--display new image... blablabla
-	end	
 	
 	if params.overlayBg ~= nil then
 		--display new image... blablabla
@@ -145,13 +148,14 @@ function moveRabbit()
 			tempY = path[table.getn(path)-1].y
 			rabbit.x = tempX
 			rabbit.y = tempY
-			transition.to(rabbit.img,{x=levelMap[tempX][tempY].hexX, y= levelMap[tempX][tempY].hexY,time=500})
+			transition.to(rabbit.img,{x=levelMap[tempX][tempY].hexX+5, y= levelMap[tempX][tempY].hexY+10,time=500})
+			
+			--CHECK IF IT ARRIVED ON A EXIT CELL
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].tag == "endCell" then 
 				gameRunning = false
 				print("YOU LOOSE")
 				HUD.callEndingScreen(false)
-			end	
-			
+			end		
 			--BELOW AN IMPLEMENTATION FOR THE FAKE EXITS(E.G. CARROT)
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].isFakeExit then 
 				placeNewObject({x=rabbit.x,y=rabbit.y,object="grass"})
@@ -165,17 +169,29 @@ end
 
 
 function findShorterExit(x0,y0)
-	endMembers = {}
+	local possibleExits = {}
 	for i=1, #levelMap.objects do	
 		if levelMap.objects[i].isExit then
 			for j=1, #levelMap.objects[i].members do
-				table.insert(endMembers, deepcopy(levelMap.objects[i].members[j]))
+				table.insert(possibleExits, deepcopy(levelMap.objects[i].members[j]))
 			end
 		end
 	end
-	local possiblePaths = aStar.findMultiplePaths( x0, y0 , endMembers, levelMap)
+	local possiblePaths = aStar.findMultiplePaths( x0, y0 , possibleExits, levelMap)
+	
 	if possiblePaths ~= false then
 		local pathToGo = possiblePaths[1]
+		--IMPLEMENT A RANDOM ERROR FOR THE RABBIT
+		if #possiblePaths > 2 and possiblePaths[1].totalCost > 50 then
+			local randomNum = math.random(100)
+			if randomNum < 85 then
+				pathToGo = possiblePaths[1]
+			elseif randomNum < 95 then
+				pathToGo = possiblePaths[2]
+			else
+				pathToGo = possiblePaths[3]
+			end
+		end
 		if pathToGo ~= false then
 			return pathToGo
 		end
@@ -201,9 +217,9 @@ function startGame()
 		local y = startCellType.members[1].y
 		rabbit.x = x
 		rabbit.y = y
-		rabbit.img = display.newImageRect("rabbit.png" , levelMap[x][y].hexW*.8, levelMap[x][y].hexH*.8)
-		rabbit.img.x = levelMap[x][y].hexX
-		rabbit.img.y = levelMap[x][y].hexY
+		rabbit.img = display.newImageRect("rabbit-1.png" , levelMap[x][y].hexW, levelMap[x][y].hexH*1.1)
+		rabbit.img.x = levelMap[x][y].hexX+5
+		rabbit.img.y = levelMap[x][y].hexY+10
 		sceneGroup:insert(rabbit.img)
 		Runtime:addEventListener( "touch", gameClickListener )
 	else

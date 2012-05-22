@@ -67,20 +67,20 @@ end
 function loadToolBox()
  --generate the object selector
 	borderWidth = #listOfBuilderObjects*90+10
-	local border = display.newRoundedRect(_W/2-borderWidth/2,_H-150,borderWidth,100,10)
+	local border = display.newRoundedRect(_W/2-borderWidth/2,_H-110,borderWidth,100,10)
 	border:setFillColor(0,0,0)
-	border.alpha = .8
+	border.alpha = 0
 	--border.strokeWidth = 6
 	--border:setStrokeColor( 80,10,10)
 	HUD:insert(border)
 	for i=0,#listOfBuilderObjects-1 do
-		local tempBox = display.newRoundedRect(border.x-border.contentWidth/2+10+i*90,border.y-border.contentHeight/2+10,80,80,10)
+		local tempBox = display.newRect(border.x-border.contentWidth/2+10+i*90,border.y-border.contentHeight/2+10,80,80)
 		tempBox:setFillColor(250,250,250)
 		tempBox.alpha = .6
 		tempBox:setStrokeColor( 10,140,10)
 		tempBox.id = i+1
 		local tempObject = gameEngine.getObjectByTag(listOfBuilderObjects[i+1])
-		local tempIcon = display.newImageRect(tempObject.img,70,70)
+		local tempIcon = display.newImageRect(tempObject.img,70,60)
 		tempIcon.x = tempBox.x
 		tempIcon.y = tempBox.y
 		HUD:insert(tempBox)
@@ -207,35 +207,35 @@ end
 function loadButtons()	
 
 	startButton = ui.newButton{
-		default = "buttonGreen.png",
-		over = "buttonGreenOver.png",
+		default = "8bitGreen.png",
+		over = "8bitGreenP.png",
 		onEvent = buttonHandler,
 		id = "startButton",
-		text = "START",
+		--text = "START",
 		emboss = true
 	}
 	stopButton = ui.newButton{
-		default = "buttonRed.png",
-		over = "buttonRedOver.png",
+		default = "8bitRed2.png",
+		over = "8bitRed2P.png",
 		onEvent = buttonHandler,
 		id = "stopButton",
-		text = "STOP",
+		--text = "STOP",
 		emboss = true,	
 	}
 	saveMapButton = ui.newButton{
-		default = "buttonOrange.png",
-		over = "buttonOrangeOver.png",
+		default = "8bitYellow.png",
+		over = "8bitYellowP.png",
 		onEvent = buttonHandler,
 		id = "saveMapButton",
-		text = "SAVE MAP",
+		--text = "SAVE MAP",
 		emboss = true
 	}
 	clearMapButton = ui.newButton{
-		default = "buttonOrange.png",
-		over = "buttonOrangeOver.png",
+		default = "8bitRed.png",
+		over = "8bitRedP.png",
 		onEvent = buttonHandler,
 		id = "resetMapButton",
-		text = "CLEAN MAP",
+		--text = "CLEAN MAP",
 		emboss = true
 	}
 	closeExitsButOff = ui.newButton{
@@ -272,28 +272,28 @@ function loadButtons()
 	stopButton.isVisible = false
 	saveMapButton.x = _W/6*3; saveMapButton.y = 80
 	clearMapButton.x = _W/6*5; clearMapButton.y = 80
-	closeExitsButOff.x = _W/6-50; closeExitsButOff.y = _H-120
-	closeExitsButOn.x = _W/6-50; closeExitsButOn.y = _H-120
+	closeExitsButOff.x = _VW0+80; closeExitsButOff.y = _H-90
+	closeExitsButOn.x = _VW0+80; closeExitsButOn.y = _H-90
 	closeExitsButOff.xScale = 2; closeExitsButOff.yScale = 2
 	closeExitsButOn.xScale = 2; closeExitsButOn.yScale = 2
 	closeExitsButOff.isVisible = false
-	lampButton2Off.x = _W-70; lampButton2Off.y = _H-120
-	lampButton2On.x = _W-70; lampButton2On.y = _H-120
+	lampButton2Off.x = _VW0+_VW-80; lampButton2Off.y = _H-90
+	lampButton2On.x = _VW0+_VW-80; lampButton2On.y = _H-90
 	lampButton2Off.xScale = 2; lampButton2Off.yScale = 2
 	lampButton2On.xScale = 2; lampButton2On.yScale = 2
 	lampButton2On.isVisible = false
 
 	
-	local closeExitsTxt = display.newText( "ALLOW", 0,0, native.systemFont,18)
-	closeExitsTxt.x = _W/6-50; closeExitsTxt.y = _H-80
+	
+	
 	local closeExitsTxt2 = display.newText( "OBJECTS", 0,0, native.systemFont,18)
-	closeExitsTxt2.x = _W/6-50; closeExitsTxt2.y = _H-60
+	closeExitsTxt2.x = _VW0+80; closeExitsTxt2.y = _H-50
 	local closeExitsTxt3 = display.newText( "ON EXITS", 0,0, native.systemFont,18)
-	closeExitsTxt3.x = _W/6-50; closeExitsTxt3.y = _H-40
-	local carrotTxt = display.newText( "PUT", 0,0, native.systemFont,18)
-	carrotTxt.x = _W-70; carrotTxt.y = _H-80
-	local carrotTxt2 = display.newText( "CARROT", 0,0, native.systemFont,18)
-	carrotTxt2.x = _W-70; carrotTxt2.y = _H-60
+	closeExitsTxt3.x = _VW0+80; closeExitsTxt3.y = _H-30
+	local carrotTxt = display.newText( "PUT ONLY", 0,0, native.systemFont,18)
+	carrotTxt.x = _VW0+_VW-80; carrotTxt.y = _H-50
+	local carrotTxt2 = display.newText( "CARROTS", 0,0, native.systemFont,18)
+	carrotTxt2.x = _VW0+_VW-80; carrotTxt2.y = _H-30
 	
 	
 	HUD:insert(startButton)
@@ -304,7 +304,6 @@ function loadButtons()
 	HUD:insert(closeExitsButOn)
 	HUD:insert(lampButton2Off)
 	HUD:insert(lampButton2On)
-	HUD:insert(closeExitsTxt)
 	HUD:insert(closeExitsTxt2)
 	HUD:insert(closeExitsTxt3)
 	HUD:insert(carrotTxt)

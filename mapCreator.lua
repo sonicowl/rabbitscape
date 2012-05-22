@@ -206,6 +206,7 @@ function placeObject(cell, object,listener)
 		local tempObject = display.newImageRect(objectType.img,objectType.imgW,objectType.imgH)
 		tempObject.x = cell.hexX
 		tempObject.y = cell.hexY
+		if objectType.alpha ~= nil then tempObject.alpha = objectType.alpha end
 		hexGroup:insert(tempObject)
 		cell.obj = tempObject
 		--add a listener
@@ -232,7 +233,7 @@ function createHexGrid(map,displayGroup)
 			for i=1,table.getn(map[j]) do
 				if map[j][i] ~= nil then
 					local hexCell = map[j][i]
-					local tempHexagon = display.newImageRect("cell1.png",hexCell.hexW,hexCell.hexH)
+					local tempHexagon = display.newImageRect("gridWhite.png",hexCell.hexW,hexCell.hexH)
 					tempHexagon.x = hexCell.hexX
 					tempHexagon.y = hexCell.hexY
 					tempHexagon.alpha = .6
