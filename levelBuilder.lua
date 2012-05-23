@@ -104,8 +104,8 @@ function scene:createScene( event )
 
 	gameEngine.insertBg("BUNNYSCAPE8BIT.jpg")
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.7 })
-	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.5 })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.7 })
+	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.5 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree",img="tree.png", imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 10 })

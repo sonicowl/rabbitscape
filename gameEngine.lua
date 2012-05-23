@@ -48,8 +48,13 @@ function newLevel(params)
 	local map_lines = 13
 	local map_cols = 13
 	local mapW = _VW*.93
-	local mapH = _VW*1.05
-	
+	local mapH = _VW*1.05	
+
+	if storyboard.getCurrentSceneName() == "levelBuilder" then
+		mapW = _VW*.90
+		mapH = _VW*.9
+		print("CHANGING MAP W H")
+	end
 	--local defaultCellType = params.defaultCellType
 	levelMap = mapCreator.createHexMap((_W-mapW)/2+5 , (_H-mapH)/2-30 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
@@ -128,7 +133,7 @@ function gameClickListener(event)
 				objTag = "carrot"
 			else
 				--objTag = mapCreator.getRandomPlaceableObject(levelMap)
-				if storyboard.getScene() == "levelBuilder" then
+				if storyboard.getPrevious() == "levelBuilder" then
 					objTag = "rock"
 				else
 					objTag = "rock2"
@@ -352,7 +357,7 @@ end
 
 
 function quitGame()
-	stopGame()
+	if gameRunning then stopGame() end
 	storyboard.gotoScene( lastScene, "slideRight", 400 )
 end
 
