@@ -45,8 +45,8 @@ function scene:createScene( event )
 	local stdImgH = 50
 	
 	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridWhite.png",imgW=stdImgW*1.4, imgH=stdImgH }
-
-	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = storyboard.getPrevious()})
+	lastScene = storyboard.getPrevious()
+	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = lastScene})
 	
 	gameEngine.insertBg("ground.png")
 	gameEngine.insertOverLay("objects.png")
@@ -55,8 +55,8 @@ function scene:createScene( event )
 	
 	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.7 })
-	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.5 })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = false , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.7 })
+	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="gridRed.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.5 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock2" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10 })
@@ -95,7 +95,7 @@ end
 function scene:enterScene( event )
 	local sceneGroup = self.view
 	levelBuilderUI.start()
-	storyboard.purgeScene( "levelsList" )
+	storyboard.purgeScene( lastScene )
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)

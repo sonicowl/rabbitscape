@@ -11,11 +11,12 @@
 
 module(..., package.seeall)
 
-function init(restartlistener,viewGroup)
+function init(viewGroup,listenersTable)
 	actions = {}
 	HUD = display.newGroup()
 	viewGroup:insert(HUD)
-	restartListener = restartlistener
+	restartListener = listenersTable.restart
+	quitListener = listenersTable.quit
 	
 	--POSITION VARS
 	_W = display.contentWidth;
@@ -30,15 +31,49 @@ function init(restartlistener,viewGroup)
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 	
 	loadActions()
-
+	loadHeader()
 
 end
 
 
 
+function loadHeader()
+	--Setup the nav bar 
+	local navBar = display.newImageRect("navBar.png",_VW,40)
+	navBar.x = display.contentWidth*.5
+	navBar.y = math.floor(_VH0 + navBar.height*0.5)
+	HUD:insert(navBar)
+	
+	local navHeader = display.newText("CATCH THE RABBIT", 0, 0, native.systemFontBold, 16)
+	navHeader:setTextColor(255, 255, 255)
+	navHeader.x = _W*.5
+	navHeader.y = navBar.y
+	HUD:insert(navHeader)
+
+	--Setup the back button
+	backBtn = ui.newButton{ 
+		default = "backButton.png", 
+		over = "backButton_over.png", 
+		id = "sceneBack",
+		onEvent = buttonHandler
+	}
+	HUD:insert(backBtn)
+	backBtn.x = math.floor(backBtn.width/2) +  _VW0 + 10
+	backBtn.y = navBar.y 
+	backBtn.alpha = 1
+end
+	
+
+
 
 
 function loadActions()
+
+
+	actions["sceneBack"] = function(event)
+		print("touched "..tostring(event.id))
+		quitListener()
+	end
 
 	actions["restartGame"] = function(event)
 		print("touched "..tostring(event.id))
@@ -49,12 +84,10 @@ function loadActions()
 			end
 		end
 		restartListener()
-		touchHandled = false
 	end	
 	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
-		if ("release" == event.phase) and not touchHandled then
-			touchHandled = true
+		if ("release" == event.phase) then
 			actions[event.id](event)
 		end
 		return true  --SO SIMPLE AND SO CONFUSING.... THIS PREVENTS FROM PROPAGATING TO OTHER BUTTONS
@@ -93,15 +126,16 @@ end
 function callEndingScreen(didWon)
 	endGameScreen = display.newGroup()
 	HUD:insert(endGameScreen)
-	local myRoundedRect = display.newRoundedRect(_W/2-175, _H/2-100 , 350, 200, 12)
-	myRoundedRect.strokeWidth = 3
-	myRoundedRect:setFillColor(140, 140, 140)
-	myRoundedRect:setStrokeColor(180, 180, 180)
+	local myRect = display.newRect(_W/2-225, _H/2-100 , 450, 200)
+	myRect.strokeWidth = 3
+	myRect:setFillColor(0, 0, 0)
+	myRect.alpha = .6
+	myRect:setStrokeColor(255, 255, 255)
 	local msg = nil
 	if didWon then
-		msg = "YOU WIN!"
+		msg = "YOU RESCUED THE BUNNY!"
 	else
-		msg = "YOU LOOSE!"
+		msg = "OH NO! BUNNY ESCAPED!"
 	end
 	local myText = display.newText(msg, 0, 0, native.systemFont, 30)
 	myText.x = _W/2
@@ -116,8 +150,8 @@ function callEndingScreen(didWon)
 		text = "RETRY",
 		emboss = true
 	}
-	resetButton.x = _W/2; resetButton.y = _H/2+50
-	endGameScreen:insert(myRoundedRect)
+	resetButton.x = _W/2; resetButton.y = _H/2+40
+	endGameScreen:insert(myRect)
 	endGameScreen:insert(myText)
 	endGameScreen:insert(resetButton)
 end

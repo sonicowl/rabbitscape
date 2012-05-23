@@ -53,13 +53,14 @@ function newLevel(params)
 	--local defaultCellType = params.defaultCellType
 	levelMap = mapCreator.createHexMap((_W-mapW)/2+5 , (_H-mapH)/2-30 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
-	
+	rabbitsGroup = display.newGroup()
+	sceneGroup:insert(rabbitsGroup)
 	
 	overLayGroup = display.newGroup()
-	sceneGroup:insert(overLayGroup)
+	sceneGroup:insert(overLayGroup)	
 	
 	
-	HUD.init(restartGame,params.viewGroup)
+	HUD.init(sceneGroup,{restart = restartGame, quit = quitGame})
 	
 	
 end
@@ -233,7 +234,7 @@ function startGame()
 		rabbit.img = display.newImageRect("rabbit-1.png" , levelMap[x][y].hexW, levelMap[x][y].hexH*1.1)
 		rabbit.img.x = levelMap[x][y].hexX+5
 		rabbit.img.y = levelMap[x][y].hexY+10
-		sceneGroup:insert(rabbit.img)
+		rabbitsGroup:insert(rabbit.img)
 		Runtime:addEventListener( "touch", gameClickListener )
 	else
 		print("no start point")
@@ -351,6 +352,7 @@ end
 
 
 function quitGame()
+	stopGame()
 	storyboard.gotoScene( lastScene, "slideRight", 400 )
 end
 
