@@ -34,7 +34,7 @@ GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-	
+	lastScene = storyboard.getPrevious()	
 
 	
 	but1handler = function( event )
@@ -95,7 +95,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
-	
+	storyboard.purgeScene( lastScene )	
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)

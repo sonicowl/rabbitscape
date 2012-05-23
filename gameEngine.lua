@@ -358,6 +358,7 @@ end
 
 function quitGame()
 	if gameRunning then stopGame() end
+	print("going to "..lastScene)
 	storyboard.gotoScene( lastScene, "slideRight", 400 )
 end
 

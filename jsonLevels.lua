@@ -139,8 +139,10 @@ function loadLevelsTable(fileName)
 	local path = nil
 	if fileName ~=nil then
 		path = system.pathForFile( fileName, system.ResourceDirectory )
+		print("loading map from "..fileName)
 	else
 		path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
+		print("loading map from levels.txt")
 	end
 	local file = io.open( path )
 	--io.open opens a file at path. returns nil if no file found

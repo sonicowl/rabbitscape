@@ -17,7 +17,7 @@ local screenOffsetW, screenOffsetH = display.contentWidth -  display.viewableCon
 local myList, backBtn, detailScreenText
 
 --setup functions to execute on touch of the list view items
-function listButtonRelease( event )
+local function listButtonRelease( event )
 	self = event.target
 	print("selected level "..self.id)
 	local id = self.id
@@ -27,7 +27,7 @@ function listButtonRelease( event )
 	
 end
 
-function drawTableView(group)
+local function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
 	data = jsonLevels.loadLevelsTable("levelsList.txt")
@@ -60,7 +60,7 @@ function drawTableView(group)
 
 end
 
-function removeTableView()
+local function removeTableView()
 	if myList ~= nil then
 		myList:removeSelf()
 		myList = nil
@@ -70,7 +70,7 @@ end
 
 
 
-function loadActions()
+local function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))

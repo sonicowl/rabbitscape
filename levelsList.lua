@@ -17,7 +17,7 @@ local screenOffsetW, screenOffsetH = display.contentWidth -  display.viewableCon
 local myList, backBtn, detailScreenText
 
 --setup functions to execute on touch of the list view items
-function listButtonRelease( event )
+local function listButtonRelease( event )
 	self = event.target
 	print("selected level "..self.id)
 	local id = self.id
@@ -27,7 +27,7 @@ function listButtonRelease( event )
 	
 end
 
-function drawTableView(group)
+local function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
 	data = jsonLevels.loadLevelsTable()
@@ -73,7 +73,7 @@ function drawTableView(group)
 
 end
 
-function removeTableView()
+local function removeTableView()
 	if myList ~= nil then
 		myList:removeSelf()
 		myList = nil
@@ -81,7 +81,7 @@ function removeTableView()
 end
 
 
-function removeLevel(row,group)
+local function removeLevel(row,group)
 	
 	jsonLevels.removeLevel(row)
 	removeTableView()
@@ -90,7 +90,7 @@ end
 
 
 
-function removeBtnRelease( event )
+local function removeBtnRelease( event )
 	if ("release" == event.phase) then
 		print("removeBtn released "..event.id)
 		removeLevel(event.id,group)
@@ -100,7 +100,7 @@ function removeBtnRelease( event )
 	
 end
 
-function addBtnRelease( event )
+local function addBtnRelease( event )
 	print("add button released")
 	storyboard.levelId = nil
 	storyboard.gotoScene( "levelBuilder", "slideLeft", 400 )
@@ -109,7 +109,7 @@ end
 
 
 
-function loadActions()
+local function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
