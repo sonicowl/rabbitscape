@@ -32,7 +32,7 @@ function init(viewGroup,listenersTable)
 	
 	loadActions()
 	loadHeader()
-
+	loadHUD()
 end
 
 
@@ -63,8 +63,44 @@ function loadHeader()
 	backBtn.alpha = 1
 end
 	
+function loadHUD()
 
+	local Rect = display.newRect(_VW0, _VH0+_VH-90 , _VW, 90)
+	Rect:setFillColor(20, 20, 20)
+	Rect.alpha = .7
+	HUD:insert(Rect)
+	
+	timeText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+	timeText:setTextColor(255, 255, 255)
+	timeText:setReferencePoint(display.CenterLeftReferencePoint);
+	timeText.x = _VW0 + 20
+	timeText.y = _VH0+_VH-20
+	HUD:insert(timeText)	
+	
+	scoreText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+	scoreText:setTextColor(255, 255, 255)
+	scoreText:setReferencePoint(display.CenterLeftReferencePoint);
+	scoreText.x = _VW0 + 20
+	scoreText.y = _VH0+_VH-60
+	HUD:insert(scoreText)		
+	
+	rocksText = display.newText("0", 0, 0, native.systemFontBold, 30)
+	rocksText:setTextColor(255, 255, 255)
+	rocksText.x = _VW0 + _VW - 100
+	rocksText.y = _VH0+_VH-60
+	rocksText:setReferencePoint(display.CenterLeftReferencePoint);
+	HUD:insert(rocksText)	
+end
 
+function updateGameScene(score,seconds,rocks)
+	timeText.text = "SECONDS: "..seconds
+	scoreText.text = "SCORE: "..score
+	rocksText.text = "ROCKS: "..rocks
+	timeText:setReferencePoint(display.CenterLeftReferencePoint);
+	scoreText:setReferencePoint(display.CenterLeftReferencePoint);
+	scoreText.x = _VW0 + 20
+	timeText.x = _VW0 + 20
+end
 
 
 function loadActions()

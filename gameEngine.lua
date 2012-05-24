@@ -42,6 +42,13 @@ function newLevel(params)
 	rabbit.steps = 1
 	rabbit.actualSteps = 1
 	gameRunning = false
+	gameStartTime = system.getTimer()
+	lastLoopTime = system.getTimer()
+	gameScore = 10000
+	gameStartScore = 10000
+	rocksPut = 0
+	secsPlaying = 0
+	
 	
 	-- MAP VARS
 	levelMap = nil
@@ -67,7 +74,18 @@ function newLevel(params)
 	
 	HUD.init(sceneGroup,{restart = restartGame, quit = quitGame})
 	
-	
+	Runtime:addEventListener("enterFrame",updateScore)
+end
+
+
+function updateScore(event)
+	if system.getTimer() > lastLoopTime + 100  and gameRunning then
+			gameScore = gameScore - gameScore*.0001
+			local millisPlaying = system.getTimer() - gameStartTime
+			secsPlaying = math.floor((millisPlaying-millisPlaying%1000)/1000)
+			lastLoopTime = system.getTimer()
+			HUD.updateGameScene(math.ceil(gameScore),secsPlaying,rocksPut)
+	end
 end
 
 
@@ -139,6 +157,8 @@ function gameClickListener(event)
 					objTag = "rock2"
 				end
 			end
+			rocksPut = rocksPut + 1
+			gameScore = gameScore - gameScore*.01
 			mapCreator.placeObject(cell, objTag)
 			mapCreator.updateHexGrid(levelMap)
 			timer.performWithDelay(100, moveRabbit )
@@ -250,6 +270,9 @@ end
 
 function restartGame()
 	reloadMap()
+	gameScore = gameStartScore
+	rocksPut = 0
+	secsPlaying = 0
 	Runtime:removeEventListener( "touch", gameClickListener )
 	startGame()
 end
