@@ -17,6 +17,8 @@ function init(viewGroup,listenersTable)
 	viewGroup:insert(HUD)
 	restartListener = listenersTable.restart
 	quitListener = listenersTable.quit
+	resumeGameListener = listenersTable.resume
+	pauseListener = listenersTable.pause
 	
 	--POSITION VARS
 	_W = display.contentWidth;
@@ -105,7 +107,19 @@ function loadScreenUI()
 		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-20
 		scoreText.x = _VW0 + 20;		scoreText.y = _VH0+_VH-60
 		rocksText.x = _VW0 + 280;		rocksText.y = _VH0+_VH-60
-		resetButton.x = _VW0+_VW - 50; 	resetButton.y = _VH0+_VH-45
+		resetButton.x = _VW0+_VW - 50; 	resetButton.y = _VH0+_VH-45		
+		
+		local menuButton = ui.newButton{
+			default = "menu1.png",
+			over = "menu2.png",
+			onEvent = buttonHandler,
+			id = "showMenu",
+			emboss = true
+		}
+		screenUI:insert(menuButton)
+		
+		
+		menuButton.x = _VW0+_VW - 100; 	menuButton.y = _VH0+_VH-45
 	end
 end
 
@@ -145,13 +159,28 @@ function loadActions()
 		restartListener()
 	end	
 	
+	
+	actions["resumeGame"] = function(event)
+		print("touched "..tostring(event.id))
+		closeMenu()
+		resumeGameListener()
+	end	
+	
+
+	actions["showMenu"] = function(event)
+		print("touched "..tostring(event.id))
+		pauseListener()
+		showMenu()
+	end	
+
+	
+	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
 		if ("release" == event.phase) then
 			actions[event.id](event)
 		end
 		return true  --SO SIMPLE AND SO CONFUSING.... THIS PREVENTS FROM PROPAGATING TO OTHER BUTTONS
 	end
-
 end
 
 
@@ -213,4 +242,102 @@ function callEndingScreen(didWon)
 	endGameScreen:insert(myRect)
 	endGameScreen:insert(myText)
 	endGameScreen:insert(resetButton)
+end
+
+
+
+
+
+function showMenu()
+	menuDialog = display.newGroup()
+	HUD:insert(menuDialog)
+	local myRect = display.newRect(_W/2-225, _H/2-300 , 450, 600)
+	myRect.strokeWidth = 3
+	myRect:setFillColor(0, 0, 0)
+	myRect.alpha = .6
+	myRect:setStrokeColor(255, 255, 255)
+	local msg = "PAUSE MENU"
+	local myText = display.newText(msg, 0, 0, native.systemFont, 30)
+	myText.x = _W/2
+	myText.y = myRect.y-myRect.y/2+20
+	myText:setTextColor(255, 255, 255)
+	
+	local objectivesButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "",
+		text = "OBJECTIVES",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true
+	}
+	
+	local optionsButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "",
+		text = "OPTIONS",
+		textColor = { 51, 51, 51, 255 },		
+		emboss = true
+	}
+
+	local scoresButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "",
+		text = "SCORES",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true
+	}
+
+	local resumeButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "resumeGame",
+		text = "RESUME",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true
+	}
+
+	local quitButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "sceneBack",
+		text = "QUIT",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true
+	}
+	
+	
+	objectivesButton.x = _W/2; objectivesButton.y = _H/2-120	
+	optionsButton.x = _W/2; optionsButton.y = _H/2-50	
+	scoresButton.x = _W/2; scoresButton.y = _H/2+20	
+	resumeButton.x = _W/2; resumeButton.y = _H/2+90
+	quitButton.x = _W/2; quitButton.y = _H/2+90+70
+	
+
+
+
+
+	menuDialog:insert(myRect)
+	menuDialog:insert(myText)
+	menuDialog:insert(objectivesButton)
+	menuDialog:insert(optionsButton)
+	menuDialog:insert(scoresButton)
+	menuDialog:insert(resumeButton)
+	menuDialog:insert(quitButton)
+	
+end
+
+function closeMenu()
+	 for i = #menuDialog,1,-1 do
+		menuDialog[i]:removeSelf()
+		menuDialog[i] = nil
+	 end
+	 menuDialog:removeSelf()
+	 menuDialog = nil
 end

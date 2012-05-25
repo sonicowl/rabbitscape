@@ -72,7 +72,7 @@ function newLevel(params)
 	sceneGroup:insert(overLayGroup)	
 	
 	
-	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame})
+	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame})
 	
 
 end
@@ -288,6 +288,14 @@ function stopGame()
 	Runtime:removeEventListener( "touch", gameClickListener )
 	Runtime:removeEventListener("enterFrame",updateScore)
 end
+
+function resumeGame()
+	gameRunning = true
+	HUD.loadScreenUI()
+	Runtime:addEventListener( "touch", gameClickListener )
+	Runtime:addEventListener("enterFrame",updateScore)
+end
+
 
 
 function reloadMap()
