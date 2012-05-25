@@ -72,9 +72,9 @@ function newLevel(params)
 	sceneGroup:insert(overLayGroup)	
 	
 	
-	HUD.init(sceneGroup,{restart = restartGame, quit = quitGame})
+	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame})
 	
-	Runtime:addEventListener("enterFrame",updateScore)
+
 end
 
 
@@ -178,7 +178,7 @@ function moveRabbit()
 				path = aStar.pathWithoutExit(rabbit.x,rabbit.y,levelMap)
 				if path == false then
 					print("YOU GOT THE RABBIT")
-					gameRunning = false
+					stopGame()
 					HUD.callEndingScreen(true)
 					return false
 				end
@@ -191,7 +191,7 @@ function moveRabbit()
 			
 			--CHECK IF IT ARRIVED ON A EXIT CELL
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].tag == "endCell" then 
-				gameRunning = false
+				stopGame()
 				print("YOU LOOSE")
 				HUD.callEndingScreen(false)
 			end		
@@ -260,7 +260,9 @@ function startGame()
 		rabbit.img.x = levelMap[x][y].hexX+5
 		rabbit.img.y = levelMap[x][y].hexY+10
 		rabbitsGroup:insert(rabbit.img)
+		HUD.loadScreenUI()
 		Runtime:addEventListener( "touch", gameClickListener )
+		Runtime:addEventListener("enterFrame",updateScore)
 	else
 		print("no start point")
 		return false
@@ -268,19 +270,23 @@ function startGame()
 end
 
 
-function restartGame()
+function restartListener()
 	reloadMap()
+	restartGame()
+end
+
+function restartGame()
 	gameScore = gameStartScore
 	rocksPut = 0
-	secsPlaying = 0
-	Runtime:removeEventListener( "touch", gameClickListener )
+	gameStartTime = system.getTimer()
 	startGame()
 end
 
 function stopGame()
 	gameRunning = false
+	HUD.hideScreenUI()
 	Runtime:removeEventListener( "touch", gameClickListener )
-	reloadMap()
+	Runtime:removeEventListener("enterFrame",updateScore)
 end
 
 

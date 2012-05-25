@@ -98,7 +98,7 @@ function scene:createScene( event )
 	local stdImgW = 50
 	local stdImgH = 50
 	
-	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridLightGreen.png",imgW=stdImgW*1.4, imgH=stdImgH }
+	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridWhite.png",imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.7 }
 
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = storyboard.getPrevious()})
 

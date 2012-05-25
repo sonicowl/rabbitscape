@@ -28,8 +28,8 @@ function init(engine,builderObjects,viewGroup)
 	GAMEBOX_FRAME_W0 = (_W-GAMEBOX_FRAME_W)/2
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 	
-	loadToolBox()
 	loadActions()
+	loadToolBox()
 	loadButtons()
 	loadHeader()
 	
@@ -66,29 +66,101 @@ end
 
 function loadToolBox()
  --generate the object selector
-	borderWidth = #listOfBuilderObjects*90+10
-	local border = display.newRoundedRect(_W/2-borderWidth/2,_H-110,borderWidth,100,10)
-	border:setFillColor(0,0,0)
-	border.alpha = 0
-	--border.strokeWidth = 6
-	--border:setStrokeColor( 80,10,10)
-	HUD:insert(border)
-	for i=0,#listOfBuilderObjects-1 do
-		local tempBox = display.newRect(border.x-border.contentWidth/2+10+i*90,border.y-border.contentHeight/2+10,80,80)
-		tempBox:setFillColor(250,250,250)
-		tempBox.alpha = .6
-		tempBox:setStrokeColor( 10,140,10)
-		tempBox.id = i+1
-		local tempObject = gameEngine.getObjectByTag(listOfBuilderObjects[i+1])
-		local tempIcon = display.newImageRect(tempObject.img,70,60)
-		tempIcon.x = tempBox.x
-		tempIcon.y = tempBox.y
-		HUD:insert(tempBox)
-		HUD:insert(tempIcon)
-		table.insert(objBoxes,tempBox)
-		tempBox:addEventListener("touch",boxListener)
+	if toolBox ~= nil then
+		toolBox.alpha = 1
+	else
+		toolBox = display.newGroup()
+		HUD:insert(toolBox)
+		borderWidth = #listOfBuilderObjects*90+10
+		local border = display.newRoundedRect(_W/2-borderWidth/2,_H-110,borderWidth,100,10)
+		border:setFillColor(0,0,0)
+		border.alpha = 0
+		--border.strokeWidth = 6
+		--border:setStrokeColor( 80,10,10)
+		toolBox:insert(border)
+		for i=0,#listOfBuilderObjects-1 do
+			local tempBox = display.newRect(border.x-border.contentWidth/2+10+i*90,border.y-border.contentHeight/2+10,80,80)
+			tempBox:setFillColor(250,250,250)
+			tempBox.alpha = .6
+			tempBox:setStrokeColor( 10,140,10)
+			tempBox.id = i+1
+			local tempObject = gameEngine.getObjectByTag(listOfBuilderObjects[i+1])
+			local tempIcon = display.newImageRect(tempObject.img,70,60)
+			tempIcon.x = tempBox.x
+			tempIcon.y = tempBox.y
+			toolBox:insert(tempBox)
+			toolBox:insert(tempIcon)
+			table.insert(objBoxes,tempBox)
+			tempBox:addEventListener("touch",boxListener)
+		end
+		
+		
+		
+		closeExitsButOff = ui.newButton{
+			default = "lamp-off.png",
+			over = "lamp-on.png",
+			id = "objectsOnExits",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		closeExitsButOn = ui.newButton{
+			default = "lamp-on.png",
+			over = "lamp-off.png",
+			id = "objectsOnExits",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		lampButton2Off = ui.newButton{
+			default = "lamp-off.png",
+			over = "lamp-on.png",
+			id = "carrotButton",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		lampButton2On = ui.newButton{
+			default = "lamp-on.png",
+			over = "lamp-off.png",
+			id = "carrotButton",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		
+		closeExitsButOff.x = _VW0+80; closeExitsButOff.y = _H-90
+		closeExitsButOn.x = _VW0+80; closeExitsButOn.y = _H-90
+		closeExitsButOff.xScale = 2; closeExitsButOff.yScale = 2
+		closeExitsButOn.xScale = 2; closeExitsButOn.yScale = 2
+		closeExitsButOff.isVisible = false
+		lampButton2Off.x = _VW0+_VW-80; lampButton2Off.y = _H-90
+		lampButton2On.x = _VW0+_VW-80; lampButton2On.y = _H-90
+		lampButton2Off.xScale = 2; lampButton2Off.yScale = 2
+		lampButton2On.xScale = 2; lampButton2On.yScale = 2
+		lampButton2On.isVisible = false	
+		
+		local closeExitsTxt2 = display.newText( "OBJECTS", 0,0, native.systemFont,18)
+		closeExitsTxt2.x = _VW0+80; closeExitsTxt2.y = _H-50
+		local closeExitsTxt3 = display.newText( "ON EXITS", 0,0, native.systemFont,18)
+		closeExitsTxt3.x = _VW0+80; closeExitsTxt3.y = _H-30
+		local carrotTxt = display.newText( "PUT ONLY", 0,0, native.systemFont,18)
+		carrotTxt.x = _VW0+_VW-80; carrotTxt.y = _H-50
+		local carrotTxt2 = display.newText( "CARROTS", 0,0, native.systemFont,18)
+		carrotTxt2.x = _VW0+_VW-80; carrotTxt2.y = _H-30
+		
+		toolBox:insert(closeExitsButOff)
+		toolBox:insert(closeExitsButOn)
+		toolBox:insert(lampButton2Off)
+		toolBox:insert(lampButton2On)
+		toolBox:insert(closeExitsTxt2)
+		toolBox:insert(closeExitsTxt3)
+		toolBox:insert(carrotTxt)
+		toolBox:insert(carrotTxt2)
+		
 	end
 end
+
+function hideToolBox()
+	if toolBox ~= nil then toolBox.alpha = 0 end
+end
+
 
 function boxListener(event)
 	if event.phase == "ended" then
@@ -172,25 +244,28 @@ function loadActions()
 	
 	actions["startButton"] = function(event)
 		print("touched "..tostring(event.id))
-		local starter = gameEngine.startGame() --will return false if there is no start point
+		local starter = gameEngine.restartGame() --will return false if there is no start point
 		if starter ~= false then
 			startButton.isVisible = false
 			stopButton.isVisible = true
 			saveMapButton.isVisible = false
 			clearMapButton.isVisible = false
 			Runtime:removeEventListener( "touch", builderClickListener )
+			hideToolBox()
 		end
 	end	
 	
 	actions["stopButton"] = function(event)
 		print("touched "..tostring(event.id))
 		gameEngine.stopGame()
+		gameEngine.reloadMap()
 		stopButton.isVisible = false
 		clearMapButton.isVisible = true
 		saveMapButton.isVisible = true
 		startButton.isVisible = true
 		Runtime:removeEventListener( "touch", builderClickListener )
 		Runtime:addEventListener( "touch", builderClickListener )
+		loadToolBox()
 	end	
 	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
@@ -238,76 +313,19 @@ function loadButtons()
 		--text = "CLEAN MAP",
 		emboss = true
 	}
-	closeExitsButOff = ui.newButton{
-		default = "lamp-off.png",
-		over = "lamp-on.png",
-		id = "objectsOnExits",
-		onEvent = buttonHandler,
-		emboss = true
-	}
-	closeExitsButOn = ui.newButton{
-		default = "lamp-on.png",
-		over = "lamp-off.png",
-		id = "objectsOnExits",
-		onEvent = buttonHandler,
-		emboss = true
-	}
-	lampButton2Off = ui.newButton{
-		default = "lamp-off.png",
-		over = "lamp-on.png",
-		id = "carrotButton",
-		onEvent = buttonHandler,
-		emboss = true
-	}
-	lampButton2On = ui.newButton{
-		default = "lamp-on.png",
-		over = "lamp-off.png",
-		id = "carrotButton",
-		onEvent = buttonHandler,
-		emboss = true
-	}
-	
+
 	startButton.x = _W/6; startButton.y = 80
 	stopButton.x = _W/6; stopButton.y = 80
 	stopButton.isVisible = false
 	saveMapButton.x = _W/6*3; saveMapButton.y = 80
 	clearMapButton.x = _W/6*5; clearMapButton.y = 80
-	closeExitsButOff.x = _VW0+80; closeExitsButOff.y = _H-90
-	closeExitsButOn.x = _VW0+80; closeExitsButOn.y = _H-90
-	closeExitsButOff.xScale = 2; closeExitsButOff.yScale = 2
-	closeExitsButOn.xScale = 2; closeExitsButOn.yScale = 2
-	closeExitsButOff.isVisible = false
-	lampButton2Off.x = _VW0+_VW-80; lampButton2Off.y = _H-90
-	lampButton2On.x = _VW0+_VW-80; lampButton2On.y = _H-90
-	lampButton2Off.xScale = 2; lampButton2Off.yScale = 2
-	lampButton2On.xScale = 2; lampButton2On.yScale = 2
-	lampButton2On.isVisible = false
+	
 
-	
-	
-	
-	local closeExitsTxt2 = display.newText( "OBJECTS", 0,0, native.systemFont,18)
-	closeExitsTxt2.x = _VW0+80; closeExitsTxt2.y = _H-50
-	local closeExitsTxt3 = display.newText( "ON EXITS", 0,0, native.systemFont,18)
-	closeExitsTxt3.x = _VW0+80; closeExitsTxt3.y = _H-30
-	local carrotTxt = display.newText( "PUT ONLY", 0,0, native.systemFont,18)
-	carrotTxt.x = _VW0+_VW-80; carrotTxt.y = _H-50
-	local carrotTxt2 = display.newText( "CARROTS", 0,0, native.systemFont,18)
-	carrotTxt2.x = _VW0+_VW-80; carrotTxt2.y = _H-30
-	
-	
 	HUD:insert(startButton)
 	HUD:insert(stopButton)
 	HUD:insert(saveMapButton)
 	HUD:insert(clearMapButton)
-	HUD:insert(closeExitsButOff)
-	HUD:insert(closeExitsButOn)
-	HUD:insert(lampButton2Off)
-	HUD:insert(lampButton2On)
-	HUD:insert(closeExitsTxt2)
-	HUD:insert(closeExitsTxt3)
-	HUD:insert(carrotTxt)
-	HUD:insert(carrotTxt2)
+
 end
 
 

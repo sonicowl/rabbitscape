@@ -16,4 +16,3 @@ local storyboard = require "storyboard"
 
 -- load first scene
 storyboard.gotoScene( "main-menu", "fade", 400 )
-

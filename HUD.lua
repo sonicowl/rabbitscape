@@ -32,7 +32,7 @@ function init(viewGroup,listenersTable)
 	
 	loadActions()
 	loadHeader()
-	loadHUD()
+
 end
 
 
@@ -63,33 +63,56 @@ function loadHeader()
 	backBtn.alpha = 1
 end
 	
-function loadHUD()
+function loadScreenUI()
+	if screenUI ~= nil then
+		screenUI.alpha = 1
+	else
+		screenUI = display.newGroup()
+		HUD:insert(screenUI)
+		
+		local Rect = display.newRect(_VW0, _VH0+_VH-90 , _VW, 90)
+		Rect:setFillColor(20, 20, 20)
+		Rect.alpha = .7
+		screenUI:insert(Rect)
+		
+		timeText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+		timeText:setTextColor(255, 255, 255)
+		timeText:setReferencePoint(display.CenterLeftReferencePoint);
+		screenUI:insert(timeText)	
+		
+		scoreText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+		scoreText:setTextColor(255, 255, 255)
+		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
+		screenUI:insert(scoreText)		
+		
+		rocksText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+		rocksText:setTextColor(255, 255, 255)
+		rocksText:setReferencePoint(display.CenterLeftReferencePoint);
+		screenUI:insert(rocksText)
+		
+		
+		local resetButton = ui.newButton{
+			default = "restart.png",
+			over = "restart.png",
+			onEvent = buttonHandler,
+			id = "restartGame",
+			emboss = true
+		}
+		resetButton.xScale = .3; resetButton.yScale = .3
+		screenUI:insert(resetButton)
+		
+		
+		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-20
+		scoreText.x = _VW0 + 20;		scoreText.y = _VH0+_VH-60
+		rocksText.x = _VW0 + 280;		rocksText.y = _VH0+_VH-60
+		resetButton.x = _VW0+_VW - 50; 	resetButton.y = _VH0+_VH-45
+	end
+end
 
-	local Rect = display.newRect(_VW0, _VH0+_VH-90 , _VW, 90)
-	Rect:setFillColor(20, 20, 20)
-	Rect.alpha = .7
-	HUD:insert(Rect)
-	
-	timeText = display.newText("0000", 0, 0, native.systemFontBold, 30)
-	timeText:setTextColor(255, 255, 255)
-	timeText:setReferencePoint(display.CenterLeftReferencePoint);
-	timeText.x = _VW0 + 20
-	timeText.y = _VH0+_VH-20
-	HUD:insert(timeText)	
-	
-	scoreText = display.newText("0000", 0, 0, native.systemFontBold, 30)
-	scoreText:setTextColor(255, 255, 255)
-	scoreText:setReferencePoint(display.CenterLeftReferencePoint);
-	scoreText.x = _VW0 + 20
-	scoreText.y = _VH0+_VH-60
-	HUD:insert(scoreText)		
-	
-	rocksText = display.newText("0", 0, 0, native.systemFontBold, 30)
-	rocksText:setTextColor(255, 255, 255)
-	rocksText.x = _VW0 + _VW - 100
-	rocksText.y = _VH0+_VH-60
-	rocksText:setReferencePoint(display.CenterLeftReferencePoint);
-	HUD:insert(rocksText)	
+function hideScreenUI()
+	if screenUI ~= nil then
+		screenUI.alpha = 0
+	end
 end
 
 function updateGameScene(score,seconds,rocks)
@@ -113,7 +136,7 @@ function loadActions()
 
 	actions["restartGame"] = function(event)
 		print("touched "..tostring(event.id))
-		if endGameScreen.numChildren > 0 then
+		if endGameScreen~=nil and endGameScreen.numChildren > 0 then
 			for i = endGameScreen.numChildren, 1,-1 do
 				endGameScreen[i]:removeSelf()
 				endGameScreen[i] = nil

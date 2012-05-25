@@ -233,10 +233,10 @@ function createHexGrid(map,displayGroup)
 			for i=1,table.getn(map[j]) do
 				if map[j][i] ~= nil then
 					local hexCell = map[j][i]
-					local tempHexagon = display.newImageRect("gridLightGreen.png",hexCell.hexW,hexCell.hexH)
+					local tempHexagon = display.newImageRect(map.objects[1].img,hexCell.hexW,hexCell.hexH)
 					tempHexagon.x = hexCell.hexX
 					tempHexagon.y = hexCell.hexY
-					tempHexagon.alpha = .1
+					if map.objects[1].alpha ~= nil then tempHexagon.alpha = map.objects[1].alpha end
 					displayGroup:insert(tempHexagon)
 					
 					--add a label
