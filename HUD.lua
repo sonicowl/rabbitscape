@@ -33,12 +33,12 @@ function init(viewGroup,listenersTable)
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 	screenUI=nil
 	loadActions()
-	loadHeader()
+	--loadHeader()
 
 end
 
 
-
+--[[
 function loadHeader()
 	--Setup the nav bar 
 	local navBar = display.newImageRect("navBar.png",_VW,40)
@@ -63,7 +63,7 @@ function loadHeader()
 	backBtn.x = math.floor(backBtn.width/2) +  _VW0 + 10
 	backBtn.y = navBar.y 
 	backBtn.alpha = 1
-end
+end]]--
 	
 function loadScreenUI()
 	if screenUI ~= nil then
