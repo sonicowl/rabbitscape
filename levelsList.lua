@@ -90,7 +90,7 @@ end
 
 
 
-local function removeBtnRelease( event )
+function removeBtnRelease( event )
 	if ("release" == event.phase) then
 		print("removeBtn released "..event.id)
 		removeLevel(event.id,group)

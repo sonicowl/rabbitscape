@@ -26,7 +26,7 @@ function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 	viewGroup:insert(rabbitGroup)
 	viewGroup:insert(objectsGroup)
 	viewGroup:insert(numbersGroup)
-	displayTexts = false
+	displayTexts = true
 
 	local coordinatedLines = (columns-columns%2)/2+lines-columns%2
 	local levelMap = newBlankMatrix(coordinatedLines)
@@ -109,6 +109,7 @@ end
 
 
 function setClusterEffect(cell,isCreate)
+
 	local x0 = cell.column
 	local y0 = cell.line
 	local cellId = cell.id
@@ -138,7 +139,7 @@ function setClusterEffect(cell,isCreate)
 				node_y = y0+1
 			end			
 			--CHECK IF THE NODE IS ACCESSIBLE (EXISTS ON THE MAP AND IS WALKABLE)
-			if hex_exists(node_x,node_y,cell.mapRef) then
+			if hex_exists(node_x,node_y,cell.mapRef) and not cell.mapRef.objects[cell.mapRef[node_x][node_y].id].isExit then
 				if isCreate then
 					cell.mapRef[node_x][node_y].terrainCost = cell.mapRef[node_x][node_y].terrainCost + clusterEffect
 				else

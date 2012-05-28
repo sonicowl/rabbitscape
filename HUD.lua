@@ -31,7 +31,7 @@ function init(viewGroup,listenersTable)
 	GAMEBOX_FRAME_H = _VW*1.3
 	GAMEBOX_FRAME_W0 = (_W-GAMEBOX_FRAME_W)/2
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
-	
+	screenUI=nil
 	loadActions()
 	loadHeader()
 
