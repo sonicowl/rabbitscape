@@ -23,7 +23,7 @@ local function listButtonRelease( event )
 	local id = self.id
 	
 	storyboard.levelId = id
-	storyboard.gotoScene( "gameScene", "slideLeft", 400 )
+	storyboard.gotoScene( "gameScene", "fade", 1000 )
 	return true
 end
 
