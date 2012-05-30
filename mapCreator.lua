@@ -26,7 +26,7 @@ function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 	viewGroup:insert(rabbitGroup)
 	viewGroup:insert(objectsGroup)
 	viewGroup:insert(numbersGroup)
-	displayTexts = true
+	displayTexts = false
 
 	local coordinatedLines = (columns-columns%2)/2+lines-columns%2
 	local levelMap = newBlankMatrix(coordinatedLines)

@@ -7,7 +7,7 @@ local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 local gameEngine = require("gameEngine")
 local jsonLevels = require("jsonLevels")
-local levelBuilderUI = require ("levelBuilderUI")
+--local levelBuilderUI = require ("levelBuilderUI")
 
 
 
@@ -48,37 +48,39 @@ function scene:createScene( event )
 	lastScene = storyboard.getPrevious()
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = lastScene})
 	
-	gameEngine.insertBg("ground.png")
-	gameEngine.insertOverLay("objects.png")
-	gameEngine.insertOverLay("shadow.png")
-	gameEngine.insertOverLay("vignete.png")
-	
 	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = false , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.7 })
 	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="gridRed.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.5 })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1})
+	--gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock2" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 10})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 10 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree",img="tree.png", imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 10 })
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = false, tag="path" ,img="cell5.png", imgW=stdImgW*1.4, imgH=stdImgH })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = false, tag="path" ,img="cell5.png", imgW=stdImgW*1.4, imgH=stdImgH })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = true , isWalkable = true , isExit=true , isFakeExit=true , canPutObjects = false, tag="carrot" ,img="carrot.png", imgW=stdImgW, imgH=stdImgH })
 	--loadLevel1() --gameEngine.setRabbitSteps(1) --gameEngine.startGame()
 	
-	listOfBuilderObjects = {"rock","startCell","endCell","path","grass"}
+	--listOfBuilderObjects = {"rock","startCell","endCell","path","grass"}
 	--levelBuilderUI.init(gameEngine,listOfBuilderObjects,  sceneGroup  )
+	
+--	gameEngine.insertBg("ground.jpg")
+--	gameEngine.insertOverLay("objects.png")
+--	gameEngine.insertOverLay("shadow.png")
+
 	
 	if storyboard.levelId ~= nil then
 		local jsonMap = jsonLevels.loadMap(storyboard.levelId,"levelsList.txt")
 		if jsonMap ~= false then
+			for i=1, #jsonMap.backgrounds do gameEngine.insertBg(jsonMap.backgrounds[i]) end
+			for i=1, #jsonMap.overlays do gameEngine.insertOverLay(jsonMap.overlays[i]) end
+			gameEngine.insertOverLay("vignete.png")
 			jsonMap = jsonMap.coords
 			for j=1,#jsonMap do
 				if jsonMap[j] ~= nil then
 					for i=1,#jsonMap[j] do
 						if jsonMap[j][i] ~= nil then
 							local cell = jsonMap[j][i]
-							--jsonLevel.coords[j][i] = {x = map[j][i].column,y=map[j][i].line,object=map.objects[map[j][i].id].tag}					
-							--jsonLevel.coords[j][i] = {x = j,y=i,object=map.objects[map[j][i].id].tag}					
 							gameEngine.placeNewObject({x=cell.x,y=cell.y,object=cell.object})
 						end
 					end
@@ -94,7 +96,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local sceneGroup = self.view
-	levelBuilderUI.start()
+	--levelBuilderUI.start()
 	storyboard.purgeScene( lastScene )
 	-----------------------------------------------------------------------------
 		
@@ -108,7 +110,7 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local sceneGroup = self.view
-	levelBuilderUI.close()
+	--levelBuilderUI.close()
 	-----------------------------------------------------------------------------
 	
 	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)

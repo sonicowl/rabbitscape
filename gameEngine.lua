@@ -57,11 +57,11 @@ function newLevel(params)
 	local mapW = _VW*.93
 	local mapH = _VW*1.05	
 
-	if storyboard.getCurrentSceneName() == "levelBuilder" then
+	--[[if storyboard.getCurrentSceneName() == "levelBuilder" then
 		mapW = _VW*.90
 		mapH = _VW*.9
 		print("CHANGING MAP W H")
-	end
+	end]]--
 	--local defaultCellType = params.defaultCellType
 	levelMap = mapCreator.createHexMap((_W-mapW)/2+5 , (_H-mapH)/2-30 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
@@ -261,7 +261,8 @@ function startGame()
 		rabbit.img.y = levelMap[x][y].hexY+10
 		rabbitsGroup:insert(rabbit.img)
 		HUD.loadScreenUI()
-		Runtime:addEventListener( "touch", gameClickListener )
+		local closure = function() Runtime:addEventListener( "touch", gameClickListener ) end
+		timer.performWithDelay(150,closure)
 		Runtime:addEventListener("enterFrame",updateScore)
 	else
 		print("no start point")
@@ -279,7 +280,7 @@ function restartGame()
 	gameScore = gameStartScore
 	rocksPut = 0
 	gameStartTime = system.getTimer()
-	startGame()
+	return startGame()
 end
 
 function stopGame()

@@ -5,11 +5,10 @@ application = {
 		scale = "zoomEven",
 		fps = 30,
 		
-		--[[
         imageSuffix = {
 		    ["@2x"] = 2,
 		}
-		--]]
+		
 	},
 
     --[[

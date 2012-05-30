@@ -102,10 +102,14 @@ function scene:createScene( event )
 
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = storyboard.getPrevious()})
 
-	gameEngine.insertBg("BUNNYSCAPE8BIT.jpg")
+	--gameEngine.insertBg("BUNNYSCAPE8BIT.jpg")
+	gameEngine.insertBg("l3g.jpg")
+	gameEngine.insertOverLay("l3o.png")
+	gameEngine.insertOverLay("l3s.png")
+	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
-	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.7 })
-	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.5 })
+	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.7 })	
+	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" ,img="exitCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.5 })	
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1 , clusterEffect = 9})
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" ,img="water1.png", imgW=stdImgW, imgH=stdImgH , clusterEffect = 9 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree",img="tree.png", imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 9 })
@@ -125,9 +129,7 @@ function scene:createScene( event )
 				if jsonMap[j] ~= nil then
 					for i=1,#jsonMap[j] do
 						if jsonMap[j][i] ~= nil then
-							local cell = jsonMap[j][i]
-							--jsonLevel.coords[j][i] = {x = map[j][i].column,y=map[j][i].line,object=map.objects[map[j][i].id].tag}					
-							--jsonLevel.coords[j][i] = {x = j,y=i,object=map.objects[map[j][i].id].tag}					
+							local cell = jsonMap[j][i]				
 							gameEngine.placeNewObject({x=cell.x,y=cell.y,object=cell.object})
 						end
 					end
