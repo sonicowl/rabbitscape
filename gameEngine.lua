@@ -261,8 +261,9 @@ function startGame()
 		rabbit.img.y = levelMap[x][y].hexY+10
 		rabbitsGroup:insert(rabbit.img)
 		HUD.loadScreenUI()
-		local closure = function() Runtime:addEventListener( "touch", gameClickListener ) end
-		timer.performWithDelay(300,closure)
+		--local closure = function() Runtime:addEventListener( "touch", gameClickListener ) end
+		Runtime:addEventListener( "touch", gameClickListener )
+		--timer.performWithDelay(300,closure)
 		Runtime:addEventListener("enterFrame",updateScore)
 	else
 		print("no start point")
@@ -297,7 +298,9 @@ function resumeGame()
 	Runtime:addEventListener("enterFrame",updateScore)
 end
 
-
+function setGrid()
+	mapCreator.setHexGrid()
+end
 
 function reloadMap()
 	--clean everything

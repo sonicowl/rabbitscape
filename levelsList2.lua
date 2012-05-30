@@ -24,7 +24,7 @@ local function listButtonRelease( event )
 	
 	storyboard.levelId = id
 	storyboard.gotoScene( "gameScene", "slideLeft", 400 )
-	return false
+	return true
 end
 
 local function drawTableView(group)

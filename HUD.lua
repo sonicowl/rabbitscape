@@ -120,6 +120,62 @@ function loadScreenUI()
 		
 		
 		menuButton.x = _VW0+_VW - 100; 	menuButton.y = _VH0+_VH-45
+	
+	
+	
+	
+	------------------------------------------------------
+	---JUST FOR NOW
+
+		lampButton2Off = ui.newButton{
+			default = "lamp-off.png",
+			over = "lamp-on.png",
+			id = "gridButton",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		lampButton2On = ui.newButton{
+			default = "lamp-on.png",
+			over = "lamp-off.png",
+			id = "gridButton",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		
+		
+		lampButton2Off.x = _VW0+_VW-180; lampButton2Off.y = _H-50
+		lampButton2On.x = _VW0+_VW-180; lampButton2On.y = _H-50
+		lampButton2Off.xScale = 2; lampButton2Off.yScale = 2
+		lampButton2On.xScale = 2; lampButton2On.yScale = 2
+		lampButton2Off.isVisible = false
+		
+
+		local carrotTxt = display.newText( "GRID", 0,0, native.systemFont,18)
+		carrotTxt.x = _VW0+_VW-180; carrotTxt.y = _H-20
+		
+		
+
+
+	--------------------------------------------------------
+	--------------------------------------------------------
+	----------------------------------------------------------
+	
+	
+	
+	
+	
+	
+		--------------------------------- just temporary
+	screenUI:insert(lampButton2Off)
+	screenUI:insert(lampButton2On)
+	screenUI:insert(carrotTxt)
+
+	
+	
+	
+	
+	
+	
 	end
 end
 
@@ -173,8 +229,18 @@ function loadActions()
 		showMenu()
 	end	
 
-	
-	
+	actions["gridButton"] = function (event)
+		print("touched "..tostring(event.id))
+		if lampButton2Off.isVisible then
+			lampButton2Off.isVisible = false
+			lampButton2On.isVisible = true
+			gameEngine.setGrid()
+		else
+			lampButton2Off.isVisible = true
+			lampButton2On.isVisible = false
+			gameEngine.setGrid()
+		end
+	end	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
 		if ("release" == event.phase) then
 			actions[event.id](event)
@@ -319,10 +385,8 @@ function showMenu()
 	resumeButton.x = _W/2; resumeButton.y = _H/2+90
 	quitButton.x = _W/2; quitButton.y = _H/2+90+70
 	
-
-
-
-
+	
+	
 	menuDialog:insert(myRect)
 	menuDialog:insert(myText)
 	menuDialog:insert(objectivesButton)
@@ -331,6 +395,7 @@ function showMenu()
 	menuDialog:insert(resumeButton)
 	menuDialog:insert(quitButton)
 	
+
 end
 
 function closeMenu()

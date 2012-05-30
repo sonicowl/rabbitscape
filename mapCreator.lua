@@ -27,7 +27,8 @@ function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 	viewGroup:insert(objectsGroup)
 	viewGroup:insert(numbersGroup)
 	displayTexts = false
-
+	hexGrid = true
+	
 	local coordinatedLines = (columns-columns%2)/2+lines-columns%2
 	local levelMap = newBlankMatrix(coordinatedLines)
 	levelMap.lines = coordinatedLines
@@ -208,7 +209,7 @@ function placeObject(cell, object,listener)
 		tempObject.x = cell.hexX
 		tempObject.y = cell.hexY
 		if objectType.alpha ~= nil then tempObject.alpha = objectType.alpha end
-		hexGroup:insert(tempObject)
+		objectsGroup:insert(tempObject)
 		cell.obj = tempObject
 		--add a listener
 		if listener ~= nil then
@@ -250,6 +251,7 @@ function createHexGrid(map,displayGroup)
 			end
 		end
 	end
+	if not hexGrid then displayGroup.alpha = 0 end
 end
 
 function updateHexGrid(map)
@@ -268,6 +270,16 @@ function updateHexGrid(map)
 				end
 			end
 		end
+	end
+end
+
+function setHexGrid()
+	if  hexGrid then
+		hexGrid = false
+		hexGroup.alpha = 0
+	else
+		hexGrid = true
+		hexGroup.alpha = 1
 	end
 end
 
