@@ -262,7 +262,7 @@ function startGame()
 		rabbitsGroup:insert(rabbit.img)
 		HUD.loadScreenUI()
 		local closure = function() Runtime:addEventListener( "touch", gameClickListener ) end
-		timer.performWithDelay(150,closure)
+		timer.performWithDelay(300,closure)
 		Runtime:addEventListener("enterFrame",updateScore)
 	else
 		print("no start point")
