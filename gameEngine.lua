@@ -65,6 +65,9 @@ function newLevel(params)
 	--local defaultCellType = params.defaultCellType
 	levelMap = mapCreator.createHexMap((_W-mapW)/2+5 , (_H-mapH)/2-30 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
+	sceneAnimationGroup =  display.newGroup()
+	sceneGroup:insert(sceneAnimationGroup)	
+	
 	rabbitsGroup = display.newGroup()
 	sceneGroup:insert(rabbitsGroup)
 	
@@ -437,4 +440,58 @@ function deepcopy(object)
         return setmetatable(new_table, getmetatable(object))
     end
     return _copy(object)
+end
+
+
+function newSceneAnimation(params)
+	otherGroup = display.newGroup()
+	sceneAnimationGroup:insert(otherGroup)
+	sceneAnimationGroup.alpha = .2
+	if params.mask then 			 
+		print(params.mask)
+		local mask = graphics.newMask(params.mask)
+		otherGroup:setMask(mask)
+		 
+		-- Center the mask over the Display Group
+		--otherGroup:setReferencePoint( display.CenterReferencePoint )
+		otherGroup.maskX = _W/2
+		otherGroup.maskY = _H/2
+	end
+	for i=1 , #params.objects do
+		local listObj = params.objects[i]
+		local tempObject1 = display.newImageRect(listObj.img,listObj.w,listObj.h)
+		tempObject1.x = listObj.x0
+		tempObject1.y = listObj.y0
+		tempObject1.params = listObj
+		otherGroup:insert(tempObject1)
+		objectClosure = function(event)
+			local listObj = event.params
+			print(listObj.x0)
+			local tempObject = display.newImageRect(listObj.img,listObj.w,listObj.h)
+			local transitionTime = listObj.time
+			if listObj.continue then 
+				tempObject.x = listObj.x0-listObj.w
+				transitionTime = transitionTime*2
+			else
+				tempObject.x = listObj.x0
+			end
+			tempObject.y = listObj.y0
+			tempObject.params = listObj
+			otherGroup:insert(tempObject)
+			transition.to(tempObject,{x=listObj.x,y=listObj.y,time=transitionTime,onComplete=objectClosure})
+			if event.x then
+				event:removeSelf()
+				event = nil
+				print("removing "..listObj.img)
+			end
+		end
+		transition.to(tempObject1,{x=listObj.x,y=listObj.y,time=listObj.time,onComplete=objectClosure})
+		local event = {params = listObj}
+		if listObj.continue then 
+			objectClosure(event)
+		end
+	end
+	
+
+
 end

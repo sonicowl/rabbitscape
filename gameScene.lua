@@ -75,6 +75,9 @@ function scene:createScene( event )
 			for i=1, #jsonMap.backgrounds do gameEngine.insertBg(jsonMap.backgrounds[i]) end
 			for i=1, #jsonMap.overlays do gameEngine.insertOverLay(jsonMap.overlays[i]) end
 			gameEngine.insertOverLay("vignete.png")
+			if jsonMap.sceneAnim then
+				gameEngine.newSceneAnimation(jsonMap.sceneAnim)
+			end
 			jsonMap = jsonMap.coords
 			for j=1,#jsonMap do
 				if jsonMap[j] ~= nil then
