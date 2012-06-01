@@ -57,11 +57,11 @@ function newLevel(params)
 	local mapW = _VW*.93
 	local mapH = _VW*1.05	
 
-	--[[if storyboard.getCurrentSceneName() == "levelBuilder" then
+	if storyboard.getCurrentSceneName() == "levelBuilder" then
 		mapW = _VW*.90
 		mapH = _VW*.9
 		print("CHANGING MAP W H")
-	end]]--
+	end
 	--local defaultCellType = params.defaultCellType
 	levelMap = mapCreator.createHexMap((_W-mapW)/2+5 , (_H-mapH)/2-30 , mapW , mapH , map_lines , map_cols, params.defaultCellType,sceneGroup)
 	
@@ -94,7 +94,7 @@ end
 
 function insertBg(file)
 
-	local bg = display.newImageRect(file,_VW,_VH)
+	local bg = display.newImageRect(file,_VW,_VW/_W*1024)
 	bg.x = _W/2
 	bg.y = _H/2
 	bgGroup:insert(bg)
@@ -103,7 +103,7 @@ end
 
 function insertOverLay(file)
 
-	local bg = display.newImageRect(file,_VW,_VH)
+	local bg = display.newImageRect(file,_VW,_VW/_W*1024)
 	bg.x = _W/2
 	bg.y = _H/2
 	overLayGroup:insert(bg)
@@ -289,7 +289,7 @@ end
 
 function stopGame()
 	gameRunning = false
-	HUD.hideScreenUI()
+
 	Runtime:removeEventListener( "touch", gameClickListener )
 	Runtime:removeEventListener("enterFrame",updateScore)
 end
@@ -347,6 +347,10 @@ end
 
 function getMap()
 	return levelMap
+end
+
+function hideGameUI()
+	HUD.hideScreenUI()
 end
 
 function cleanMap()

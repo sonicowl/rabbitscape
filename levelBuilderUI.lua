@@ -258,6 +258,7 @@ function loadActions()
 	actions["stopButton"] = function(event)
 		print("touched "..tostring(event.id))
 		gameEngine.stopGame()
+		gameEngine.hideGameUI()
 		gameEngine.reloadMap()
 		stopButton.isVisible = false
 		clearMapButton.isVisible = true

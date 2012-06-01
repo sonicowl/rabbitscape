@@ -9,7 +9,7 @@
 -- hide device status bar
 display.setStatusBar( display.HiddenStatusBar )
 
-
+io.output():setvbuf('no')
 
 -- require controller module
 local storyboard = require "storyboard"

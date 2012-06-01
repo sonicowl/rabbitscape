@@ -102,10 +102,7 @@ function scene:createScene( event )
 
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = storyboard.getPrevious()})
 
-	--gameEngine.insertBg("BUNNYSCAPE8BIT.jpg")
-	gameEngine.insertBg("l3g.jpg")
-	gameEngine.insertOverLay("l3o.png")
-	gameEngine.insertOverLay("l3s.png")
+	gameEngine.insertBg("BUNNYSCAPE8BIT.jpg")
 	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.1, alpha = 0.7 })	

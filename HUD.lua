@@ -33,166 +33,129 @@ function init(viewGroup,listenersTable)
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 	screenUI=nil
 	loadActions()
-	--loadHeader()
 
 end
 
-
---[[
-function loadHeader()
-	--Setup the nav bar 
-	local navBar = display.newImageRect("navBar.png",_VW,40)
-	navBar.x = display.contentWidth*.5
-	navBar.y = math.floor(_VH0 + navBar.height*0.5)
-	HUD:insert(navBar)
-	
-	local navHeader = display.newText("CATCH THE RABBIT", 0, 0, native.systemFontBold, 16)
-	navHeader:setTextColor(255, 255, 255)
-	navHeader.x = _W*.5
-	navHeader.y = navBar.y
-	HUD:insert(navHeader)
-
-	--Setup the back button
-	backBtn = ui.newButton{ 
-		default = "backButton.png", 
-		over = "backButton_over.png", 
-		id = "sceneBack",
-		onEvent = buttonHandler
-	}
-	HUD:insert(backBtn)
-	backBtn.x = math.floor(backBtn.width/2) +  _VW0 + 10
-	backBtn.y = navBar.y 
-	backBtn.alpha = 1
-end]]--
 	
 function loadScreenUI()
 	if screenUI ~= nil then
-		screenUI.alpha = 1
+		transition.to(screenUI,{y=0,time=200,transition=easing.outExpo})
+		--screenUI.alpha = 1
 	else
 		screenUI = display.newGroup()
 		HUD:insert(screenUI)
 		
-		local Rect = display.newRect(_VW0, _VH0+_VH-90 , _VW, 90)
-		Rect:setFillColor(20, 20, 20)
-		Rect.alpha = .7
-		screenUI:insert(Rect)
+		local bar = display.newImageRect("menubg.png",_VW,100)
+		screenUI:insert(bar)
 		
-		timeText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+
+		local objectsTag = display.newImageRect("objects-tag.png",416/2,133/2)
+		screenUI:insert(objectsTag)
+
+		local timeTag = display.newImageRect("time-tag.png",426/2,135/2)
+		screenUI:insert(timeTag)
+
+		timeText = display.newText("0000", 0, 0, "Poplar Std", 30)
 		timeText:setTextColor(255, 255, 255)
 		timeText:setReferencePoint(display.CenterLeftReferencePoint);
 		screenUI:insert(timeText)	
 		
-		scoreText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+--[[		scoreText = display.newText("0000", 0, 0, native.systemFontBold, 30)
 		scoreText:setTextColor(255, 255, 255)
 		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
-		screenUI:insert(scoreText)		
+		screenUI:insert(scoreText)]]--		
 		
-		rocksText = display.newText("0000", 0, 0, native.systemFontBold, 30)
+		rocksText = display.newText("0000", 0, 0, "Poplar Std", 30)
 		rocksText:setTextColor(255, 255, 255)
 		rocksText:setReferencePoint(display.CenterLeftReferencePoint);
 		screenUI:insert(rocksText)
 		
+	
+
 		
 		local resetButton = ui.newButton{
-			default = "restart.png",
-			over = "restart.png",
+			default = "reset-off.png",
+			over = "reset-on.png",
 			onEvent = buttonHandler,
 			id = "restartGame",
 			emboss = true
 		}
-		resetButton.xScale = .3; resetButton.yScale = .3
+		
+		resetButton.xScale = .5; resetButton.yScale = .5
 		screenUI:insert(resetButton)
+	
+	
+		bar.x = _VW/2					bar.y = _VH0+_VH-50
+		objectsTag.x = _VW0+130;		objectsTag.y = _VH0+_VH-45;	
+		timeTag.x = _VW0+_VW-130;			timeTag.y = _VH0+_VH-45;	
+		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-42
+--		scoreText.x = _VW0 + 20;		scoreText.y = _VH0+_VH-60
+		rocksText.x = _VW0 + 30;		rocksText.y = _VH0+_VH-45
+		resetButton.x =_W/2-110; 		resetButton.y = _VH0+_VH-45		
 		
-		
-		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-20
-		scoreText.x = _VW0 + 20;		scoreText.y = _VH0+_VH-60
-		rocksText.x = _VW0 + 280;		rocksText.y = _VH0+_VH-60
-		resetButton.x = _VW0+_VW - 50; 	resetButton.y = _VH0+_VH-45		
-		
-		local menuButton = ui.newButton{
-			default = "menu1.png",
-			over = "menu2.png",
+		menuButton = ui.newButton{
+			default = "menu-off.png",
+			over = "menu-on.png",
 			onEvent = buttonHandler,
 			id = "showMenu",
 			emboss = true
 		}
 		screenUI:insert(menuButton)
 		
-		
-		menuButton.x = _VW0+_VW - 100; 	menuButton.y = _VH0+_VH-45
+		menuButton:scale(.5,.5)
+		menuButton.x = _W/2; 	menuButton.y = _VH0+_VH-45
 	
 	
 	
-	
-	------------------------------------------------------
-	---JUST FOR NOW
 
-		lampButton2Off = ui.newButton{
-			default = "lamp-off.png",
-			over = "lamp-on.png",
-			id = "gridButton",
-			onEvent = buttonHandler,
-			emboss = true
-		}
-		lampButton2On = ui.newButton{
-			default = "lamp-on.png",
-			over = "lamp-off.png",
+		gridButton = ui.newButton{
+			default = "grid-off.png",
+			over = "grid-on.png",
 			id = "gridButton",
 			onEvent = buttonHandler,
 			emboss = true
 		}
 		
-		
-		lampButton2Off.x = _VW0+_VW-180; lampButton2Off.y = _H-50
-		lampButton2On.x = _VW0+_VW-180; lampButton2On.y = _H-50
-		lampButton2Off.xScale = 2; lampButton2Off.yScale = 2
-		lampButton2On.xScale = 2; lampButton2On.yScale = 2
-		lampButton2Off.isVisible = false
+		gridButton.x = _W/2+110; gridButton.y = _H-50
+		gridButton:scale(.5,.5)
 		
 
-		local carrotTxt = display.newText( "GRID", 0,0, native.systemFont,18)
-		carrotTxt.x = _VW0+_VW-180; carrotTxt.y = _H-20
-		
-		
+		screenUI:insert(gridButton)
+	
 
-
-	--------------------------------------------------------
-	--------------------------------------------------------
-	----------------------------------------------------------
-	
-	
-	
-	
-	
-	
-		--------------------------------- just temporary
-	screenUI:insert(lampButton2Off)
-	screenUI:insert(lampButton2On)
-	screenUI:insert(carrotTxt)
-
-	
-	
-	
-	
-	
-	
 	end
 end
 
 function hideScreenUI()
 	if screenUI ~= nil then
-		screenUI.alpha = 0
+		transition.to(screenUI,{y=200,time=200,delay=150,transition=easing.outExpo})
+		print("HIDING UI")
+		--screenUI.alpha = 0	
 	end
 end
 
 function updateGameScene(score,seconds,rocks)
-	timeText.text = "SECONDS: "..seconds
-	scoreText.text = "SCORE: "..score
-	rocksText.text = "ROCKS: "..rocks
-	timeText:setReferencePoint(display.CenterLeftReferencePoint);
-	scoreText:setReferencePoint(display.CenterLeftReferencePoint);
-	scoreText.x = _VW0 + 20
-	timeText.x = _VW0 + 20
+	if timeText then
+		local secs = seconds%60
+		local minutes = (seconds-secs)/60
+		local secsText = secs..""
+		local minutesText = minutes..""
+		if minutes<10 then minutesText = "0"..minutesText end
+		if secs<10 then secsText = "0"..secsText end
+		
+		timeText.text = minutesText..":"..secsText
+		timeText:setReferencePoint(display.CenterLeftReferencePoint);
+		timeText.x = _VW0+_VW - 60-50		
+	end
+	if scoreText then
+		scoreText.text = "SCORE: "..score
+		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
+		scoreText.x = _VW0 + 20
+	end
+	if rocksText then
+		rocksText.text = rocks
+		rocksText.x = _VW0+30
+	end
 end
 
 
@@ -201,16 +164,19 @@ function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
+		closeMenu(true)
 		quitListener()
 	end
 
 	actions["restartGame"] = function(event)
 		print("touched "..tostring(event.id))
-		if endGameScreen~=nil and endGameScreen.numChildren > 0 then
+		if endGameScreen~=nil and endGameScreen.numChildren ~= nil and endGameScreen.numChildren > 0 then
 			for i = endGameScreen.numChildren, 1,-1 do
 				endGameScreen[i]:removeSelf()
 				endGameScreen[i] = nil
 			end
+			endGameScreen:removeSelf()
+			endGameScreen = nil
 		end
 		restartListener()
 	end	
@@ -224,23 +190,20 @@ function loadActions()
 	
 
 	actions["showMenu"] = function(event)
-		print("touched "..tostring(event.id))
-		pauseListener()
-		showMenu()
+		if menuDialog == nil then
+			print("touched "..tostring(event.id))
+			pauseListener()
+			showMenu()
+		else
+			actions["resumeGame"](event)
+		end
 	end	
 
 	actions["gridButton"] = function (event)
 		print("touched "..tostring(event.id))
-		if lampButton2Off.isVisible then
-			lampButton2Off.isVisible = false
-			lampButton2On.isVisible = true
-			gameEngine.setGrid()
-		else
-			lampButton2Off.isVisible = true
-			lampButton2On.isVisible = false
-			gameEngine.setGrid()
-		end
+		gameEngine.setGrid()
 	end	
+	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
 		if ("release" == event.phase) then
 			actions[event.id](event)
@@ -278,13 +241,20 @@ end
 
 
 function callEndingScreen(didWon)
+
 	endGameScreen = display.newGroup()
 	HUD:insert(endGameScreen)
-	local myRect = display.newRect(_W/2-225, _H/2-100 , 450, 200)
-	myRect.strokeWidth = 3
+
+	local myRect = display.newRect(0,0 , _W, _H)
 	myRect:setFillColor(0, 0, 0)
-	myRect.alpha = .6
-	myRect:setStrokeColor(255, 255, 255)
+	myRect.alpha = 0
+	
+	local myRect2 = display.newRect(_W/2-225, _H/2-100 , 450, 200)
+	myRect2.strokeWidth = 3
+	myRect2:setFillColor(0, 0, 0)
+	myRect2.alpha = 0.6
+	myRect2:setStrokeColor(255, 255, 255)
+	
 	local msg = nil
 	if didWon then
 		msg = "YOU RESCUED THE BUNNY!"
@@ -304,10 +274,14 @@ function callEndingScreen(didWon)
 		text = "RETRY",
 		emboss = true
 	}
+	
 	resetButton.x = _W/2; resetButton.y = _H/2+40
 	endGameScreen:insert(myRect)
+	endGameScreen:insert(myRect2)
 	endGameScreen:insert(myText)
 	endGameScreen:insert(resetButton)
+	transition.to(screenUI,{time=200,y=200,delay=100})
+	transition.to(myRect,{time=300,alpha=.4})
 end
 
 
@@ -317,92 +291,114 @@ end
 function showMenu()
 	menuDialog = display.newGroup()
 	HUD:insert(menuDialog)
-	local myRect = display.newRect(_W/2-225, _H/2-300 , 450, 600)
-	myRect.strokeWidth = 3
+	local myRect = display.newRect(0, -_H , _W, _H*2)
 	myRect:setFillColor(0, 0, 0)
-	myRect.alpha = .6
-	myRect:setStrokeColor(255, 255, 255)
-	local msg = "PAUSE MENU"
-	local myText = display.newText(msg, 0, 0, native.systemFont, 30)
-	myText.x = _W/2
-	myText.y = myRect.y-myRect.y/2+20
-	myText:setTextColor(255, 255, 255)
+	myRect.alpha = .0
+
+
 	
 	local objectivesButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "objectives-off.png",
+		over = "objectives-on.png",
 		onEvent = buttonHandler,
 		id = "",
-		text = "OBJECTIVES",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true
+	}
+
+	local levelSelectButton = ui.newButton{
+		default = "level-select-off.png",
+		over = "level-select-on.png",
+		onEvent = buttonHandler,
+		id = "",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
 	
 	local optionsButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "options-off.png",
+		over = "options-on.png",
 		onEvent = buttonHandler,
 		id = "",
-		text = "OPTIONS",
 		textColor = { 51, 51, 51, 255 },		
 		emboss = true
 	}
 
 	local scoresButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "scores-off.png",
+		over = "scores-on.png",
 		onEvent = buttonHandler,
 		id = "",
-		text = "SCORES",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
 
 	local resumeButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "resume-off.png",
+		over = "resume-on.png",
 		onEvent = buttonHandler,
 		id = "resumeGame",
-		text = "RESUME",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
 
 	local quitButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "quit-off.png",
+		over = "quit-on.png",
 		onEvent = buttonHandler,
 		id = "sceneBack",
-		text = "QUIT",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
 	
 	
-	objectivesButton.x = _W/2; objectivesButton.y = _H/2-120	
-	optionsButton.x = _W/2; optionsButton.y = _H/2-50	
-	scoresButton.x = _W/2; scoresButton.y = _H/2+20	
-	resumeButton.x = _W/2; resumeButton.y = _H/2+90
-	quitButton.x = _W/2; quitButton.y = _H/2+90+70
+	objectivesButton.x = _W/2; objectivesButton.y = _VH0+_VH-50-350
+	levelSelectButton.x = _W/2; levelSelectButton.y = _VH0+_VH-50-280
+	optionsButton.x = _W/2; optionsButton.y = _VH0+_VH-50-210
+	scoresButton.x = _W/2; scoresButton.y = _VH0+_VH-50-140
+	quitButton.x = _W/2; quitButton.y = _VH0+_VH- 50-70
+	resumeButton.x = _W/2; resumeButton.y = _VH0+_VH-50
 	
+	levelSelectButton:scale(.5,.5)
+	objectivesButton:scale(.5,.5)
+	scoresButton:scale(.5,.5)
+	optionsButton:scale(.5,.5)
+	resumeButton:scale(.5,.5)
+	quitButton:scale(.5,.5)
 	
 	
 	menuDialog:insert(myRect)
-	menuDialog:insert(myText)
+	menuDialog:insert(levelSelectButton)
 	menuDialog:insert(objectivesButton)
 	menuDialog:insert(optionsButton)
 	menuDialog:insert(scoresButton)
 	menuDialog:insert(resumeButton)
 	menuDialog:insert(quitButton)
 	
+	menuDialog.y = 450
+	HUD:insert(menuButton)	
+	transition.to(menuButton,{time=300,y=menuButton.y-450,transition=easing.outExpo})
+	transition.to(menuDialog,{time=300,y=0,transition=easing.outExpo})
+	transition.to(myRect,{time=300,alpha=.4,transition=easing.outExpo})
 
 end
 
-function closeMenu()
-	 for i = #menuDialog,1,-1 do
-		menuDialog[i]:removeSelf()
-		menuDialog[i] = nil
-	 end
-	 menuDialog:removeSelf()
-	 menuDialog = nil
+function closeMenu(quickClose)
+	local closure = function()
+	 	for i = #menuDialog,1,-1 do
+			menuDialog[i]:removeSelf()
+			menuDialog[i] = nil
+		end
+		menuDialog:removeSelf()
+		menuDialog = nil	
+		screenUI:insert(menuButton)	
+			
+	end
+	if quickClose then	
+		closure()
+		return
+	end
+	transition.to(menuButton,{time=300,y=menuButton.y+450,transition=easing.outExpo})
+	transition.to(menuDialog,{time=300,y=450,transition=easing.outExpo,onComplete=closure})
+	transition.to(menuDialog[1],{time=300,alpha=0,transition=easing.outExpo,onComplete=closure})
 end
