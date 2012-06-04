@@ -11,7 +11,22 @@
 
 module(..., package.seeall)
 
---newLevel params: sceneBg, overlayBg, hasCarrot,defaultCellType?...
+
+
+
+---------------------------------------------------------
+--#####################################################--
+--	newLevel() 
+--  *Creates a new blank level with only the default object type
+--	  and no objects placed.
+--
+--	PARAMETERS
+--	params.storyBoard	:	scene storyboard
+--	params.lastScene	:	last Scene of the game (for purging)
+--	params.viewGroup	:	the scene view group
+--
+--#####################################################--
+---------------------------------------------------------
 function newLevel(params)
 	HUD = require("HUD")
 	aStar = require("aStar")
@@ -73,14 +88,25 @@ function newLevel(params)
 	
 	overLayGroup = display.newGroup()
 	sceneGroup:insert(overLayGroup)	
-	
-	
+		
 	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame})
-	
-
 end
 
 
+
+
+---------------------------------------------------------
+--#####################################################--
+--	updateScore(event) 
+--  *Calculator for the score based on the timer and the
+--	  running flag
+--
+--	PARAMETERS
+--	event		: the event param sent by the "enterFrame"
+--				   listener
+--
+--#####################################################--
+---------------------------------------------------------
 function updateScore(event)
 	if system.getTimer() > lastLoopTime + 100  and gameRunning then
 			gameScore = gameScore - gameScore*.0001
@@ -92,6 +118,18 @@ function updateScore(event)
 end
 
 
+
+---------------------------------------------------------
+--#####################################################--
+--	insertBg(file) 
+--  *Insert a new image on the background group of
+--	  the scene
+--
+--	PARAMETERS
+--	file		:	the fileName of the background
+--
+--#####################################################--
+---------------------------------------------------------
 function insertBg(file)
 
 	local bg = display.newImageRect(file,_VW,_VW/_W*1024)
@@ -101,6 +139,19 @@ function insertBg(file)
 
 end
 
+
+
+---------------------------------------------------------
+--#####################################################--
+--	insertOverLay(file) 
+--  *Insert a new image on the overlay group of
+--	  the scene
+--
+--	PARAMETERS
+--	file		:	the fileName of the overlay
+--
+--#####################################################--
+---------------------------------------------------------
 function insertOverLay(file)
 
 	local bg = display.newImageRect(file,_VW,_VW/_W*1024)
@@ -110,6 +161,21 @@ function insertOverLay(file)
 
 end
 
+
+
+
+---------------------------------------------------------
+--#####################################################--
+--	createNewObject() 
+--  *Creates a new object type on the level to be used
+--	  later. No placing happens here
+--
+--	PARAMETERS
+--	params		:	the params required from mapCreator
+--		... to be described better
+--
+--#####################################################--
+---------------------------------------------------------
 function createNewObject(params)
 	mapCreator.createNewObject(levelMap,params) --directly to mapCreator, everything on celltypeparams
 end
@@ -118,11 +184,46 @@ end
 
 
 
---TODO: VIEW LISTENER PART
+
+
+---------------------------------------------------------
+--#####################################################--
+--	placeNewObject(params)
+--  *Place an object on the specified x,y position of the
+--	  level. Remember that creating the object with the 
+--	  referred tag BEFORE the placing is needed.
+--
+--	PARAMETERS
+--	params.x		:	column position of the object
+--	params.y		:	line position of the object
+--	params.object	:	tag of a created object with
+--							createNewObject(params)
+--
+--#####################################################--
+---------------------------------------------------------
 function placeNewObject(params)
 	mapCreator.placeObject(levelMap[params.x][params.y], params.object)
 end
 
+
+
+
+
+---------------------------------------------------------
+--#####################################################--
+--	setRabbitSteps(steps)
+--  *Sets the rabbit steps per turn.  At this time
+--		setting the steps for "x" will result on rabbit
+--		walking 1,x,1,x,1...
+--
+--	PARAMETERS
+--	params.x		:	column position of the object
+--	params.y		:	line position of the object
+--	params.object	:	tag of a created object with
+--							createNewObject(params)
+--
+--#####################################################--
+---------------------------------------------------------
 function setRabbitSteps(steps)
 	if steps > 0 then
 		rabbit.steps = steps
@@ -134,8 +235,20 @@ end
 
 
 
-
---on clicks
+---------------------------------------------------------
+--#####################################################--
+--	gameClickListener(event)
+--  *This is the main game updater. It listens to the
+--	 	screen touches, get the cell based on the event x
+--		and y, and if it's a "blank" space, put an object
+--		and makes the rabbit run
+--
+--	PARAMETERS
+--	event		: the event param sent by the "enterFrame"
+--				   listener
+--
+--#####################################################--
+---------------------------------------------------------
 function gameClickListener(event)
 	if event.phase == "ended" and gameRunning then
 		local cell = mapCreator.getCellByXY(event.x,event.y,levelMap)
@@ -173,6 +286,14 @@ function gameClickListener(event)
 end
 
 
+---------------------------------------------------------
+--#####################################################--
+--	moveRabbit()
+--  *A function that makes the rabbit walk to an exit or
+--		randomly, if there is no exit.
+--
+--#####################################################--
+---------------------------------------------------------
 function moveRabbit()
 	for i=1,rabbit.actualSteps do
 		if gameRunning == true then
@@ -209,7 +330,16 @@ end
 
 
 
-
+---------------------------------------------------------
+--#####################################################--
+--	findShorterExit(x0,y0)
+--  *Based on a x and y position, it uses the aStar to find
+--		on all possible exits, the shorter or less risky one.
+--		It has a little random implementation to prevent
+--		users from using walkthroughs
+--
+--#####################################################--
+---------------------------------------------------------
 function findShorterExit(x0,y0)
 	local possibleExits = {}
 	for i=1, #levelMap.objects do	
