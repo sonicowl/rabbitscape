@@ -558,25 +558,6 @@ end
 
 
 
-function deepcopy(object)
-    local lookup_table = {}
-    local function _copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
-        end
-        local new_table = {}
-        lookup_table[object] = new_table
-        for index, value in pairs(object) do
-            new_table[_copy(index)] = _copy(value)
-        end
-        return setmetatable(new_table, getmetatable(object))
-    end
-    return _copy(object)
-end
-
-
 function newSceneAnimation(params)
 	otherGroup = display.newGroup()
 	sceneAnimationGroup:insert(otherGroup)
@@ -625,7 +606,41 @@ function newSceneAnimation(params)
 			objectClosure(event)
 		end
 	end
-	
+end
 
 
+
+---------------------------------------------------------
+--#####################################################--
+--	deepcopy(object)
+--  *A pure lua function that makes a deep copy of a table
+--		returning instead of a pointer to the same table,
+--		a completely new one.
+--
+--	PARAMETERS
+--
+--	object		:		the desired table to be copied
+--
+--	RETURNS
+--
+--	table		:		A copy of the sent table
+--
+--#####################################################--
+---------------------------------------------------------
+function deepcopy(object)
+    local lookup_table = {}
+    local function _copy(object)
+        if type(object) ~= "table" then
+            return object
+        elseif lookup_table[object] then
+            return lookup_table[object]
+        end
+        local new_table = {}
+        lookup_table[object] = new_table
+        for index, value in pairs(object) do
+            new_table[_copy(index)] = _copy(value)
+        end
+        return setmetatable(new_table, getmetatable(object))
+    end
+    return _copy(object)
 end

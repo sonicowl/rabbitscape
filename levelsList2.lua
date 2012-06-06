@@ -30,7 +30,8 @@ end
 local function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
-	data = jsonLevels.loadLevelsTable("levelsList.txt")
+	--data = jsonLevels.loadLevelsTable("levelsList.txt")
+	data = jsonLevels.loadLevelsTable("downloadedLevels.txt")
 	local bottomBoundary = display.screenOriginY + 0
 
 	if data ~= false then
@@ -137,6 +138,9 @@ function scene:createScene( event )
 
 	
 	drawTableView(group)
+	listenerClosure = function() drawTableView(group) end
+	
+	jsonLevels.syncLevels(listenerClosure)
 
 	
 end
