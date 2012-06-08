@@ -28,6 +28,7 @@ module(..., package.seeall)
 --#####################################################--
 ---------------------------------------------------------
 function newLevel(params)
+	require "sprite"
 	HUD = require("HUD")
 	aStar = require("aStar")
 	mapCreator = require("mapCreator")
@@ -63,7 +64,8 @@ function newLevel(params)
 	gameStartScore = 10000
 	rocksPut = 0
 	secsPlaying = 0
-	
+	msPerFrame = 800/10
+	movingRabbit = false
 	
 	-- MAP VARS
 	levelMap = nil
@@ -85,6 +87,7 @@ function newLevel(params)
 	
 	rabbitsGroup = display.newGroup()
 	sceneGroup:insert(rabbitsGroup)
+	loadRabbitSprites()
 	
 	overLayGroup = display.newGroup()
 	sceneGroup:insert(overLayGroup)	
@@ -233,19 +236,74 @@ function setRabbitSteps(steps)
 end
 
 
-
-
+--rabbitsGroup
 function loadRabbitSprites()
 
-
-
-
+	local run6Sheet = sprite.newSpriteSheetFromData( "run-6.png", require("run-6").getSpriteSheetData() )
+	run6Set = sprite.newSpriteSet(run6Sheet,1,42)
+	sprite.add(run6Set,"runS",1,7,6*msPerFrame,1)
+	sprite.add(run6Set,"runSW",8,7,6*msPerFrame,1)
+	sprite.add(run6Set,"runN",15,7,6*msPerFrame,1)
+	sprite.add(run6Set,"runNW",22,7,6*msPerFrame,1)
+	sprite.add(run6Set,"runNE",29,7,6*msPerFrame,1)
+	sprite.add(run6Set,"runSE",36,7,6*msPerFrame,1)
 
 end
 
 
+function getMovingDirection(x0,y0,x,y)
+
+	local deltaX = x-x0
+	local deltaY = y-y0
+	
+	if deltaY == -1 and deltaX == 0 then return "N"
+	elseif deltaY == 0 and deltaX == -1 then return "NW"
+	elseif deltaY == 1 and deltaX == -1 then return "SW"
+	elseif deltaY == 1 and deltaX == 0 then return "S"
+	elseif deltaY == 0 and deltaX == 1 then return "SE"
+	elseif deltaY == -1 and deltaX == 1 then return "NE"
+	end
+	return false
+end
 
 
+function moveRabbitTo(x,y)
+	
+	local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,x,y)
+	if cardinalDirec then
+		if not instance1 then
+			instance1 = sprite.newSprite(run6Set)
+			rabbitsGroup:insert(instance1)
+			instance1.xScale = .5
+			instance1.yScale = .5
+			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
+		end
+		print("RUNNING RABBIT TO "..cardinalDirec)
+		instance1:prepare("run"..cardinalDirec)
+		instance1:play()
+		--rabbit.img.alpha = 0
+		movingRabbit = true
+		local tempClosure = function(event) 
+			if event.phase == "end" then
+				movingRabbit = false
+				event.sprite.currentFrame = 4
+			end
+			--rabbit.img.x = x
+			--rabbit.img.y = y
+			--rabbit.img.alpha = 1
+			--event:removeSelf()
+			--event = nil
+		end
+		instance1:addEventListener("sprite", tempClosure)
+		transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=7*msPerFrame})	
+--		transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=7*msPerFrame,onComplete=tempClosure})	
+		rabbit.x = x
+		rabbit.y = y
+	else
+		print("WRONG CARDINAL DIRECTION")
+	end
+end
 
 
 ---------------------------------------------------------
@@ -263,7 +321,7 @@ end
 --#####################################################--
 ---------------------------------------------------------
 function gameClickListener(event)
-	if event.phase == "ended" and gameRunning then
+	if event.phase == "ended" and gameRunning and not movingRabbit then
 		local cell = mapCreator.getCellByXY(event.x,event.y,levelMap)
 		if cell == false then
 			print("clicking outside of the matrix")
@@ -320,11 +378,9 @@ function moveRabbit()
 					return false
 				end
 			end
-			tempX = path[table.getn(path)-1].x
-			tempY = path[table.getn(path)-1].y
-			rabbit.x = tempX
-			rabbit.y = tempY
-			transition.to(rabbit.img,{x=levelMap[tempX][tempY].hexX+5, y= levelMap[tempX][tempY].hexY+10,time=500})
+			local tempX = path[table.getn(path)-1].x
+			local tempY = path[table.getn(path)-1].y
+			moveRabbitTo(tempX,tempY)
 			
 			--CHECK IF IT ARRIVED ON A EXIT CELL
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].tag == "endCell" then 
@@ -402,10 +458,21 @@ function startGame()
 		local y = startCellType.members[1].y
 		rabbit.x = x
 		rabbit.y = y
-		rabbit.img = display.newImageRect("rabbit-1.png" , levelMap[x][y].hexW, levelMap[x][y].hexH*1.1)
-		rabbit.img.x = levelMap[x][y].hexX+5
-		rabbit.img.y = levelMap[x][y].hexY+10
-		rabbitsGroup:insert(rabbit.img)
+		if not instance1 then
+			instance1 = sprite.newSprite(run6Set)
+			rabbitsGroup:insert(instance1)
+			instance1.xScale = .5
+			instance1.yScale = .5
+			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance1:prepare("runNW")
+			instance1.currentFrame = 4
+		end
+		movingRabbit = false
+		--rabbit.img = display.newImageRect("rabbit-1.png" , levelMap[x][y].hexW, levelMap[x][y].hexH*1.1)
+		--rabbit.img.x = levelMap[x][y].hexX+5
+		--rabbit.img.y = levelMap[x][y].hexY+10
+		--rabbitsGroup:insert(rabbit.img)
 		HUD.loadScreenUI()
 		--local closure = function() Runtime:addEventListener( "touch", gameClickListener ) end
 		Runtime:addEventListener( "touch", gameClickListener )
@@ -424,6 +491,10 @@ function restartListener()
 end
 
 function restartGame()
+	if instance1 then
+		instance1:removeSelf()
+		instance1 = nil
+	end
 	gameScore = gameStartScore
 	rocksPut = 0
 	gameStartTime = system.getTimer()
