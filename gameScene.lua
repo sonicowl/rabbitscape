@@ -70,7 +70,7 @@ function scene:createScene( event )
 
 	
 	if storyboard.levelId ~= nil then
-		local jsonMap = jsonLevels.loadMap(storyboard.levelId,"levelsList.txt")
+		local jsonMap = jsonLevels.loadMap(storyboard.levelId,"downloadedLevels.txt")
 		if jsonMap ~= false then
 			for i=1, #jsonMap.backgrounds do gameEngine.insertBg(jsonMap.backgrounds[i]) end
 			for i=1, #jsonMap.overlays do gameEngine.insertOverLay(jsonMap.overlays[i]) end

@@ -97,7 +97,8 @@ function loadMap(row,fileName)
 		print("loading map on row "..row)
 		local path = nil
 		if fileName ~=nil then
-			path = system.pathForFile( fileName, system.ResourceDirectory )
+			if fileName == "downloadedLevels.txt" then path = system.pathForFile( fileName, system.DocumentsDirectory )
+			else path = system.pathForFile( fileName, system.ResourceDirectory ) end
 		else
 			path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
 		end
@@ -311,7 +312,7 @@ end
 function download(file)
 	downloadingFile = true
 	network.download( 
-		"http://www.sonicowl.com/gameassets/"..file, 
+		"http://www.sonicowl.com/gameAssets/"..file, 
 		"GET", 
 		networkListener, 
 		file, 
