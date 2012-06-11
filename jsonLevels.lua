@@ -330,33 +330,36 @@ function downloadingAssets(event)
 	if syncPhase == 2 then
 		if not downloadingFile then
 			local path = system.pathForFile( "serverLevels.json", system.DocumentsDirectory )
-			local levelsFile = io.open( path )
-			if levelsFile then
-				for line in levelsFile:lines() do
-					local tempTable = json.decode(line)
-					if tempTable then
-						--GET THE BGS
-						for i=1, #tempTable.backgrounds do
-							table.insert(filesToDownload,tempTable.backgrounds[i])
-						end
-						--GET THE OVERLAYS
-						for i=1, #tempTable.overlays do
-							table.insert(filesToDownload,tempTable.overlays[i])
-						end
-						--GET THE ANIMATIONS
-						if tempTable.sceneAnim then
-							if tempTable.sceneAnim.mask then table.insert(filesToDownload , tempTable.sceneAnim.mask) end
-							for i=1, #tempTable.sceneAnim.objects do
-								table.insert(filesToDownload,tempTable.sceneAnim.objects[i].img)
+			local sceneriesFile = io.open( path )
+			if sceneriesFile then
+				for line in sceneriesFile:lines() do
+					local tempScenery = json.decode(line)
+					if tempScenery then
+						for i=1, #tempScenery.levels do 
+							local tempTable = tempScenery.levels[i]
+							--GET THE BGS
+							for i=1, #tempTable.backgrounds do
+								table.insert(filesToDownload,tempTable.backgrounds[i])
+							end
+							--GET THE OVERLAYS
+							for i=1, #tempTable.overlays do
+								table.insert(filesToDownload,tempTable.overlays[i])
+							end
+							--GET THE ANIMATIONS
+							if tempTable.sceneAnim then
+								if tempTable.sceneAnim.mask then table.insert(filesToDownload , tempTable.sceneAnim.mask) end
+								for i=1, #tempTable.sceneAnim.objects do
+									table.insert(filesToDownload,tempTable.sceneAnim.objects[i].img)
+								end
 							end
 						end
 					end
 				end
-				io.close( levelsFile )
+				io.close( sceneriesFile )
 				syncPhase = 3
 			else
 				--TODO: DO SOMETHING WHEN DOWNLOAD THE TABLES WENT WRONG
-				print("levelsFile not found")
+				print("sceneriesFile not found")
 			end
 		end
 	end
