@@ -139,9 +139,6 @@ function scene:createScene( event )
 
 	
 	drawTableView(group)
-	listenerClosure = function() drawTableView(group) end
-	
-	jsonLevels.syncLevels(listenerClosure)
 
 	
 end
