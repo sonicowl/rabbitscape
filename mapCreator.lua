@@ -273,15 +273,47 @@ function updateHexGrid(map)
 	end
 end
 
-function setHexGrid()
+function setHexGrid(map)
+	if not dynamicExits then dynamicExits = {} end
 	if  hexGrid then
 		hexGrid = false
 		hexGroup.alpha = 0
+		for i=1, #map.objects do
+			if map.objects[i].isExit and not map.objects[i].isFakeExit and map.objects[i].isDynamic then
+				map.objects[i].isDynamic = false
+				table.insert(dynamicExits,map.objects[i].tag)
+				refreshObjects(map,map.objects[i].tag)
+			end
+		end
 	else
 		hexGrid = true
 		hexGroup.alpha = 1
+		for i=1, #dynamicExits do
+			map.objects[getCellTypeIdByTag(map,dynamicExits[i])].isDynamic = true
+			refreshObjects(map,dynamicExits[i])
+		end
 	end
 end
+
+
+function refreshObjects(map,cellTag)
+	for j=1,#map do
+		if map[j] then
+			for i=1,#map[j] do
+				if map[j][i] then
+					local cell = map[j][i]
+					local tag = levelMap.objects[levelMap[j][i].id].tag
+					if tag == cellTag then
+						placeNewObject({x=j,y=i,object="grass"})
+						placeNewObject({x=j,y=i,object=tag})
+					end
+				end
+			end
+		end
+	end
+end
+
+
 
 
 function getRandomPlaceableObject(map)

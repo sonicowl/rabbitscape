@@ -45,7 +45,7 @@ function scene:createScene( event )
 	
 	but2handler = function( event )
 		if event.phase == "release"  then
-			storyboard.gotoScene( "levelsList2", "slideLeft", 400 )
+			storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
 		end
 	end
 

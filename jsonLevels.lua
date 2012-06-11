@@ -97,7 +97,7 @@ function loadMap(row,fileName)
 		print("loading map on row "..row)
 		local path = nil
 		if fileName ~=nil then
-			if fileName == "downloadedLevels.txt" then path = system.pathForFile( fileName, system.DocumentsDirectory )
+			if fileName == "downloadedLevels.json" then path = system.pathForFile( fileName, system.DocumentsDirectory )
 			else path = system.pathForFile( fileName, system.ResourceDirectory ) end
 		else
 			path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
@@ -128,7 +128,7 @@ function loadLevelsTable(fileName)
 	local levelsTable = {}
 	local path = nil
 	if fileName ~=nil then
-		if fileName == "downloadedLevels.txt" then path = system.pathForFile( fileName, system.DocumentsDirectory )
+		if fileName == "downloadedLevels.json" then path = system.pathForFile( fileName, system.DocumentsDirectory )
 		else path = system.pathForFile( fileName, system.ResourceDirectory ) end
 		print("loading map from "..fileName)
 	else
@@ -170,6 +170,131 @@ function linesCount(file)
 end
 
 
+---------------------------------------------------------------------------------------------------------
+---------------------------------JSON WITH SCENARIES MECHANICS-------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+function loadSceneryTable()
+	local sceneriesTable = {}
+	local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+	local file = io.open( path )
+	if file then
+		for line in file:lines() do
+			local tempScenery = json.decode(line)
+			if tempScenery then
+				table.insert(sceneriesTable, tempScenery.sceneryId)
+			end
+		end
+		io.close( file )
+		return sceneriesTable
+	else
+		print("file not found")
+	end
+	return false
+end
+
+
+function loadSceneryLevels(scenery)
+	local levelsTable = {}
+	local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+	local file = io.open( path )
+	if file then
+		for line in file:lines() do
+			local tempScenery = json.decode(line)
+			if tempScenery then
+				if scenery == tempScenery.sceneryId then
+					for i=1, #tempScenery.levels do
+						table.insert(levelsTable, tempScenery.levels[i].levelId)
+					end
+				end
+			end
+		end
+		io.close( file )
+		return levelsTable
+	else
+		print("file not found")
+	end
+	return false
+end
+
+
+function loadSceneryMap(scenery,row)
+	if row ~= nil then
+		print("loading map of scenery "..scenery.." on row "..row)
+		local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+		
+		local file = io.open( path, "r" )
+		local lineHelper = 1
+		local level = nil
+		if file then
+			for line in file:lines() do
+				local tempScenery = json.decode(line)
+				if tempScenery then
+					if scenery == tempScenery.sceneryId then
+						level = deepcopy(tempScenery.levels[row])
+					end
+				end
+			end
+			io.close( file )
+			if level ~= nil then
+				return level
+			end
+			print("COULD NOT FIND THE MAP")
+		end
+	end
+	return false
+end
+ 
+
+---------------------------------------------------------
+--#####################################################--
+--	deepcopy(object)
+--  *A pure lua function that makes a deep copy of a table
+--		returning instead of a pointer to the same table,
+--		a completely new one.
+--
+--	PARAMETERS
+--
+--	object		:		the desired table to be copied
+--
+--	RETURNS
+--
+--	table		:		A copy of the sent table
+--
+--#####################################################--
+---------------------------------------------------------
+function deepcopy(object)
+    local lookup_table = {}
+    local function _copy(object)
+        if type(object) ~= "table" then
+            return object
+        elseif lookup_table[object] then
+            return lookup_table[object]
+        end
+        local new_table = {}
+        lookup_table[object] = new_table
+        for index, value in pairs(object) do
+            new_table[_copy(index)] = _copy(value)
+        end
+        return setmetatable(new_table, getmetatable(object))
+    end
+    return _copy(object)
+end
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+------------------------LEVELS DOWNLOADING FROM SERVER BELOW---------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+
+
 function syncLevels(listener)
 
 	--DOWNLOAD THE JSONS txt
@@ -198,13 +323,13 @@ function downloadingAssets(event)
 	print("downloading Assets")
 	if syncPhase == 1 then
 		downloadingFile = true
-		download("serverLevels.txt")
-		table.insert(filesToDownload,"serverLevels.txt")
+		download("serverLevels.json")
+		table.insert(filesToDownload,"serverLevels.json")
 		syncPhase = 2
 	end
 	if syncPhase == 2 then
 		if not downloadingFile then
-			local path = system.pathForFile( "serverLevels.txt", system.DocumentsDirectory )
+			local path = system.pathForFile( "serverLevels.json", system.DocumentsDirectory )
 			local levelsFile = io.open( path )
 			if levelsFile then
 				for line in levelsFile:lines() do
@@ -247,7 +372,7 @@ function downloadingAssets(event)
 		end
 	end
 	if syncPhase == 4 then
-		copyFromFile("serverLevels.txt","downloadedLevels.txt")
+		copyFromFile("serverLevels.json","downloadedLevels.json")
 		Runtime:removeEventListener("enterFrame", downloadingAssets)
 		loadingRect:removeSelf()
 		loadingRect = nil

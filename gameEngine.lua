@@ -503,7 +503,10 @@ end
 
 function stopGame()
 	gameRunning = false
-
+	if instance1 then
+		instance1:removeSelf()
+		instance1 = nil
+	end
 	Runtime:removeEventListener( "touch", gameClickListener )
 	Runtime:removeEventListener("enterFrame",updateScore)
 end
@@ -516,7 +519,7 @@ function resumeGame()
 end
 
 function setGrid()
-	mapCreator.setHexGrid()
+	mapCreator.setHexGrid(levelMap)
 end
 
 function reloadMap()
@@ -621,6 +624,10 @@ end
 function quitGame()
 	if gameRunning then stopGame() end
 	print("going to "..lastScene)
+	if instance1 then
+		instance1:removeSelf()
+		instance1 = nil
+	end
 	storyboard.gotoScene( lastScene, "slideRight", 400 )
 end
 

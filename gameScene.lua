@@ -61,16 +61,9 @@ function scene:createScene( event )
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = true , isWalkable = true , isExit=true , isFakeExit=true , canPutObjects = false, tag="carrot" ,img="carrot.png", imgW=stdImgW, imgH=stdImgH })
 	--loadLevel1() --gameEngine.setRabbitSteps(1) --gameEngine.startGame()
 	
-	--listOfBuilderObjects = {"rock","startCell","endCell","path","grass"}
-	--levelBuilderUI.init(gameEngine,listOfBuilderObjects,  sceneGroup  )
-	
---	gameEngine.insertBg("ground.jpg")
---	gameEngine.insertOverLay("objects.png")
---	gameEngine.insertOverLay("shadow.png")
-
 	
 	if storyboard.levelId ~= nil then
-		local jsonMap = jsonLevels.loadMap(storyboard.levelId,"downloadedLevels.txt")
+		local jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId)
 		if jsonMap ~= false then
 			for i=1, #jsonMap.backgrounds do gameEngine.insertBg(jsonMap.backgrounds[i]) end
 			for i=1, #jsonMap.overlays do gameEngine.insertOverLay(jsonMap.overlays[i]) end

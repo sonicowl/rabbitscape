@@ -20,26 +20,24 @@ local myList, backBtn, detailScreenText
 local function listButtonRelease( event )
 	self = event.target
 	print("selected level "..self.id)
-	local id = self.id
 	
-	storyboard.levelId = id
-	storyboard.gotoScene( "gameScene", "fade", 1000 )
+	storyboard.sceneryId = sceneryList[self.id]
+	storyboard.gotoScene( "levelsList2", "slideLeft", 400 )
 	return true
 end
 
 local function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
-	
-	data = jsonLevels.loadSceneryLevels(storyboard.sceneryId)
-	
+	--data = jsonLevels.loadLevelsTable("levelsList.txt")
+	sceneryList = jsonLevels.loadSceneryTable()
 	local bottomBoundary = display.screenOriginY + 0
 
-	if data ~= false then
+	if sceneryList ~= false then
 		local levelHelper = 1
 		-- Create a list with no background, allowing the background image to show through 
 		myList = tableView.newList{
-			data=data,
+			data=sceneryList,
 			default="listItemBg_white.png",
 			over="listItemBg_over.png",
 			onRelease=listButtonRelease,
