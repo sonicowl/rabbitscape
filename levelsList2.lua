@@ -76,7 +76,7 @@ local function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
-		storyboard.gotoScene( "main-menu", "slideRight", 400 )
+		storyboard.gotoScene( "scene-sceneryList", "slideRight", 400 )
 	end	
 
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
