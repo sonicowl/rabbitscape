@@ -503,10 +503,6 @@ end
 
 function stopGame()
 	gameRunning = false
-	if instance1 then
-		instance1:removeSelf()
-		instance1 = nil
-	end
 	Runtime:removeEventListener( "touch", gameClickListener )
 	Runtime:removeEventListener("enterFrame",updateScore)
 end
