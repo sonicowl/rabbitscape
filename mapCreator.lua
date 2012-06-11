@@ -302,7 +302,7 @@ function refreshObjects(map,cellTag)
 			for i=1,#map[j] do
 				if map[j][i] then
 					local cell = map[j][i]
-					local tag = levelMap.objects[levelMap[j][i].id].tag
+					local tag = map.objects[map[j][i].id].tag
 					if tag == cellTag then
 						placeNewObject({x=j,y=i,object="grass"})
 						placeNewObject({x=j,y=i,object=tag})
