@@ -253,8 +253,8 @@ function getNextLevel(sceneryId,levelId)
 			--change to next scenery
 			return {level = 1,scenery = sceneryId+1}
 		else
-			return false
 			print("game Complete")
+			return false
 			--man! the guy ended everything! send us a feedback!
 		end
 	end
