@@ -19,6 +19,7 @@ function init(viewGroup,listenersTable)
 	quitListener = listenersTable.quit
 	resumeGameListener = listenersTable.resume
 	pauseListener = listenersTable.pause
+	nextLevelListener = listenersTable.continue
 	
 	--POSITION VARS
 	_W = display.contentWidth;
@@ -147,11 +148,11 @@ function updateGameScene(score,seconds,rocks)
 		timeText:setReferencePoint(display.CenterLeftReferencePoint);
 		timeText.x = _VW0+_VW - 60-50		
 	end
-	if scoreText then
+--[[	if scoreText then
 		scoreText.text = "SCORE: "..score
 		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
 		scoreText.x = _VW0 + 20
-	end
+	end]]--
 	if rocksText then
 		rocksText.text = rocks
 		rocksText.x = _VW0+30
@@ -179,6 +180,19 @@ function loadActions()
 			endGameScreen = nil
 		end
 		restartListener()
+	end	
+	
+	actions["nextLevel"] = function(event)
+		print("touched "..tostring(event.id))
+		if endGameScreen~=nil and endGameScreen.numChildren ~= nil and endGameScreen.numChildren > 0 then
+			for i = endGameScreen.numChildren, 1,-1 do
+				endGameScreen[i]:removeSelf()
+				endGameScreen[i] = nil
+			end
+			endGameScreen:removeSelf()
+			endGameScreen = nil
+		end
+		nextLevelListener()
 	end	
 	
 	
@@ -240,14 +254,14 @@ end
 
 
 
-function callEndingScreen(didWon)
+function callEndingScreen(didWon,score)
 
 	endGameScreen = display.newGroup()
 	HUD:insert(endGameScreen)
 
-	local myRect = display.newRect(0,0 , _W, _H)
-	myRect:setFillColor(0, 0, 0)
-	myRect.alpha = 0
+	local blackAlpha = display.newRect(0,0 , _W, _H)
+	blackAlpha:setFillColor(0, 0, 0)
+	blackAlpha.alpha = 0
 	
 	local myRect2 = display.newRect(_W/2-225, _H/2-100 , 450, 200)
 	myRect2.strokeWidth = 3
@@ -256,15 +270,19 @@ function callEndingScreen(didWon)
 	myRect2:setStrokeColor(255, 255, 255)
 	
 	local msg = nil
+	local scoreMsg = ""
 	if didWon then
-		msg = "YOU RESCUED THE BUNNY!"
+		msg = "YOU CATCHED THE BUNNY!"
+		scoreMsg = "SCORE: "..score.." POINTS"
 	else
 		msg = "OH NO! BUNNY ESCAPED!"
 	end
-	local myText = display.newText(msg, 0, 0, native.systemFont, 30)
-	myText.x = _W/2
-	myText.y = _H/2-50
+	
+	local myText = display.newText(msg, 0, 0, "Poplar Std", 30)
 	myText:setTextColor(255, 255, 255)
+	local scoreText = display.newText(scoreMsg, 0, 0, "Poplar Std", 30)
+	myText:setTextColor(255, 255, 255)
+	
 	
 	local resetButton = ui.newButton{
 		default = "buttonRed.png",
@@ -273,15 +291,36 @@ function callEndingScreen(didWon)
 		id = "restartGame",
 		text = "RETRY",
 		emboss = true
+	}	
+	
+	
+	local nextLevelButton = ui.newButton{
+		default = "buttonGreen.png",
+		over = "buttonGreenOver.png",
+		onEvent = buttonHandler,
+		id = "nextLevel",
+		text = "CONTINUE",
+		emboss = true
 	}
 	
-	resetButton.x = _W/2; resetButton.y = _H/2+40
-	endGameScreen:insert(myRect)
+	
+	
+	
+	myText.x = _W/2;		myText.y = _H/2-70
+	scoreText.x = _W/2;		scoreText.y = _H/2-40
+	resetButton.x = _W/2-10-resetButton.contentWidth/2; 	resetButton.y = _H/2+40
+	nextLevelButton.x = _W/2+10+nextLevelButton.contentWidth/2; 	nextLevelButton.y = _H/2+40
+	
+	
+	endGameScreen:insert(blackAlpha)
 	endGameScreen:insert(myRect2)
 	endGameScreen:insert(myText)
+	endGameScreen:insert(scoreText)
 	endGameScreen:insert(resetButton)
+	endGameScreen:insert(nextLevelButton)
+	
 	transition.to(screenUI,{time=200,y=200,delay=100})
-	transition.to(myRect,{time=300,alpha=.4})
+	transition.to(blackAlpha,{time=300,alpha=.4})
 end
 
 

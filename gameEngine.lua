@@ -92,7 +92,7 @@ function newLevel(params)
 	overLayGroup = display.newGroup()
 	sceneGroup:insert(overLayGroup)	
 		
-	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame})
+	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame,continue = goToNextLevel})
 end
 
 
@@ -490,6 +490,23 @@ function restartListener()
 	restartGame()
 end
 
+function goToNextLevel()
+	if instance1 then
+		instance1:removeSelf()
+		instance1 = nil
+	end
+	-- getNextLevel returns a table with level and scenery
+	nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)
+	if nextLevel == false then
+		storyboard.gotoScene( "main-menu", "slideRight", 400 )
+		storyboard.gameComplete = true
+	else
+		storyboard.sceneryId = nextLevel.scenery
+		storyboard.levelId = nextLevel.level
+		storyboard.gotoScene( "gameScene", "fade", 1000 )
+	end
+end
+
 function restartGame()
 	if instance1 then
 		instance1:removeSelf()
@@ -513,6 +530,20 @@ function resumeGame()
 	Runtime:addEventListener( "touch", gameClickListener )
 	Runtime:addEventListener("enterFrame",updateScore)
 end
+
+function quitGame()
+	if gameRunning then stopGame() end
+	print("going to "..lastScene)
+	if instance1 then
+		instance1:removeSelf()
+		instance1 = nil
+	end
+	storyboard.gotoScene( "scene-sceneryList", "slideRight", 400 )
+end
+
+
+
+
 
 function setGrid()
 	mapCreator.setHexGrid(levelMap)
@@ -616,16 +647,6 @@ end
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 
-
-function quitGame()
-	if gameRunning then stopGame() end
-	print("going to "..lastScene)
-	if instance1 then
-		instance1:removeSelf()
-		instance1 = nil
-	end
-	storyboard.gotoScene( lastScene, "slideRight", 400 )
-end
 
 
 

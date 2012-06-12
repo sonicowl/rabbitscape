@@ -31,19 +31,12 @@ function saveMap(map)
 			end
 		end
 	end
-	
 	local jsonBlob = json.encode(jsonLevel)
-	--print(jsonBlob)
-
 	local path = system.pathForFile( "levels.txt", system.DocumentsDirectory )
-	
-   -- create file b/c it doesn't exist yet
-   local file = io.open( path, "a" )
+	local file = io.open( path, "a" )
+	file:write(jsonBlob.."\n")
+	io.close( file )
    
-   file:write(jsonBlob.."\n")
-   
-   io.close( file )
-	
 end
 
 function removeLevel(row)
@@ -174,6 +167,8 @@ end
 ---------------------------------JSON WITH SCENARIES MECHANICS-------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 
+
+--RETURNS A TABLE WITH THE SCENERIES NAMES
 function loadSceneryTable()
 	local sceneriesTable = {}
 	local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
@@ -246,6 +241,26 @@ function loadSceneryMap(scenery,row)
 end
  
 
+function getNextLevel(sceneryId,levelId)
+	local sceneryLvls = loadSceneryLevels(sceneryId)
+	if levelId < #sceneryLvls then
+		--get next level
+		return {level = levelId+1,scenery = sceneryId}
+	else
+		--get next scenery then next level
+		local sceneriesTable = loadSceneryTable()
+		if sceneryId < #sceneriesTable then
+			--change to next scenery
+			return {level = 1,scenery = sceneryId+1}
+		else
+			return false
+			print("game Complete")
+			--man! the guy ended everything! send us a feedback!
+		end
+	end
+end
+ 
+ 
 ---------------------------------------------------------
 --#####################################################--
 --	deepcopy(object)
