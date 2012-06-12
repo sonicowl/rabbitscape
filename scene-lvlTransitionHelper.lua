@@ -23,7 +23,7 @@ local scene = storyboard.newScene()
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
         local group = self.view
-		lastScene = storyboard.getPrevious()
+		--lastScene = storyboard.getPrevious()
         -----------------------------------------------------------------------------
                 
         --      CREATE display objects and add them to 'group' here.
@@ -36,7 +36,6 @@ end
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
         local group = self.view
-        
         -----------------------------------------------------------------------------
 		
         --      This event requires build 2012.782 or later.
@@ -48,7 +47,8 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
         local group = self.view
-		storyboard.purgeScene( lastScene )
+		print("entering transition helper from "..lastScene)
+		storyboard.purgeScene( "gameScene" )
         storyboard.gotoScene( "gameScene", "fade", 500 )
         -----------------------------------------------------------------------------
                 

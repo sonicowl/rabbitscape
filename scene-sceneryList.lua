@@ -20,7 +20,7 @@ local myList, backBtn, detailScreenText
 --setup functions to execute on touch of the list view items
 local function listButtonRelease( event )
 	self = event.target
-	print("selected level "..self.id)
+	print("selected scenery "..self.id)
 	
 	storyboard.sceneryId = sceneryList[self.id]
 	storyboard.gotoScene( "levelsList2", "slideLeft", 400 )
@@ -116,7 +116,7 @@ function scene:createScene( event )
 	navBar.y = math.floor(display.screenOriginY + navBar.height*0.5)
 	group:insert(navBar)
 	
-	local navHeader = display.newText("LEVEL SELECT", 0, 0, native.systemFontBold, 16)
+	local navHeader = display.newText("SCENERY SELECT", 0, 0, native.systemFontBold, 16)
 	navHeader:setTextColor(255, 255, 255)
 	navHeader.x = display.contentWidth*.5
 	navHeader.y = navBar.y

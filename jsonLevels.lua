@@ -249,9 +249,13 @@ function getNextLevel(sceneryId,levelId)
 	else
 		--get next scenery then next level
 		local sceneriesTable = loadSceneryTable()
-		if sceneryId < #sceneriesTable then
+		if sceneryId ~= sceneriesTable[#sceneriesTable] then
 			--change to next scenery
-			return {level = 1,scenery = sceneryId+1}
+			for i=1, #sceneriesTable do
+				if sceneriesTable[i] == sceneryId then
+					return {level = 1,scenery = sceneriesTable[i+1]}
+				end
+			end
 		else
 			print("game Complete")
 			return false

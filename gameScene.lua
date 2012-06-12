@@ -45,7 +45,7 @@ function scene:createScene( event )
 	local stdImgH = 50
 	
 	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridLightGreen.png",imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.1 }
-	lastScene = storyboard.getPrevious()
+	lastScene = "scene-sceneryList"
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = lastScene})
 	
 	
@@ -93,6 +93,7 @@ end
 function scene:enterScene( event )
 	local sceneGroup = self.view
 	--levelBuilderUI.start()
+	--print("purging "..lastScene)
 	storyboard.purgeScene( lastScene )
 	-----------------------------------------------------------------------------
 		

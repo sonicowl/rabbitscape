@@ -498,7 +498,7 @@ function goToNextLevel()
 	-- getNextLevel returns a table with level and scenery
 	nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)
 	if nextLevel == false then
-		storyboard.gotoScene( "main-menu", "slideRight", 400 )
+		storyboard.gotoScene( "main-menu", "fade", 1000 )
 		storyboard.gameComplete = true
 	else
 		--local blackBg = display.newRect(0,0,_W,_H)
