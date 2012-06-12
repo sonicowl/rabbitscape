@@ -505,7 +505,7 @@ function goToNextLevel()
 		blackBg.alpha = 0
 		local blackClosure2 = function(event) event:removeSelf(); event = nil end
 		local blackClosure = function(event) transition.to(event,{time = 500, alpha=0,onComplete = blackClosure2}) end
-		transition.to(blackBg,{time = 500, alpha=1,onComplete = blackClosure}
+		transition.to(blackBg,{time = 500, alpha=1,onComplete = blackClosure})
 		storyboard.sceneryId = nextLevel.scenery
 		storyboard.levelId = nextLevel.level
 		storyboard.reloadScene()
