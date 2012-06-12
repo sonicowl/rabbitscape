@@ -303,7 +303,10 @@ function callEndingScreen(didWon,score)
 		emboss = true
 	}
 	
-	
+	--TODO: NEED TO FUTURE CHECK IF THE LEVEL IS ALREADY PASSED ONCE
+	if not didWon then
+		nextLevelButton.alpha = 0
+	end
 	
 	
 	myText.x = _W/2;		myText.y = _H/2-70

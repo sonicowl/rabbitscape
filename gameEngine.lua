@@ -374,7 +374,7 @@ function moveRabbit()
 				if path == false then
 					print("YOU GOT THE RABBIT")
 					stopGame()
-					HUD.callEndingScreen(true)
+					HUD.callEndingScreen(true,gameScore)
 					return false
 				end
 			end
