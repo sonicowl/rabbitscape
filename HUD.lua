@@ -273,7 +273,7 @@ function callEndingScreen(didWon,score)
 	local scoreMsg = ""
 	if didWon then
 		msg = "YOU CATCHED THE BUNNY!"
-		scoreMsg = "SCORE: "..score.." POINTS"
+		scoreMsg = "SCORE: "..math.floor(score).." POINTS"
 	else
 		msg = "OH NO! BUNNY ESCAPED!"
 	end
