@@ -241,12 +241,12 @@ function loadRabbitSprites()
 
 	local run6Sheet = sprite.newSpriteSheetFromData( "run-6.png", require("run-6").getSpriteSheetData() )
 	run6Set = sprite.newSpriteSet(run6Sheet,1,42)
-	sprite.add(run6Set,"runS",1,7,6*msPerFrame,1)
-	sprite.add(run6Set,"runSW",8,7,6*msPerFrame,1)
-	sprite.add(run6Set,"runN",15,7,6*msPerFrame,1)
-	sprite.add(run6Set,"runNW",22,7,6*msPerFrame,1)
-	sprite.add(run6Set,"runNE",29,7,6*msPerFrame,1)
-	sprite.add(run6Set,"runSE",36,7,6*msPerFrame,1)
+	sprite.add(run6Set,"runS",1,4,6*msPerFrame,1)
+	sprite.add(run6Set,"runSW",8,4,6*msPerFrame,1)
+	sprite.add(run6Set,"runN",15,4,6*msPerFrame,1)
+	sprite.add(run6Set,"runNW",22,4,6*msPerFrame,1)
+	sprite.add(run6Set,"runNE",29,4,6*msPerFrame,1)
+	sprite.add(run6Set,"runSE",36,4,6*msPerFrame,1)
 
 end
 
@@ -296,7 +296,7 @@ function moveRabbitTo(x,y)
 			--event = nil
 		end
 		instance1:addEventListener("sprite", tempClosure)
-		transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=7*msPerFrame})	
+		rabbitTransition = transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=4*msPerFrame})	
 --		transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=7*msPerFrame,onComplete=tempClosure})	
 		rabbit.x = x
 		rabbit.y = y
@@ -321,7 +321,13 @@ end
 --#####################################################--
 ---------------------------------------------------------
 function gameClickListener(event)
-	if event.phase == "ended" and gameRunning and not movingRabbit then
+	if event.phase == "ended" and gameRunning then
+		if movingRabbit then
+			transition.cancel(rabbitTransition)
+			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			--movingRabbit = false
+		end
 		local cell = mapCreator.getCellByXY(event.x,event.y,levelMap)
 		if cell == false then
 			print("clicking outside of the matrix")
