@@ -399,9 +399,15 @@ function moveRabbit()
 				stopGame()
 				print("YOU LOOSE")
 				local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,nearExit.x,nearExit.y)
-				local escapeClosure = function(event) escapeRabbit(cardinalDirec,nearExit.x,nearExit.y) end
+				local escapeClosure2 = function(event) 
+					escapeRabbit(cardinalDirec,nearExit.x,nearExit.y) 
+				end
+				local escapeClosure = function(event)
+					timer.performWithDelay(5*msPerFrame, escapeClosure2 )
+					moveRabbitTo(nearExit.x,nearExit.y)
+				end
 				timer.performWithDelay(5*msPerFrame, escapeClosure )
-				moveRabbitTo(nearExit.x,nearExit.y)
+
 				return false
 			end
 			--BELOW AN IMPLEMENTATION FOR THE FAKE EXITS(E.G. CARROT)
@@ -449,7 +455,7 @@ end
 
 function escapeRabbit(direction,actualX,actualY)
 	if instance1 then
-		instance1:prepare("run"..cardinalDirec)
+		instance1:prepare("run"..direction)
 		instance1:play()
 		movingRabbit = true
 		local actualCell = levelMap[actualX][actualY]
