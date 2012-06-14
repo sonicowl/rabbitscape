@@ -477,7 +477,7 @@ function escapeRabbit(direction,actualX,actualY)
 			end
 		end
 		instance1:addEventListener("sprite", endingClosure)
-		rabbitTransition = transition.to(instance1,{x= (actualCell.hexX+5+xMove)*1.1, y= (actualCell.hexY+10+yMove)*1.1,time=4*msPerFrame})	
+		rabbitTransition = transition.to(instance1,{x= actualCell.hexX+5+xMove*1.1, y= actualCell.hexY+10+yMove*1.1,time=4*msPerFrame})	
 	end
 end
 
