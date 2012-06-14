@@ -400,7 +400,7 @@ function moveRabbit()
 				print("YOU LOOSE")
 				local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,nearExit.x,nearExit.y)
 				local escapeClosure = function(event) escapeRabbit(cardinalDirec,nearExit.x,nearExit.y) end
-				timer.performWithDelay(500, escapeClosure )
+				timer.performWithDelay(5*msPerFrame, escapeClosure )
 				moveRabbitTo(nearExit.x,nearExit.y)
 				return false
 			end
@@ -413,6 +413,38 @@ function moveRabbit()
 	rabbit.actualSteps = rabbit.actualSteps%rabbit.steps+1
 end
 
+
+
+function findAround(x,y,objTag)
+	for i=1, 6 do
+		--RUN NODE UPDATE FOR 6 NEIGHBOURIN TILES
+		local node_x = 0
+		local node_y = 0
+		if i==1 then
+			node_x = x-1
+			node_y = y
+		elseif i==2 then
+			node_x = x
+			node_y = y-1
+		elseif i==3 then
+			node_x = x+1
+			node_y = y-1
+		elseif i==4 then
+			node_x = x+1
+			node_y = y
+		elseif i==5 then
+			node_x = x
+			node_y = y+1
+		elseif i==6 then
+			node_x = x-1
+			node_y = y+1
+		end	
+		if levelMap[node_x] and levelMap[node_x][node_y] and levelMap.objects[levelMap[node_x][node_y].id].tag == objTag then
+			return {x = node_x , y = node_y}
+		end
+	end
+	return false
+end
 
 
 function escapeRabbit(direction,actualX,actualY)
@@ -428,11 +460,9 @@ function escapeRabbit(direction,actualX,actualY)
 				HUD.callEndingScreen(false)
 			end
 		end
-
 		instance1:addEventListener("sprite", endingClosure)
 		rabbitTransition = transition.to(instance1,{x=actualCell.hexX+5+actualCell.hexW, y= actualCell.hexY+10+actualCell.hexH,time=4*msPerFrame})	
 	end
-	
 end
 
 
