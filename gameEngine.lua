@@ -325,10 +325,7 @@ function gameClickListener(event)
 			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
 			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
 		end
-		if eatingCarrot then
-			eatingCarrot = false
-			return false
-		end
+
 		if cell.line == rabbit.y and cell.column == rabbit.x then 
 			print("clicking over the rabbit!")
 			return false
@@ -350,7 +347,12 @@ function gameClickListener(event)
 			gameScore = gameScore - gameScore*.01
 			mapCreator.placeObject(cell, objTag)
 			mapCreator.updateHexGrid(levelMap)
-			timer.performWithDelay(100, moveRabbit )
+			if eatingCarrot then
+				eatingCarrot = false
+				return false
+			else
+				timer.performWithDelay(100, moveRabbit )
+			end
 		else
 			print("cant put objects here")
 		end
