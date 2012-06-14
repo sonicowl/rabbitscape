@@ -7,14 +7,13 @@
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
  
-----------------------------------------------------------------------------------
--- 
---      NOTE:
---      
---      Code outside of listener functions (below) will only be executed once,
---      unless storyboard.removeScene() is called.
--- 
----------------------------------------------------------------------------------
+--POSITION VARS
+_W = display.contentWidth;
+_H = display.contentHeight;
+_VW = display.viewableContentWidth
+_VH = display.viewableContentHeight
+_VH0 = (_H-_VH)/2
+_VW0 = (_W-_VW)/2
  
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
@@ -22,14 +21,36 @@ local scene = storyboard.newScene()
  
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
-        local group = self.view
- 
-        -----------------------------------------------------------------------------
-                
-        --      CREATE display objects and add them to 'group' here.
-        --      Example use-case: Restore 'group' from previously saved state.
-        
-        -----------------------------------------------------------------------------
+	local group = self.view
+	lastScene = storyboard.getPrevious()	
+
+	
+	buthandler = function( event )
+		if event.phase == "release"  then
+			storyboard.gotoScene( lastScene, "slideRight", 400 )
+		end
+	end
+
+	local bg = display.newImageRect("l1g.jpg",_VW,_VH)
+	bg.x = _W/2
+	bg.y = _H/2
+	group:insert(bg)
+	
+	backButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buthandler,
+		text = "PLAY GAME",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true,
+		size = 22
+	}
+	backButton.x = _W/2
+	backButton.y = _VH0+_VH-100
+	backButton.xScale = 2
+	backButton.yScale = 2
+	
+	group:insert(backButton)
         
 end
  
@@ -48,7 +69,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
         local group = self.view
-        
+        storyboard.purgeScene( lastScene )
         -----------------------------------------------------------------------------
                 
         --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
@@ -94,7 +115,7 @@ function scene:destroyScene( event )
         -----------------------------------------------------------------------------
         
 end
-
+ 
 -- Called if/when overlay scene is displayed via storyboard.showOverlay()
 function scene:overlayBegan( event )
         local group = self.view

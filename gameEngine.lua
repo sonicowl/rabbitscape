@@ -282,22 +282,15 @@ function moveRabbitTo(x,y)
 		print("RUNNING RABBIT TO "..cardinalDirec)
 		instance1:prepare("run"..cardinalDirec)
 		instance1:play()
-		--rabbit.img.alpha = 0
 		movingRabbit = true
+		
 		local tempClosure = function(event) 
 			if event.phase == "end" then
 				movingRabbit = false
-				event.sprite.currentFrame = 4
 			end
-			--rabbit.img.x = x
-			--rabbit.img.y = y
-			--rabbit.img.alpha = 1
-			--event:removeSelf()
-			--event = nil
 		end
 		instance1:addEventListener("sprite", tempClosure)
 		rabbitTransition = transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=4*msPerFrame})	
---		transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=7*msPerFrame,onComplete=tempClosure})	
 		rabbit.x = x
 		rabbit.y = y
 	else
@@ -322,15 +315,18 @@ end
 ---------------------------------------------------------
 function gameClickListener(event)
 	if event.phase == "ended" and gameRunning then
+		local cell = mapCreator.getCellByXY(event.x,event.y,levelMap)
+		if cell == false then
+			print("clicking outside of the matrix")
+			return false
+		end
 		if movingRabbit then
 			transition.cancel(rabbitTransition)
 			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
 			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
-			--movingRabbit = false
 		end
-		local cell = mapCreator.getCellByXY(event.x,event.y,levelMap)
-		if cell == false then
-			print("clicking outside of the matrix")
+		if eatingCarrot then
+			eatingCarrot = false
 			return false
 		end
 		if cell.line == rabbit.y and cell.column == rabbit.x then 
@@ -475,14 +471,8 @@ function startGame()
 			instance1.currentFrame = 4
 		end
 		movingRabbit = false
-		--rabbit.img = display.newImageRect("rabbit-1.png" , levelMap[x][y].hexW, levelMap[x][y].hexH*1.1)
-		--rabbit.img.x = levelMap[x][y].hexX+5
-		--rabbit.img.y = levelMap[x][y].hexY+10
-		--rabbitsGroup:insert(rabbit.img)
 		HUD.loadScreenUI()
-		--local closure = function() Runtime:addEventListener( "touch", gameClickListener ) end
 		Runtime:addEventListener( "touch", gameClickListener )
-		--timer.performWithDelay(300,closure)
 		Runtime:addEventListener("enterFrame",updateScore)
 	else
 		print("no start point")
@@ -507,17 +497,18 @@ function goToNextLevel()
 		storyboard.gotoScene( "main-menu", "fade", 1000 )
 		storyboard.gameComplete = true
 	else
-		--local blackBg = display.newRect(0,0,_W,_H)
-		--blackBg.alpha = 0
-		--local blackClosure2 = function(event) event:removeSelf(); event = nil end
-		--local blackClosure = function(event) transition.to(event,{time = 500, alpha=0,onComplete = blackClosure2}) end
-		--transition.to(blackBg,{time = 500, alpha=1,onComplete = blackClosure})
 		storyboard.sceneryId = nextLevel.scenery
 		storyboard.levelId = nextLevel.level
-		--storyboard.reloadScene()
-		
 		storyboard.gotoScene( "scene-lvlTransitionHelper", "fade", 500 )
 	end
+end
+
+
+function eatCarrot()
+	--START BUNNY ANIMATION OF EATING CARROT
+	print("nhac nhac nhac nhac")
+	HUD.toast("nhac nhac nhac nhac")
+	eatingCarrot = true
 end
 
 function restartGame()

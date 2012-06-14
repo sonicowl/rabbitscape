@@ -61,11 +61,6 @@ function loadScreenUI()
 		timeText:setReferencePoint(display.CenterLeftReferencePoint);
 		screenUI:insert(timeText)	
 		
---[[		scoreText = display.newText("0000", 0, 0, native.systemFontBold, 30)
-		scoreText:setTextColor(255, 255, 255)
-		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
-		screenUI:insert(scoreText)]]--		
-		
 		rocksText = display.newText("0000", 0, 0, "Poplar Std", 30)
 		rocksText:setTextColor(255, 255, 255)
 		rocksText:setReferencePoint(display.CenterLeftReferencePoint);
@@ -90,7 +85,6 @@ function loadScreenUI()
 		objectsTag.x = _VW0+130;		objectsTag.y = _VH0+_VH-45;	
 		timeTag.x = _VW0+_VW-130;			timeTag.y = _VH0+_VH-45;	
 		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-42
---		scoreText.x = _VW0 + 20;		scoreText.y = _VH0+_VH-60
 		rocksText.x = _VW0 + 30;		rocksText.y = _VH0+_VH-45
 		resetButton.x =_W/2-110; 		resetButton.y = _VH0+_VH-45		
 		
@@ -109,19 +103,19 @@ function loadScreenUI()
 	
 	
 
-		gridButton = ui.newButton{
+		carrotButton = ui.newButton{
 			default = "grid-off.png",
 			over = "grid-on.png",
-			id = "gridButton",
+			id = "carrotButton",
 			onEvent = buttonHandler,
 			emboss = true
 		}
 		
-		gridButton.x = _W/2+110; gridButton.y = _H-50
-		gridButton:scale(.5,.5)
+		carrotButton.x = _W/2+110; carrotButton.y = _H-50
+		carrotButton:scale(.5,.5)
 		
 
-		screenUI:insert(gridButton)
+		screenUI:insert(carrotButton)
 	
 
 	end
@@ -213,10 +207,10 @@ function loadActions()
 		end
 	end	
 
-	actions["gridButton"] = function (event)
+	actions["carrotButton"] = function (event)
 		print("touched "..tostring(event.id))
-		gameEngine.setGrid()
-	end	
+		gameEngine.eatCarrot()
+	end
 	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
 		if ("release" == event.phase) then
