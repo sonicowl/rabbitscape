@@ -391,7 +391,19 @@ function moveRabbit()
 				stopGame()
 				print("YOU LOOSE")
 				HUD.callEndingScreen(false)
-			end		
+			end
+			
+			--AQUI VAI TE UM ESQUEMA PRA TRES PULINHOS!
+			nearExit = findAround(rabbit.x,rabbit.y,"endCell")
+			if nearExit then
+				stopGame()
+				print("YOU LOOSE")
+				local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,nearExit.x,nearExit.y)
+				local escapeClosure = function(event) escapeRabbit(cardinalDirec,nearExit.x,nearExit.y) end
+				timer.performWithDelay(500, escapeClosure )
+				moveRabbitTo(nearExit.x,nearExit.y)
+				return false
+			end
 			--BELOW AN IMPLEMENTATION FOR THE FAKE EXITS(E.G. CARROT)
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].isFakeExit then 
 				placeNewObject({x=rabbit.x,y=rabbit.y,object="grass"})
@@ -401,6 +413,27 @@ function moveRabbit()
 	rabbit.actualSteps = rabbit.actualSteps%rabbit.steps+1
 end
 
+
+
+function escapeRabbit(direction,actualX,actualY)
+	if instance1 then
+		instance1:prepare("run"..cardinalDirec)
+		instance1:play()
+		movingRabbit = true
+		local actualCell = levelMap[actualX][actualY]
+		
+		local endingClosure = function(event) 
+			if event.phase == "end" then
+				movingRabbit = false
+				HUD.callEndingScreen(false)
+			end
+		end
+
+		instance1:addEventListener("sprite", endingClosure)
+		rabbitTransition = transition.to(instance1,{x=actualCell.hexX+5+actualCell.hexW, y= actualCell.hexY+10+actualCell.hexH,time=4*msPerFrame})	
+	end
+	
+end
 
 
 ---------------------------------------------------------
