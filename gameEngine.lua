@@ -462,12 +462,12 @@ function escapeRabbit(direction,actualX,actualY)
 		
 		local xMove = 0
 		local yMove = 0
-		if direction == "N" 		 then xMove = 0; yMove = actualCell.hexH*-1;
-		elseif direction == "NW" then xMove = actualCell.hexW*-1; yMove = actualCell.hexH*-1;
-		elseif direction == "SW" then xMove = actualCell.hexW*-1; yMove = actualCell.hexH;
-		elseif direction == "S"  then xMove = 0; yMove = actualCell.hexH;
-		elseif direction == "SE" then xMove = actualCell.hexW; yMove = actualCell.hexH;
-		elseif direction == "NE" then xMove = actualCell.hexW; yMove = actualCell.hexH*-1;
+		if direction == "N" 		 then xMove = 0; yMove = actualCell.hexH/2*-1;
+		elseif direction == "NW" then xMove = actualCell.hexW*-1; yMove = actualCell.hexH/2*-1;
+		elseif direction == "SW" then xMove = actualCell.hexW*-1; yMove = actualCell.hexH/2;
+		elseif direction == "S"  then xMove = 0; yMove = actualCell.hexH/2;
+		elseif direction == "SE" then xMove = actualCell.hexW; yMove = actualCell.hexH/2;
+		elseif direction == "NE" then xMove = actualCell.hexW; yMove = actualCell.hexH*-1/2;
 		end
 		
 		local endingClosure = function(event) 
