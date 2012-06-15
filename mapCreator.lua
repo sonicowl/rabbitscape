@@ -68,7 +68,7 @@ function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 			levelMap[tempColumn][tempLine].mapRef = levelMap
 		end
 	end
-	createHexGrid(levelMap,hexGroup) 
+	createHexGrid(levelMap) 
 	return levelMap
 end
 
@@ -229,17 +229,17 @@ end
 
 
 
-function createHexGrid(map,displayGroup) 
+function createHexGrid(map) 
 	for j=1,table.getn(map) do
 		if map[j] ~= nil then
 			for i=1,table.getn(map[j]) do
-				if map[j][i] ~= nil and map.objects[map[j][i].id].tag == "rock" then
+				if map[j][i] and map.objects[map[j][i].id].tag ~= "rock" and map.objects[map[j][i].id].tag ~= "endCell" then
 					local hexCell = map[j][i]
-					local tempHexagon = display.newImageRect(map.objects[1].img,hexCell.hexW,hexCell.hexH)
+					local tempHexagon = display.newImageRect(map.objects[1].img,hexCell.hexW*.9,hexCell.hexH)
 					tempHexagon.x = hexCell.hexX
 					tempHexagon.y = hexCell.hexY
-					if map.objects[1].alpha ~= nil then tempHexagon.alpha = map.objects[1].alpha end
-					displayGroup:insert(tempHexagon)
+					--if map.objects[1].alpha ~= nil then tempHexagon.alpha = map.objects[1].alpha end
+					hexGroup:insert(tempHexagon)
 					
 					--add a label
 					if displayTexts then
@@ -255,6 +255,11 @@ function createHexGrid(map,displayGroup)
 end
 
 function updateHexGrid(map)
+	for i=hexGroup.numChildren,1,-1 do
+		hexGroup[i]:removeSelf()
+		hexGroup[i] = nil
+	end
+	createHexGrid(map)
 	if displayTexts then
 		for j=1,table.getn(map) do
 			if map[j] ~= nil then

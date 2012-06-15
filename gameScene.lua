@@ -44,14 +44,15 @@ function scene:createScene( event )
 	local stdImgW = 50
 	local stdImgH = 50
 	
-	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridLightGreen.png",imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.1 }
+	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridRoundGreen.png",imgW=stdImgW*.7, imgH=stdImgH*.7 }
+--	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridRoundGreen.png",imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.1 }
 	lastScene = "scene-sceneryList"
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = lastScene})
 	
 	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = false , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="gridRoundGreen.png", imgW=stdImgW, imgH=stdImgH })
-	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = false , tag="endCell" ,img="gridRoundRed.png", imgW=stdImgW, imgH=stdImgH })
+	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = false , tag="endCell" ,img="gridRoundRed.png", imgW=stdImgW*1.3, imgH=stdImgH*1.3 })
 --	gameEngine.createNewObject({ terrainCost = 10, maxMembers =  1, isDynamic = false , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell",img="startCell.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.7 })
 --	gameEngine.createNewObject({ terrainCost = 0 , maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = false , tag="endCell" ,img="gridRed.png", imgW=stdImgW*1.4, imgH=stdImgH*1.2, alpha = 0.5 })
 	gameEngine.createNewObject({ terrainCost = 10, maxMembers = -1, isDynamic = false , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" ,img="pedra2.png", imgW=stdImgW*1.1, imgH=stdImgH*1.1})

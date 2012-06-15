@@ -553,6 +553,7 @@ function startGame()
 		end
 		movingRabbit = false
 		HUD.loadScreenUI()
+		mapCreator.updateHexGrid(levelMap)
 		Runtime:addEventListener( "touch", gameClickListener )
 		Runtime:addEventListener("enterFrame",updateScore)
 	else
