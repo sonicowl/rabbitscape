@@ -354,7 +354,7 @@ function gameClickListener(event)
 				timer.performWithDelay(100, moveRabbit )
 			end
 		else
-			print("cant put objects here")
+			print("clicking "..cell.line..","..cell.column.." cant put objects here")
 		end
 	end
 	return true

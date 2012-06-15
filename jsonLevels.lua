@@ -383,7 +383,8 @@ function downloadingAssets(event)
 		end
 	end
 	if syncPhase == 3 then
-		if not downloadingFile and #filesToDownload > 0 then
+
+		if not downloadingFile and #filesToDownload > 0  then
 			if checkIfFileExists(filesToDownload[1]) then
 				removeFileFromTable(filesToDownload, filesToDownload[1])
 			else
