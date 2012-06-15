@@ -104,8 +104,8 @@ function loadScreenUI()
 	
 
 		carrotButton = ui.newButton{
-			default = "grid-off.png",
-			over = "grid-on.png",
+			default = "carrot-off.png",
+			over = "carrot-on.png",
 			id = "carrotButton",
 			onEvent = buttonHandler,
 			emboss = true
@@ -334,8 +334,8 @@ function showMenu()
 
 	
 	local objectivesButton = ui.newButton{
-		default = "objectives-off.png",
-		over = "objectives-on.png",
+		default = "howtoplay-off.png",
+		over = "howtoplay-on.png",
 		onEvent = buttonHandler,
 		id = "",
 		textColor = { 51, 51, 51, 255 },
