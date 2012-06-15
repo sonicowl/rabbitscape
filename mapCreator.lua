@@ -233,7 +233,7 @@ function createHexGrid(map,displayGroup)
 	for j=1,table.getn(map) do
 		if map[j] ~= nil then
 			for i=1,table.getn(map[j]) do
-				if map[j][i] ~= nil then
+				if map[j][i] ~= nil and map.objects[map[j][i].id].tag == "rock" then
 					local hexCell = map[j][i]
 					local tempHexagon = display.newImageRect(map.objects[1].img,hexCell.hexW,hexCell.hexH)
 					tempHexagon.x = hexCell.hexX
