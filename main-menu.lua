@@ -7,6 +7,7 @@
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 require("ui")
+local dialogsModule = require( "module-dialogs" )
 
 _W = display.contentWidth;
 _H = display.contentHeight;
@@ -35,7 +36,7 @@ GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 function scene:createScene( event )
 	local group = self.view
 	lastScene = storyboard.getPrevious()	
-
+	dialogsModule.init()
 	
 	but1handler = function( event )
 		if event.phase == "release"  then
@@ -45,7 +46,8 @@ function scene:createScene( event )
 	
 	but2handler = function( event )
 		if event.phase == "release"  then
-			storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
+			--storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
+			dialogsModule.callScenerySelector(group)
 		end
 	end
 
@@ -63,6 +65,7 @@ function scene:createScene( event )
 		emboss = true,
 		size = 22
 	}
+	
 	gameButton.x = display.contentWidth/2
 	gameButton.y = display.contentHeight/2-100
 	gameButton.xScale = 2
@@ -87,15 +90,14 @@ function scene:createScene( event )
 	
 	group:insert(lvlBuilderButton)
 	
-	
-	
 end
 
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
-	storyboard.purgeScene( lastScene )	
+	storyboard.purgeScene( lastScene )
+	jsonLevels.checkForUpdates()
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)

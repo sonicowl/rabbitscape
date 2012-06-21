@@ -30,9 +30,11 @@ end
 local function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
-	
-	data = jsonLevels.loadSceneryLevels(storyboard.sceneryId)
-	
+	if storyboard.getFromResources then
+		data = jsonLevels.loadSceneryLevels(storyboard.sceneryId)
+	else
+		data = jsonLevels.loadSceneryLevels(storyboard.sceneryId,"documents")
+	end
 	local bottomBoundary = display.screenOriginY + 0
 
 	if data ~= false then

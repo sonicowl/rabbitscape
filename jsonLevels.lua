@@ -148,9 +148,14 @@ end
 
 
 
-function linesCount(file)
+function linesCount(file,place)
 	local count = 0
-	local path = system.pathForFile( file, system.DocumentsDirectory  )
+	local path = nil
+	if place == "resources" then
+		path = system.pathForFile( file, system.DocumentsDirectory  )
+	else
+		path = system.pathForFile( file, system.ResourceDirectory  )
+	end
 	local fh = io.open( path )
 	if fh then
 		for line in fh:lines() do
@@ -158,6 +163,8 @@ function linesCount(file)
 		end
 		
 		fh:close()
+	else
+		return false
 	end
 	return count
 end
@@ -177,21 +184,48 @@ function loadSceneryTable()
 		for line in file:lines() do
 			local tempScenery = json.decode(line)
 			if tempScenery then
-				table.insert(sceneriesTable, tempScenery.sceneryId)
+				local tempSceneryInfo = {}
+				tempSceneryInfo.id = tempScenery.sceneryId
+				tempSceneryInfo.default = tempScenery.default
+				tempSceneryInfo.over = tempScenery.over
+				table.insert(sceneriesTable, tempSceneryInfo)
 			end
 		end
 		io.close( file )
+		sceneriesTable.resources = false
 		return sceneriesTable
 	else
 		print("file not found")
+			local path = system.pathForFile( "gameLevels.json", system.ResourceDirectory )
+			local file = io.open( path )
+			if file then
+				for line in file:lines() do
+					local tempScenery = json.decode(line)
+					if tempScenery then
+						local tempSceneryInfo = {}
+						tempSceneryInfo.id = tempScenery.sceneryId
+						tempSceneryInfo.default = tempScenery.default
+						tempSceneryInfo.over = tempScenery.over
+						table.insert(sceneriesTable, tempSceneryInfo)
+					end
+				end
+				io.close( file )
+				sceneriesTable.resources = true
+				return sceneriesTable
+			end
 	end
 	return false
 end
 
 
-function loadSceneryLevels(scenery)
+function loadSceneryLevels(scenery,place)
 	local levelsTable = {}
-	local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+	local path = nil
+	if place == nil then
+		path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+	elseif place == "documents" then
+		path = system.pathForFile( "gameLevels.json", system.ResourceDirectory )
+	end
 	local file = io.open( path )
 	if file then
 		for line in file:lines() do
@@ -249,10 +283,10 @@ function getNextLevel(sceneryId,levelId)
 	else
 		--get next scenery then next level
 		local sceneriesTable = loadSceneryTable()
-		if sceneryId ~= sceneriesTable[#sceneriesTable] then
+		if sceneryId ~= sceneriesTable[#sceneriesTable].id then
 			--change to next scenery
 			for i=1, #sceneriesTable do
-				if sceneriesTable[i] == sceneryId then
+				if sceneriesTable[i].id == sceneryId then
 					return {level = 1,scenery = sceneriesTable[i+1]}
 				end
 			end
@@ -263,6 +297,7 @@ function getNextLevel(sceneryId,levelId)
 		end
 	end
 end
+
  
  
 ---------------------------------------------------------
@@ -477,4 +512,75 @@ function removeFileFromTable(tableRef, file)
 		end
 	end
 	return false
+end
+ 
+ 
+function checkForUpdates()
+
+	local function syncBoxCallback( event )
+		if "clicked" == event.action then
+				local i = event.index
+				if 1 == i then
+					if matrixSize == 6 then
+						sizeBut_off.isVisible = false
+						sizeBut_on.isVisible = true
+						matrixSize = 9
+					else
+						sizeBut_on.isVisible = false
+						sizeBut_off.isVisible = true
+						matrixSize = 6
+					end
+					restartGame()
+				elseif 2 == i then
+					print('dont leave game')
+				end
+		end
+	end
+
+	function dialogRequestUpdate()
+		local alert = native.showAlert( "There are new levels available, do you want to download them now?", 
+		{ "OK", "Later" }, syncBoxCallback )
+	end
+
+
+	local function serverListener( event )
+		if ( event.isError ) then
+			print ( "Network error - download of "..event.response.." failed" )
+		else
+			print ( "Download of " .. event.response.." completed!" )
+			
+			local path = system.pathForFile( "serverLevels.json", system.DocumentsDirectory )
+			local path2 = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+			local file = io.open( path, "r" )
+			local file2 = io.open( path2, "r" )
+			if file and file2 then		
+				local line1 = file:read()
+				local line2 = file2:read()
+				scene1 = json.decode(line1)
+				scene2 = json.decode(line2)
+				if scene1.version > scene2.version then
+					dialogRequestUpdate()
+				end
+				
+				io.close( file )
+				io.close( file2 )
+			end
+		end
+	end
+	
+	local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+	local file = io.open( path, "r" )
+	if file then
+		network.download( 
+			"http://www.sonicowl.com/gameAssets/"..file, 
+			"GET", 
+			serverListener, 
+			"serverLevels.json", 
+			system.DocumentsDirectory 
+		)
+		io.close(file)
+	else
+		dialogRequestUpdate()
+	end
+	
 end

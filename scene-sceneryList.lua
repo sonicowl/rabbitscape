@@ -46,7 +46,7 @@ local function drawTableView(group)
 			bottom=bottomBoundary,
 			callback=function(row) 
 					rowGroup = display.newGroup()
-					local t = display.newText(row, 0, 0, native.systemFontBold, 40)
+					local t = display.newText(row.id, 0, 0, native.systemFontBold, 40)
 					t:setTextColor(255, 255, 255)
 					t.x = math.floor(t.width/2) + 12
 					t.y = 46 

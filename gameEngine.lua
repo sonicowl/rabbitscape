@@ -134,8 +134,12 @@ end
 --#####################################################--
 ---------------------------------------------------------
 function insertBg(file)
-
-	local bg = display.newImageRect(file,_VW,_VW/_W*1024)
+	local bg = nil
+	if storyboard.getFromResources then 
+		bg = display.newImageRect(file,_VW,_VW/_W*1024)
+	else
+		bg = display.newImageRect(file,system.DocumentsDirectory,_VW,_VW/_W*1024)
+	end
 	bg.x = _W/2
 	bg.y = _H/2
 	bgGroup:insert(bg)
@@ -156,8 +160,12 @@ end
 --#####################################################--
 ---------------------------------------------------------
 function insertOverLay(file)
-
-	local bg = display.newImageRect(file,_VW,_VW/_W*1024)
+	local bg = nil
+	if storyboard.getFromResources then 
+		bg = display.newImageRect(file,_VW,_VW/_W*1024)
+	else
+		bg = display.newImageRect(file,system.DocumentsDirectory,_VW,_VW/_W*1024)
+	end
 	bg.x = _W/2
 	bg.y = _H/2
 	overLayGroup:insert(bg)
@@ -768,7 +776,12 @@ function newSceneAnimation(params)
 	end
 	for i=1 , #params.objects do
 		local listObj = params.objects[i]
-		local tempObject1 = display.newImageRect(listObj.img,listObj.w,listObj.h)
+		local tempObject1 = nil
+		if storyboard.getFromResources then 
+			tempObject1 = display.newImageRect(listObj.img,listObj.w,listObj.h)
+		else
+			tempObject1 = display.newImageRect(listObj.img,system.DocumentsDirectory,listObj.w,listObj.h)
+		end
 		tempObject1.x = listObj.x0
 		tempObject1.y = listObj.y0
 		tempObject1.params = listObj
@@ -776,7 +789,12 @@ function newSceneAnimation(params)
 		objectClosure = function(event)
 			local listObj = event.params
 			print(listObj.x0)
-			local tempObject = display.newImageRect(listObj.img,listObj.w,listObj.h)
+			local tempObject = nil
+			if storyboard.getFromResources then 
+				tempObject = display.newImageRect(listObj.img,listObj.w,listObj.h)
+			else
+				tempObject = display.newImageRect(listObj.img,system.DocumentsDirectory,listObj.w,listObj.h)
+			end
 			local transitionTime = listObj.time
 			if listObj.continue then 
 				tempObject.x = listObj.x0-listObj.w
