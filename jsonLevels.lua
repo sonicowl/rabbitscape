@@ -364,10 +364,10 @@ function syncLevels(viewGroup,listener)
 	--SUBSTITUTE THE DOWNLOADED JSON WITH THE OFFICIAL ONE
 	--RETURN TRUE
 	--loadingRect = display.newRect(_VW0,_VH0+_VH-50,400,50)
-	local touchClosure = function(event) return true end
 	loadingRect = display.newRect(0,0,_W,_H)
 	loadingRect:setFillColor(0,0,0)
 	loadingRect.alpha = .7
+	local touchClosure = function(event) return true end
 	loadingRect:addEventListener("touch", touchClosure)
 	loadingText = display.newText("LOADING LEVELS...", 0, 0, "Poplar Std", 30)
 	--loadingText:setReferencePoint(display.CenterLeftReferencePoint);
@@ -377,7 +377,7 @@ function syncLevels(viewGroup,listener)
 	loadingBar = display.newRect(_W/2-145,_H/2+5,290,40)
 	loadingBar:setFillColor(134,184,0)
 	loadingBarText = display.newText("calculating size...", 0, 0, "Poplar Std", 30)
-	loadingBarText.x = loadingBar.x; loadingBarText.y = loadingBar.y
+	loadingBarText.x = loadingBar.x; loadingBarText.y = loadingBar.y+10
 	loadingBarText:setTextColor(61, 79, 38)
 	loadingBar.xScale = 0.01
 	loadingBar.x = _W/2-loadingBarBox.contentWidth/2+5+loadingBar.contentWidth/2

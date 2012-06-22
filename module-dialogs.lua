@@ -17,7 +17,13 @@ function init()
 end
 
 function callScenerySelector(viewGroup,storyboard)	
-
+	
+	local holdingClickBg = display.newRect(0,0,_W,_H)
+	viewGroup:insert(holdingClickBg)
+	holdingClickBg.alpha = 0.01
+	local touchClosure = function(event) return true end
+	holdingClickBg:addEventListener("touch", touchClosure)
+	
 	local board = display.newImageRect("board-2.png", math.floor(1053/2),math.floor(1683/2))
 	board.x = _W/2; board.y = _H/2
 	viewGroup:insert(board)
@@ -46,6 +52,15 @@ function callScenerySelector(viewGroup,storyboard)
 		return true
 	end
 	
+	
+	function closeButHandler(event)
+		if event.phase == "release"  then
+			local closeClosure = function(event) event:removeSelf(); event = nil; end
+			transition.to(viewGroup,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
+		end
+		return true
+	end
+	
 	function listener(imgNum)
 		print( "USER CLICKED LEVEL "..imgNum)
 		if sceneryList.resources then 
@@ -57,6 +72,12 @@ function callScenerySelector(viewGroup,storyboard)
 		storyboard.gotoScene( "levelsList2", "slideUp", 400 )
 	end
 
+	local closeBut = ui.newButton{
+		default = "close-off.png",
+		over = "close-on.png",
+		onEvent = closeButHandler,
+	}
+	
 	local leftArrow = ui.newButton{
 		default = "left-off.png",
 		over = "left-on.png",
@@ -73,11 +94,14 @@ function callScenerySelector(viewGroup,storyboard)
 
 	leftArrow:scale(.5,.5)
 	rightArrow:scale(.5,.5)
+	closeBut:scale(.5,.5)
 
 	leftArrow.x = _W/4-15;		leftArrow.y = _H/2+20
 	rightArrow.x = _W/4*3+15;	rightArrow.y = _H/2+20
+	closeBut.x = board.x+board.contentWidth/2-10	closeBut.y = board.y - board.contentHeight/2+10
 	viewGroup:insert(leftArrow)
 	viewGroup:insert(rightArrow)
+	viewGroup:insert(closeBut)
 
 
 
