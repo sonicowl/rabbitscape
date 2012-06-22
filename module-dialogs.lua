@@ -26,9 +26,9 @@ function callScenerySelector(viewGroup,storyboard)
 	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
 	viewGroup:insert(boardIcon)
 
-	local pickText = display.newText("PICK A STAGE", 0, 0, "Poplar Std", 50)
+	local pickText = display.newText("PICK  A  STAGE", 0, 0, "Poplar Std", 50)
 	pickText:setTextColor(255, 255, 255)
-	local pickTextShadow = display.newText("PICK A STAGE", 0, 0, "Poplar Std", 50)
+	local pickTextShadow = display.newText("PICK  A  STAGE", 0, 0, "Poplar Std", 50)
 	pickTextShadow:setTextColor(0, 0, 0)
 	viewGroup:insert(pickTextShadow)
 	viewGroup:insert(pickText)
@@ -50,9 +50,11 @@ function callScenerySelector(viewGroup,storyboard)
 		print( "USER CLICKED LEVEL "..imgNum)
 		if sceneryList.resources then 
 			storyboard.getFromResources = true
+		else
+			storyboard.getFromResources = false
 		end
 		storyboard.sceneryId = sceneryList[imgNum].id
-		storyboard.gotoScene( "levelsList2", "slideLeft", 400 )
+		storyboard.gotoScene( "levelsList2", "slideUp", 400 )
 	end
 
 	local leftArrow = ui.newButton{

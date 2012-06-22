@@ -809,8 +809,10 @@ function newSceneAnimation(params)
 			end
 			tempObject.y = listObj.y0
 			tempObject.params = listObj
-			otherGroup:insert(tempObject)
-			transition.to(tempObject,{x=listObj.x,y=listObj.y,time=transitionTime,onComplete=objectClosure})
+			if otherGroup and tempoObject then
+				otherGroup:insert(tempObject)
+				transition.to(tempObject,{x=listObj.x,y=listObj.y,time=transitionTime,onComplete=objectClosure})
+			end
 			if event.x then
 				event:removeSelf()
 				event = nil

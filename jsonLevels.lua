@@ -77,10 +77,7 @@ function removeLevel(row)
 	else
 		print("sended a nil row")
 	end
-	
-	--
-	
-	
+
 
 end
 
@@ -354,7 +351,7 @@ end
 
 
 function syncLevels(viewGroup,listener)
-
+	syncGroup = viewGroup
 	--DOWNLOAD THE JSONS txt
 	--CREATE A TABLE WITH ALL THE FILES!
 	filesToDownload = {}
@@ -366,14 +363,29 @@ function syncLevels(viewGroup,listener)
 	--AFTER CHECKING EVERY FILE RECHECK AGAIN TO CONFIRM THE DOWNLOAD WAS SUCCESSFUL
 	--SUBSTITUTE THE DOWNLOADED JSON WITH THE OFFICIAL ONE
 	--RETURN TRUE
-	loadingRect = display.newRect(_VW0,_VH0+_VH-50,400,50)
+	--loadingRect = display.newRect(_VW0,_VH0+_VH-50,400,50)
+	local touchClosure = function(event) return true end
+	loadingRect = display.newRect(0,0,_W,_H)
 	loadingRect:setFillColor(0,0,0)
-	loadingRect.alpha = .5
+	loadingRect.alpha = .7
+	loadingRect:addEventListener("touch", touchClosure)
 	loadingText = display.newText("LOADING LEVELS...", 0, 0, "Poplar Std", 30)
-	loadingText:setReferencePoint(display.CenterLeftReferencePoint);
-	loadingText.x = _VW0+10; loadingText.y = loadingRect.y
-	viewGroup:insert(loadingRect)
-	viewGroup:insert(loadingText)
+	--loadingText:setReferencePoint(display.CenterLeftReferencePoint);
+	--loadingText.x = _VW0+10; loadingText.y = loadingRect.y
+	loadingText.x = _W/2; loadingText.y = _H/2 - 40
+	loadingBarBox = display.newRect(_W/2-150,_H/2,300,50)
+	loadingBar = display.newRect(_W/2-145,_H/2+5,290,40)
+	loadingBar:setFillColor(134,184,0)
+	loadingBarText = display.newText("calculating size...", 0, 0, "Poplar Std", 30)
+	loadingBarText.x = loadingBar.x; loadingBarText.y = loadingBar.y
+	loadingBarText:setTextColor(61, 79, 38)
+	loadingBar.xScale = 0.01
+	loadingBar.x = _W/2-loadingBarBox.contentWidth/2+5+loadingBar.contentWidth/2
+	syncGroup:insert(loadingRect)
+	syncGroup:insert(loadingText)
+	syncGroup:insert(loadingBarBox)
+	syncGroup:insert(loadingBar)
+	syncGroup:insert(loadingBarText)
 end
 
 
@@ -415,6 +427,7 @@ function downloadingAssets(event)
 						end
 					end
 				end
+				filesToDownload.totalFiles = #filesToDownload
 				io.close( sceneriesFile )
 				syncPhase = 3
 			else
@@ -424,8 +437,10 @@ function downloadingAssets(event)
 		end
 	end
 	if syncPhase == 3 then
-
 		if not downloadingFile and #filesToDownload > 0  then
+			loadingBarText.text = "loaded "..math.floor((1 - #filesToDownload / filesToDownload.totalFiles)*100).."%"
+			loadingBar.xScale = (1 - #filesToDownload / filesToDownload.totalFiles)
+			loadingBar.x = _W/2-loadingBarBox.contentWidth/2+5+loadingBar.contentWidth/2
 			if checkIfFileExists(filesToDownload[1]) then
 				removeFileFromTable(filesToDownload, filesToDownload[1])
 			else
@@ -438,10 +453,13 @@ function downloadingAssets(event)
 	if syncPhase == 4 then
 		copyFromFile("serverLevels.json","downloadedLevels.json")
 		Runtime:removeEventListener("enterFrame", downloadingAssets)
-		loadingRect:removeSelf()
-		loadingRect = nil
-		loadingText:removeSelf()
-		loadingText = nil
+		--for i=#syncGroup
+		syncGroup:removeSelf()
+		syncGroup = nil
+		--loadingRect:removeSelf()
+		--loadingRect = nil
+		--loadingText:removeSelf()
+		--loadingText = nil
 		
 		if listener then onComplete() end
 	end

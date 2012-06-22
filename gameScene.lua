@@ -96,7 +96,18 @@ function scene:createScene( event )
 	
 	gameEngine.startGame()
 end
-
+-- Called BEFORE scene has moved onscreen:
+function scene:willEnterScene( event )
+        local group = self.view
+        
+        -----------------------------------------------------------------------------
+                
+        --      This event requires build 2012.782 or later.
+        
+        -----------------------------------------------------------------------------
+        lastScene = storyboard.getPrevious()
+		print("COMING FROM "..tostring(lastScene))
+end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
@@ -146,7 +157,8 @@ end
 
 -- "createScene" event is dispatched if scene's view does not exist
 scene:addEventListener( "createScene", scene )
-
+-- "willEnterScene" event is dispatched before scene transition begins
+scene:addEventListener( "willEnterScene", scene )
 -- "enterScene" event is dispatched whenever scene transition has finished
 scene:addEventListener( "enterScene", scene )
 

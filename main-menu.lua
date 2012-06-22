@@ -51,7 +51,9 @@ function scene:createScene( event )
 		if "clicked" == event.action then
 			local i = event.index
 			if 1 == i then
-				jsonLevels.syncLevels(group)
+				local loadingGroup = display.newGroup()
+				group:insert(loadingGroup)
+				jsonLevels.syncLevels(loadingGroup)
 				hasUpdates = false
 			else
 				sceneDialog = display.newGroup()
