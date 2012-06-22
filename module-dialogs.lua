@@ -20,18 +20,18 @@ function callScenerySelector(viewGroup,storyboard)
 
 	local board = display.newImageRect("board-2.png", math.floor(1053/2),math.floor(1683/2))
 	board.x = _W/2; board.y = _H/2
-	scenerySelector:insert(board)
+	viewGroup:insert(board)
 
 	local boardIcon = display.newImageRect("title-levelselect.png", math.floor(362/2),math.floor(312/2))
 	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
-	scenerySelector:insert(boardIcon)
+	viewGroup:insert(boardIcon)
 
-	local pickText = display.newText("PICK A STAGE", 0, 0, "Poplar Std", 30)
+	local pickText = display.newText("PICK A STAGE", 0, 0, "Poplar Std", 50)
 	pickText:setTextColor(255, 255, 255)
-	local pickTextShadow = display.newText("PICK A STAGE", 0, 0, "Poplar Std", 30)
+	local pickTextShadow = display.newText("PICK A STAGE", 0, 0, "Poplar Std", 50)
 	pickTextShadow:setTextColor(0, 0, 0)
-	scenerySelector:insert(pickTextShadow)
-	scenerySelector:insert(pickText)
+	viewGroup:insert(pickTextShadow)
+	viewGroup:insert(pickText)
 	pickText.x = _W*.5;					pickText.y = _H/2-220
 	pickTextShadow.x = pickText.x + 2;	pickTextShadow.y = pickText.y + 2
 
@@ -51,7 +51,7 @@ function callScenerySelector(viewGroup,storyboard)
 		if sceneryList.resources then 
 			storyboard.getFromResources = true
 		end
-		storyboard.sceneryId = sceneryList[imgNum]
+		storyboard.sceneryId = sceneryList[imgNum].id
 		storyboard.gotoScene( "levelsList2", "slideLeft", 400 )
 	end
 
@@ -74,8 +74,8 @@ function callScenerySelector(viewGroup,storyboard)
 
 	leftArrow.x = _W/4-15;		leftArrow.y = _H/2+20
 	rightArrow.x = _W/4*3+15;	rightArrow.y = _H/2+20
-	scenerySelector:insert(leftArrow)
-	scenerySelector:insert(rightArrow)
+	viewGroup:insert(leftArrow)
+	viewGroup:insert(rightArrow)
 
 
 
@@ -85,10 +85,10 @@ function callScenerySelector(viewGroup,storyboard)
 		{default = "stage3-off.png",over = "stage3-on.png"},
 		{default = "stage4-off.png",over = "stage4-on.png"}
 	}	
-	slider = slideView.new( sceneryList )
+	slider = slideView.new( sceneryList,listener )
 	slider.y = slider.y + 50
-	scenerySelector:insert(slider)
-	scenerySelector.y = -display.contentHeight
-	transition.to(scenerySelector,{time=1000,y=0,transition = easing.inOutExpo})
+	viewGroup:insert(slider)
+	viewGroup.y = -display.contentHeight
+	transition.to(viewGroup,{time=1000,y=0,transition = easing.inOutExpo})
 
 end

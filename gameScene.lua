@@ -66,8 +66,14 @@ function scene:createScene( event )
 	
 	
 	if storyboard.levelId ~= nil then
-		local jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId)
-		if jsonMap ~= false then
+		jsonMap = nil
+		if storyboard.getFromResources then
+			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId,system.ResourceDirectory)
+			print("scene: "..storyboard.sceneryId.." level:"..storyboard.levelId)
+		else
+			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId)
+		end
+		if jsonMap then
 			for i=1, #jsonMap.backgrounds do gameEngine.insertBg(jsonMap.backgrounds[i]) end
 			for i=1, #jsonMap.overlays do gameEngine.insertOverLay(jsonMap.overlays[i]) end
 			gameEngine.insertOverLay("vignete.png")

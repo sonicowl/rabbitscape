@@ -30,13 +30,15 @@ end
 local function drawTableView(group)
 		-- setup the data
 	removeButtons = {}
+	print("GET FROM RESOURCES?: "..tostring(storyboard.getFromResources))
+	print(storyboard.sceneryId)
+	local data = nil
 	if storyboard.getFromResources then
-		data = jsonLevels.loadSceneryLevels(storyboard.sceneryId)
+		data = jsonLevels.loadSceneryLevels(storyboard.sceneryId,system.ResourceDirectory)
 	else
-		data = jsonLevels.loadSceneryLevels(storyboard.sceneryId,"documents")
+		data = jsonLevels.loadSceneryLevels(storyboard.sceneryId)
 	end
 	local bottomBoundary = display.screenOriginY + 0
-
 	if data ~= false then
 		local levelHelper = 1
 		-- Create a list with no background, allowing the background image to show through 
@@ -78,7 +80,7 @@ local function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
-		storyboard.gotoScene( "scene-sceneryList", "slideRight", 400 )
+		storyboard.gotoScene( "main-menu", "slideRight", 400 )
 	end	
 
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
@@ -103,6 +105,7 @@ end
 function scene:createScene( event )
 	group = self.view
 	lastScene = storyboard.getPrevious()
+		print("COMING FROM "..tostring(lastScene))
 	actions = {}
 	local bg = display.newImageRect("l1g.jpg",_VW,_VH)
 	bg.x = _W/2; bg.y = _H/2
@@ -144,7 +147,18 @@ function scene:createScene( event )
 
 	
 end
-
+-- Called BEFORE scene has moved onscreen:
+function scene:willEnterScene( event )
+        local group = self.view
+        
+        -----------------------------------------------------------------------------
+                
+        --      This event requires build 2012.782 or later.
+        
+        -----------------------------------------------------------------------------
+        lastScene = storyboard.getPrevious()
+		print("COMING FROM "..tostring(lastScene))
+end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
@@ -193,6 +207,8 @@ end
 
 -- "createScene" event is dispatched if scene's view does not exist
 scene:addEventListener( "createScene", scene )
+-- "willEnterScene" event is dispatched before scene transition begins
+scene:addEventListener( "willEnterScene", scene )
 
 -- "enterScene" event is dispatched whenever scene transition has finished
 scene:addEventListener( "enterScene", scene )

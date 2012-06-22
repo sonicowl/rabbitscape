@@ -161,7 +161,7 @@ end
 ---------------------------------------------------------
 function insertOverLay(file)
 	local bg = nil
-	if storyboard.getFromResources then 
+	if storyboard.getFromResources or file == "vignete.png" then 
 		bg = display.newImageRect(file,_VW,_VW/_W*1024)
 	else
 		bg = display.newImageRect(file,system.DocumentsDirectory,_VW,_VW/_W*1024)
@@ -582,7 +582,12 @@ function goToNextLevel()
 		instance1 = nil
 	end
 	-- getNextLevel returns a table with level and scenery
-	nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)
+	nextLevel = nil
+	if storyboard.getFromResources then
+		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId,system.ResourceDirectory)
+	else
+		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)		
+	end
 	if nextLevel == false then
 		storyboard.gotoScene( "main-menu", "fade", 1000 )
 		storyboard.gameComplete = true
@@ -632,7 +637,7 @@ function quitGame()
 		instance1:removeSelf()
 		instance1 = nil
 	end
-	storyboard.gotoScene( "scene-sceneryList", "slideRight", 400 )
+	storyboard.gotoScene( "main-menu", "slideRight", 400 )
 end
 
 

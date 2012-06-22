@@ -218,13 +218,13 @@ function loadSceneryTable()
 end
 
 
-function loadSceneryLevels(scenery,place)
+function loadSceneryLevels(scenery,baseDir)
 	local levelsTable = {}
 	local path = nil
-	if place == nil then
-		path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
-	elseif place == "documents" then
+	if baseDir == system.ResourceDirectory then
 		path = system.pathForFile( "gameLevels.json", system.ResourceDirectory )
+	else
+		path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
 	end
 	local file = io.open( path )
 	if file then
@@ -247,11 +247,15 @@ function loadSceneryLevels(scenery,place)
 end
 
 
-function loadSceneryMap(scenery,row)
+function loadSceneryMap(scenery,row,baseDir)
 	if row ~= nil then
 		print("loading map of scenery "..scenery.." on row "..row)
-		local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
-		
+		local path = nil
+		if baseDir == system.ResourceDirectory then
+			path = system.pathForFile( "gameLevels.json", system.ResourceDirectory )
+		else
+			path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
+		end
 		local file = io.open( path, "r" )
 		local lineHelper = 1
 		local level = nil
@@ -275,8 +279,8 @@ function loadSceneryMap(scenery,row)
 end
  
 
-function getNextLevel(sceneryId,levelId)
-	local sceneryLvls = loadSceneryLevels(sceneryId)
+function getNextLevel(sceneryId,levelId,baseDir)
+	local sceneryLvls = loadSceneryLevels(sceneryId,baseDir)
 	if levelId < #sceneryLvls then
 		--get next level
 		return {level = levelId+1,scenery = sceneryId}
@@ -349,14 +353,14 @@ end
 
 
 
-function syncLevels(listener)
+function syncLevels(viewGroup,listener)
 
 	--DOWNLOAD THE JSONS txt
 	--CREATE A TABLE WITH ALL THE FILES!
 	filesToDownload = {}
 	--CHECK EACH FILE IF ITS ALREADY ON THE SYSTEM AND IF NOT DOWNLOAD IT
 	syncPhase = 1
-	onComplete = listener
+	if listener then onComplete = listener end
 	Runtime:addEventListener("enterFrame", downloadingAssets)
 	
 	--AFTER CHECKING EVERY FILE RECHECK AGAIN TO CONFIRM THE DOWNLOAD WAS SUCCESSFUL
@@ -368,8 +372,8 @@ function syncLevels(listener)
 	loadingText = display.newText("LOADING LEVELS...", 0, 0, "Poplar Std", 30)
 	loadingText:setReferencePoint(display.CenterLeftReferencePoint);
 	loadingText.x = _VW0+10; loadingText.y = loadingRect.y
-	group:insert(loadingRect)
-	group:insert(loadingText)
+	viewGroup:insert(loadingRect)
+	viewGroup:insert(loadingText)
 end
 
 
@@ -389,6 +393,8 @@ function downloadingAssets(event)
 				for line in sceneriesFile:lines() do
 					local tempScenery = json.decode(line)
 					if tempScenery then
+						table.insert(filesToDownload,tempScenery.default)
+						table.insert(filesToDownload,tempScenery.over)
 						for i=1, #tempScenery.levels do 
 							local tempTable = tempScenery.levels[i]
 							--GET THE BGS
@@ -437,7 +443,7 @@ function downloadingAssets(event)
 		loadingText:removeSelf()
 		loadingText = nil
 		
-		onComplete()
+		if listener then onComplete() end
 	end
 end
 
@@ -515,32 +521,7 @@ function removeFileFromTable(tableRef, file)
 end
  
  
-function checkForUpdates()
-
-	local function syncBoxCallback( event )
-		if "clicked" == event.action then
-				local i = event.index
-				if 1 == i then
-					if matrixSize == 6 then
-						sizeBut_off.isVisible = false
-						sizeBut_on.isVisible = true
-						matrixSize = 9
-					else
-						sizeBut_on.isVisible = false
-						sizeBut_off.isVisible = true
-						matrixSize = 6
-					end
-					restartGame()
-				elseif 2 == i then
-					print('dont leave game')
-				end
-		end
-	end
-
-	function dialogRequestUpdate()
-		local alert = native.showAlert( "There are new levels available, do you want to download them now?", 
-		{ "OK", "Later" }, syncBoxCallback )
-	end
+function checkForUpdates(listener)
 
 
 	local function serverListener( event )
@@ -551,18 +532,20 @@ function checkForUpdates()
 			
 			local path = system.pathForFile( "serverLevels.json", system.DocumentsDirectory )
 			local path2 = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
-			local file = io.open( path, "r" )
+			local file1 = io.open( path, "r" )
 			local file2 = io.open( path2, "r" )
-			if file and file2 then		
-				local line1 = file:read()
+			if file1 and file2 then		
+				local line1 = file1:read()
 				local line2 = file2:read()
 				scene1 = json.decode(line1)
 				scene2 = json.decode(line2)
-				if scene1.version > scene2.version then
-					dialogRequestUpdate()
+				print("SERVER VERSION :"..tostring(scene1.version).." DEVICE VERSION :"..tostring(scene2.version))
+				--xprint(line1)
+				if scene2.version and scene1.version and scene1.version > scene2.version then
+					listener(true)
 				end
 				
-				io.close( file )
+				io.close( file1 )
 				io.close( file2 )
 			end
 		end
@@ -572,7 +555,7 @@ function checkForUpdates()
 	local file = io.open( path, "r" )
 	if file then
 		network.download( 
-			"http://www.sonicowl.com/gameAssets/"..file, 
+			"http://www.sonicowl.com/gameAssets/serverLevels.json", 
 			"GET", 
 			serverListener, 
 			"serverLevels.json", 
@@ -580,7 +563,8 @@ function checkForUpdates()
 		)
 		io.close(file)
 	else
-		dialogRequestUpdate()
+		print("NO DOWNLOADS YET")
+		listener(true)
 	end
 	
 end

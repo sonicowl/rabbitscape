@@ -19,6 +19,10 @@ GAMEBOX_FRAME_W = _VW
 GAMEBOX_FRAME_H = _VW*1.3
 GAMEBOX_FRAME_W0 = (_W-GAMEBOX_FRAME_W)/2
 GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
+hasUpdates = false
+
+
+
 ----------------------------------------------------------------------------------
 -- 
 --	NOTE:
@@ -35,8 +39,32 @@ GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-	lastScene = storyboard.getPrevious()	
+	lastScene = storyboard.getPrevious()
+	print("COMING FROM "..tostring(lastScene))
 	dialogsModule.init()
+
+	function checkUpdatedListener(bool)
+		if bool then hasUpdates = true end
+	end
+
+	local function syncBoxCallback( event )
+		if "clicked" == event.action then
+			local i = event.index
+			if 1 == i then
+				jsonLevels.syncLevels(group)
+				hasUpdates = false
+			else
+				sceneDialog = display.newGroup()
+				group:insert(sceneDialog)
+				dialogsModule.callScenerySelector(sceneDialog,storyboard)
+			end
+		end
+	end
+
+	local function requestSync()
+		local alert = native.showAlert("Updates Available", "There are new levels available, do you want to download them now?", 
+		{ "OK", "Later" }, syncBoxCallback )
+	end
 	
 	but1handler = function( event )
 		if event.phase == "release"  then
@@ -47,7 +75,12 @@ function scene:createScene( event )
 	but2handler = function( event )
 		if event.phase == "release"  then
 			--storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
-			dialogsModule.callScenerySelector(group)
+			if hasUpdates then requestSync()
+			else
+				sceneDialog = display.newGroup()
+				group:insert(sceneDialog)
+				dialogsModule.callScenerySelector(sceneDialog,storyboard)
+			end
 		end
 	end
 
@@ -91,13 +124,24 @@ function scene:createScene( event )
 	group:insert(lvlBuilderButton)
 	
 end
-
+-- Called BEFORE scene has moved onscreen:
+function scene:willEnterScene( event )
+        local group = self.view
+        
+        -----------------------------------------------------------------------------
+                
+        --      This event requires build 2012.782 or later.
+        
+        -----------------------------------------------------------------------------
+        lastScene = storyboard.getPrevious()
+		print("COMING FROM "..tostring(lastScene))
+end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
 	storyboard.purgeScene( lastScene )
-	jsonLevels.checkForUpdates()
+	jsonLevels.checkForUpdates(checkUpdatedListener)
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
@@ -138,6 +182,8 @@ end
 
 -- "createScene" event is dispatched if scene's view does not exist
 scene:addEventListener( "createScene", scene )
+-- "willEnterScene" event is dispatched before scene transition begins
+scene:addEventListener( "willEnterScene", scene )
 
 -- "enterScene" event is dispatched whenever scene transition has finished
 scene:addEventListener( "enterScene", scene )
