@@ -13,6 +13,8 @@ module(..., package.seeall)
 
 function init(viewGroup,listenersTable)
 	actions = {}
+	dialogsModule = require("module-dialogs")
+	dialogsModule.init()
 	HUD = display.newGroup()
 	viewGroup:insert(HUD)
 	restartListener = listenersTable.restart
@@ -20,6 +22,7 @@ function init(viewGroup,listenersTable)
 	resumeGameListener = listenersTable.resume
 	pauseListener = listenersTable.pause
 	nextLevelListener = listenersTable.continue
+	levelSelectListener = listenersTable.levelSelect
 	
 	--POSITION VARS
 	_W = display.contentWidth;
@@ -211,6 +214,30 @@ function loadActions()
 		print("touched "..tostring(event.id))
 		gameEngine.eatCarrot()
 	end
+	actions["levelSelect"] = function (event)
+		print("touched "..tostring(event.id))
+		closeMenu(true)
+		levelSelectListener()
+	end
+	
+	actions["options"] = function (event)
+		print("touched "..tostring(event.id))
+		
+	end
+	
+	actions["scores"] = function (event)
+		print("touched "..tostring(event.id))
+		
+	end
+	
+	actions["howtoplay"] = function (event)
+		print("touched "..tostring(event.id))
+		local dialogGroup = display.newGroup()
+		HUD:insert(dialogGroup)
+		local menuClosure = function(event) showMenu() print("calling listener") end
+		dialogsModule.callHowToPlay(dialogGroup,menuClosure)
+		closeMenu()
+	end
 	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
 		if ("release" == event.phase) then
@@ -248,7 +275,7 @@ end
 
 
 
-function callEndingScreen(didWon,score)
+function callEndingScreen(didWon,score,high)
 
 	endGameScreen = display.newGroup()
 	HUD:insert(endGameScreen)
@@ -265,9 +292,11 @@ function callEndingScreen(didWon,score)
 	
 	local msg = nil
 	local scoreMsg = ""
+	local highMsg = ""
 	if didWon then
 		msg = "YOU CATCHED THE BUNNY!"
 		scoreMsg = "SCORE: "..math.floor(score).." POINTS"
+		highMsg = "HIGHSCORE: "..math.floor(high).." POINTS"
 	else
 		msg = "OH NO! BUNNY ESCAPED!"
 	end
@@ -275,7 +304,7 @@ function callEndingScreen(didWon,score)
 	local myText = display.newText(msg, 0, 0, "Poplar Std", 30)
 	myText:setTextColor(255, 255, 255)
 	local scoreText = display.newText(scoreMsg, 0, 0, "Poplar Std", 30)
-	myText:setTextColor(255, 255, 255)
+	local highText = display.newText(highMsg, 0, 0, "Poplar Std", 15)
 	
 	
 	local resetButton = ui.newButton{
@@ -305,6 +334,7 @@ function callEndingScreen(didWon,score)
 	
 	myText.x = _W/2;		myText.y = _H/2-70
 	scoreText.x = _W/2;		scoreText.y = _H/2-40
+	highText.x = _W/2;		highText.y = _H/2-15
 	resetButton.x = _W/2-10-resetButton.contentWidth/2; 	resetButton.y = _H/2+40
 	nextLevelButton.x = _W/2+10+nextLevelButton.contentWidth/2; 	nextLevelButton.y = _H/2+40
 	
@@ -313,6 +343,7 @@ function callEndingScreen(didWon,score)
 	endGameScreen:insert(myRect2)
 	endGameScreen:insert(myText)
 	endGameScreen:insert(scoreText)
+	endGameScreen:insert(highText)
 	endGameScreen:insert(resetButton)
 	endGameScreen:insert(nextLevelButton)
 	
@@ -337,7 +368,7 @@ function showMenu()
 		default = "howtoplay-off.png",
 		over = "howtoplay-on.png",
 		onEvent = buttonHandler,
-		id = "",
+		id = "howtoplay",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
@@ -346,7 +377,7 @@ function showMenu()
 		default = "level-select-off.png",
 		over = "level-select-on.png",
 		onEvent = buttonHandler,
-		id = "",
+		id = "levelSelect",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
@@ -355,7 +386,7 @@ function showMenu()
 		default = "options-off.png",
 		over = "options-on.png",
 		onEvent = buttonHandler,
-		id = "",
+		id = "options",
 		textColor = { 51, 51, 51, 255 },		
 		emboss = true
 	}
@@ -364,7 +395,7 @@ function showMenu()
 		default = "scores-off.png",
 		over = "scores-on.png",
 		onEvent = buttonHandler,
-		id = "",
+		id = "scores",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true
 	}
@@ -436,5 +467,5 @@ function closeMenu(quickClose)
 	end
 	transition.to(menuButton,{time=300,y=menuButton.y+450,transition=easing.outExpo})
 	transition.to(menuDialog,{time=300,y=450,transition=easing.outExpo,onComplete=closure})
-	transition.to(menuDialog[1],{time=300,alpha=0,transition=easing.outExpo,onComplete=closure})
+	transition.to(menuDialog[1],{time=290,alpha=0,transition=easing.outExpo})
 end

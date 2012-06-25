@@ -29,23 +29,11 @@ function scene:createScene( event )
 	--	Example use-case: Restore 'sceneGroup' from previously saved state.
 	
 	-----------------------------------------------------------------------------
---[[
-	listOfObjects = {
-		{ terrainCost = 10, maxMembers = -1, isDynamic = false, appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="grass" 		,img="cell1.png" , imgW=stdImgW*1.4, imgH=stdImgH }
-		{ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = true , tag="startCell"	,img="cell2.png" , imgW=stdImgW*1.4, imgH=stdImgH }
-		{ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=true , isFakeExit=false, canPutObjects = true , tag="endCell" 	,img="exits.png" , imgW=stdImgW*1.4, imgH=stdImgH }
-		{ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 60, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="rock" 		,img="pedra.png" , imgW=stdImgW    , imgH=stdImgH , clusterEffect = 10}
-		{ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="vase" 		,img="water1.png", imgW=stdImgW    , imgH=stdImgH , clusterEffect = 10 }
-		{ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 20, isPlaceable = true , isWalkable = false, isExit=false, isFakeExit=false, canPutObjects = false, tag="tree"		,img="tree.png"  , imgW=stdImgW*1.3, imgH=stdImgH*2.5 , clusterEffect = 10 }
-		{ terrainCost = 10, maxMembers = -1, isDynamic = true , appearingWeight = 0 , isPlaceable = false, isWalkable = true , isExit=false, isFakeExit=false, canPutObjects = false, tag="path" 		,img="cell5.png" , imgW=stdImgW*1.4, imgH=stdImgH }
-		{ terrainCost = 10, maxMembers =  1, isDynamic = true , appearingWeight = 0 , isPlaceable = true , isWalkable = true , isExit=true , isFakeExit=true , canPutObjects = false, tag="carrot" 		,img="carrot.png", imgW=stdImgW    , imgH=stdImgH }
-	}
-]]--
+
 	local stdImgW = 50
 	local stdImgH = 50
 	
 	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridRoundGreen.png",imgW=stdImgW*.7, imgH=stdImgH*.7 }
---	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridRoundGreen.png",imgW=stdImgW*1.4, imgH=stdImgH, alpha = 0.1 }
 	lastScene = "scene-sceneryList"
 	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = lastScene})
 	
@@ -96,15 +84,10 @@ function scene:createScene( event )
 	
 	gameEngine.startGame()
 end
+
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
         local group = self.view
-        
-        -----------------------------------------------------------------------------
-                
-        --      This event requires build 2012.782 or later.
-        
-        -----------------------------------------------------------------------------
         lastScene = storyboard.getPrevious()
 		print("COMING FROM "..tostring(lastScene))
 end
@@ -112,14 +95,8 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local sceneGroup = self.view
-	--levelBuilderUI.start()
-	--print("purging "..lastScene)
 	storyboard.purgeScene( lastScene )
-	-----------------------------------------------------------------------------
-		
-	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-	
-	-----------------------------------------------------------------------------
+
 	
 end
 
@@ -127,12 +104,6 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local sceneGroup = self.view
-	--levelBuilderUI.close()
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
-	
-	-----------------------------------------------------------------------------
 	
 end
 
@@ -141,11 +112,6 @@ end
 function scene:destroyScene( event )
 	local sceneGroup = self.view
 	
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-	
-	-----------------------------------------------------------------------------
 	
 end
 --main()

@@ -29,6 +29,7 @@ module(..., package.seeall)
 ---------------------------------------------------------
 function newLevel(params)
 	require "sprite"
+	require("ice")
 	HUD = require("HUD")
 	aStar = require("aStar")
 	mapCreator = require("mapCreator")
@@ -39,6 +40,10 @@ function newLevel(params)
 	sceneGroup = params.viewGroup
 	bgGroup = display.newGroup()
 	sceneGroup:insert(bgGroup)
+	
+	gameData = ice:loadBox( "gameData" )
+	gameData:storeIfNew( storyboard.sceneryId.."-"..storyboard.levelId, 0 )
+	gameData:save()
 	
 	--POSITION VARS
 	_W = display.contentWidth;
@@ -52,7 +57,7 @@ function newLevel(params)
 	GAMEBOX_FRAME_W0 = (_W-GAMEBOX_FRAME_W)/2
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 	
-	--GAME FLAGS
+	--GAME VARS
 	rabbit = {}
 	putCarrot = false
 	rabbit.steps = 1
@@ -92,7 +97,7 @@ function newLevel(params)
 	overLayGroup = display.newGroup()
 	sceneGroup:insert(overLayGroup)	
 		
-	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame,continue = goToNextLevel})
+	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame,continue = goToNextLevel, levelSelect = backToLevelSelect})
 end
 
 
@@ -386,7 +391,13 @@ function moveRabbit()
 				if path == false then
 					print("YOU GOT THE RABBIT")
 					stopGame()
-					HUD.callEndingScreen(true,gameScore)
+					local highScore = gameData:retrieve(storyboard.sceneryId.."-"..storyboard.levelId)
+					if gameScore > highScore then
+						gameData:store( storyboard.sceneryId.."-"..storyboard.levelId, gameScore )
+						gameData:save()
+						highScore = gameScore
+					end
+					HUD.callEndingScreen(true,gameScore,highScore)
 					return false
 				end
 			end
@@ -576,6 +587,8 @@ function restartListener()
 	restartGame()
 end
 
+
+
 function goToNextLevel()
 	if instance1 then
 		instance1:removeSelf()
@@ -640,8 +653,15 @@ function quitGame()
 	storyboard.gotoScene( "main-menu", "slideRight", 400 )
 end
 
-
-
+function backToLevelSelect()
+	if gameRunning then stopGame() end
+	print("going to "..lastScene)
+	if instance1 then
+		instance1:removeSelf()
+		instance1 = nil
+	end
+	storyboard.gotoScene( "levelsList2", "slideRight", 400 )
+end
 
 
 function setGrid()

@@ -22,15 +22,71 @@ GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 hasUpdates = false
 
 
+function checkUpdatedListener(bool)
+	if bool then hasUpdates = true end
+end
 
-----------------------------------------------------------------------------------
--- 
---	NOTE:
---	
---	Code outside of listener functions (below) will only be executed once,
---	unless storyboard.removeScene() is called.
--- 
----------------------------------------------------------------------------------
+function syncBoxCallback( event )
+	if "clicked" == event.action then
+		local i = event.index
+		if 1 == i then
+			local loadingGroup = display.newGroup()
+			menuGroup:insert(loadingGroup)
+			jsonLevels.syncLevels(loadingGroup)
+			hasUpdates = false
+		else
+			sceneDialog = display.newGroup()
+			menuGroup:insert(sceneDialog)
+			dialogsModule.callScenerySelector(sceneDialog,storyboard)
+		end
+	end
+end
+
+function requestSync()
+	local alert = native.showAlert("Updates Available", "There are new levels available, do you want to download them now?", 
+	{ "OK", "Later" }, syncBoxCallback )
+end
+
+function loadActions()
+
+	actions["play"] = function(event)
+		print("touched "..tostring(event.id))
+		--storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
+		if hasUpdates then requestSync()
+		else
+			sceneDialog = display.newGroup()
+			menuGroup:insert(sceneDialog)
+			dialogsModule.callScenerySelector(sceneDialog,storyboard)
+		end
+	end
+	
+	actions["help"] = function(event)
+		print("touched "..tostring(event.id))
+		
+	end	
+	
+	actions["options"] = function(event)
+		print("touched "..tostring(event.id))
+		
+	end	
+	
+	actions["openfeint"] = function(event)
+		print("touched "..tostring(event.id))
+		
+	end	
+	
+	actions["licensing"] = function(event)
+		print("touched "..tostring(event.id))
+		
+	end
+	
+	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
+		if ("release" == event.phase) then
+			actions[event.id](event)
+		end
+		return true  --SO SIMPLE AND SO CONFUSING.... THIS PREVENTS FROM PROPAGATING TO OTHER BUTTONS
+	end
+end
 
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
@@ -39,91 +95,79 @@ hasUpdates = false
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
+	menuGroup = group
 	lastScene = storyboard.getPrevious()
 	print("COMING FROM "..tostring(lastScene))
+
 	dialogsModule.init()
 
-	function checkUpdatedListener(bool)
-		if bool then hasUpdates = true end
-	end
+	actions = {}
+	loadActions()
 
-	local function syncBoxCallback( event )
-		if "clicked" == event.action then
-			local i = event.index
-			if 1 == i then
-				local loadingGroup = display.newGroup()
-				group:insert(loadingGroup)
-				jsonLevels.syncLevels(loadingGroup)
-				hasUpdates = false
-			else
-				sceneDialog = display.newGroup()
-				group:insert(sceneDialog)
-				dialogsModule.callScenerySelector(sceneDialog,storyboard)
-			end
-		end
-	end
-
-	local function requestSync()
-		local alert = native.showAlert("Updates Available", "There are new levels available, do you want to download them now?", 
-		{ "OK", "Later" }, syncBoxCallback )
-	end
-	
-	but1handler = function( event )
-		if event.phase == "release"  then
-			storyboard.gotoScene( "levelsList", "slideLeft", 400 )
-		end
-	end
-	
-	but2handler = function( event )
-		if event.phase == "release"  then
-			--storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
-			if hasUpdates then requestSync()
-			else
-				sceneDialog = display.newGroup()
-				group:insert(sceneDialog)
-				dialogsModule.callScenerySelector(sceneDialog,storyboard)
-			end
-		end
-	end
 
 	local bg = display.newImageRect("bg1.jpg",_VW,_VH)
-	bg.x = _W/2
-	bg.y = _H/2
+	bg.x = _W/2;	bg.y = _H/2
 	group:insert(bg)
 	
-	gameButton = ui.newButton{
+	playButton = ui.newButton{
 		default = "buttonYellow.png",
 		over = "buttonYellowOver.png",
-		onEvent = but2handler,
+		onEvent = buttonHandler,
+		id = "play",
 		text = "PLAY GAME",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true,
 		size = 22
 	}
-	
-	gameButton.x = display.contentWidth/2
-	gameButton.y = display.contentHeight/2-100
-	gameButton.xScale = 2
-	gameButton.yScale = 2
-	
-	group:insert(gameButton)
-	
 
-	lvlBuilderButton = ui.newButton{
+	helpButton = ui.newButton{
 		default = "buttonYellow.png",
 		over = "buttonYellowOver.png",
-		onEvent = but1handler,
-		text = "LEVEL BUILDER",
+		onEvent = buttonHandler,
+		id = "help",
+		text = "HELP",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true,
 		size = 22
 	}
-	lvlBuilderButton.x = display.contentWidth/2
-	lvlBuilderButton.y = display.contentHeight/2+100
-	lvlBuilderButton.xScale = 2
-	lvlBuilderButton.yScale = 2
 	
-	group:insert(lvlBuilderButton)
+	optionsButton = ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "options",
+		text = "OPTIONS",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true,
+		size = 22
+	}
+	
+	ofButton= ui.newButton{
+		default = "buttonYellow.png",
+		over = "buttonYellowOver.png",
+		onEvent = buttonHandler,
+		id = "openfeint",
+		text = "OPENFEINT",
+		textColor = { 51, 51, 51, 255 },
+		emboss = true,
+		size = 22
+	}
+	
+	playButton.x = _W/2;	playButton.y = _H/2-225
+	helpButton.x = _W/2;	helpButton.y = _H/2-75
+	optionsButton.x = _W/2;	optionsButton.y = _H/2+75
+	ofButton.x = _W/2;		ofButton.y = _H/2+225
+	
+	playButton:scale(2,2)
+	helpButton:scale(2,2)
+	optionsButton:scale(2,2)
+	ofButton:scale(2,2)
+
+	
+	group:insert(playButton)
+	group:insert(helpButton)
+	group:insert(optionsButton)
+	group:insert(ofButton)
 	
 end
 -- Called BEFORE scene has moved onscreen:
