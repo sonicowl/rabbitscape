@@ -6,19 +6,10 @@
  
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
- 
-----------------------------------------------------------------------------------
--- 
---      NOTE:
---      
---      Code outside of listener functions (below) will only be executed once,
---      unless storyboard.removeScene() is called.
--- 
----------------------------------------------------------------------------------
- 
----------------------------------------------------------------------------------
--- BEGINNING OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
+
+
+
+
  
 -- Called when the scene's view does not exist:
 function scene:createScene( event )

@@ -102,9 +102,7 @@ function loadScreenUI()
 		
 		menuButton:scale(.5,.5)
 		menuButton.x = _W/2; 	menuButton.y = _VH0+_VH-45
-	
-	
-	
+
 
 		carrotButton = ui.newButton{
 			default = "carrot-off.png",
@@ -145,11 +143,6 @@ function updateGameScene(score,seconds,rocks)
 		timeText:setReferencePoint(display.CenterLeftReferencePoint);
 		timeText.x = _VW0+_VW - 60-50		
 	end
---[[	if scoreText then
-		scoreText.text = "SCORE: "..score
-		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
-		scoreText.x = _VW0 + 20
-	end]]--
 	if rocksText then
 		rocksText.text = rocks
 		rocksText.x = _VW0+30

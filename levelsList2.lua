@@ -95,12 +95,6 @@ end
 
 
 
-
-
----------------------------------------------------------------------------------
--- BEGINNING OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
-
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	group = self.view
@@ -113,9 +107,6 @@ function scene:createScene( event )
 	
 
 
-
-	
-	
 	--Setup the nav bar 
 	local navBar = display.newImageRect("navBar.png",_VW,40)
 	navBar.x = display.contentWidth*.5
@@ -150,12 +141,7 @@ end
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
         local group = self.view
-        
-        -----------------------------------------------------------------------------
-                
-        --      This event requires build 2012.782 or later.
-        
-        -----------------------------------------------------------------------------
+
         lastScene = storyboard.getPrevious()
 		print("COMING FROM "..tostring(lastScene))
 end
@@ -164,12 +150,6 @@ end
 function scene:enterScene( event )
 	local group = self.view
 	storyboard.purgeScene( lastScene )
-	-----------------------------------------------------------------------------
-		
-	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-	
-	-----------------------------------------------------------------------------
-	
 
 	
 	
@@ -193,11 +173,7 @@ end
 function scene:destroyScene( event )
 	local group = self.view
 	removeTableView()
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-	
-	-----------------------------------------------------------------------------
+
 	
 end
 

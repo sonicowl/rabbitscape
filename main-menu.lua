@@ -8,6 +8,9 @@ local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 require("ui")
 local dialogsModule = require( "module-dialogs" )
+local gameStore = require("module-store")
+social = require("module-social")
+
 
 _W = display.contentWidth;
 _H = display.contentHeight;
@@ -15,10 +18,6 @@ _VW = display.viewableContentWidth
 _VH = display.viewableContentHeight
 _VH0 = (_H-_VH)/2
 _VW0 = (_W-_VW)/2
-GAMEBOX_FRAME_W = _VW 
-GAMEBOX_FRAME_H = _VW*1.3
-GAMEBOX_FRAME_W0 = (_W-GAMEBOX_FRAME_W)/2
-GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 hasUpdates = false
 
 
@@ -98,9 +97,10 @@ function scene:createScene( event )
 	menuGroup = group
 	lastScene = storyboard.getPrevious()
 	print("COMING FROM "..tostring(lastScene))
-
+	social.init()
 	dialogsModule.init()
-
+	gameStore.init()
+	
 	actions = {}
 	loadActions()
 

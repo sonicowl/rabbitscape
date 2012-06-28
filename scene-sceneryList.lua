@@ -150,14 +150,6 @@ end
 function scene:enterScene( event )
 	local group = self.view
 	storyboard.purgeScene( lastScene )
-	-----------------------------------------------------------------------------
-		
-	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-	
-	-----------------------------------------------------------------------------
-	
-
-	
 	
 end
 
@@ -166,12 +158,6 @@ end
 function scene:exitScene( event )
 	local group = self.view
 	
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
-	
-	-----------------------------------------------------------------------------
-	
 end
 
 
@@ -179,12 +165,7 @@ end
 function scene:destroyScene( event )
 	local group = self.view
 	removeTableView()
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-	
-	-----------------------------------------------------------------------------
-	
+
 end
 
 ---------------------------------------------------------------------------------

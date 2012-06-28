@@ -40,7 +40,7 @@ function newLevel(params)
 	sceneGroup = params.viewGroup
 	bgGroup = display.newGroup()
 	sceneGroup:insert(bgGroup)
-	
+
 	gameData = ice:loadBox( "gameData" )
 	gameData:storeIfNew( storyboard.sceneryId.."-"..storyboard.levelId, 0 )
 	gameData:save()
@@ -395,6 +395,7 @@ function moveRabbit()
 					if gameScore > highScore then
 						gameData:store( storyboard.sceneryId.."-"..storyboard.levelId, gameScore )
 						gameData:save()
+						social.setGNHighScore(gameScore,storyboard.levelId)
 						highScore = gameScore
 					end
 					HUD.callEndingScreen(true,gameScore,highScore)

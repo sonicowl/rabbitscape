@@ -453,14 +453,9 @@ function downloadingAssets(event)
 	if syncPhase == 4 then
 		copyFromFile("serverLevels.json","downloadedLevels.json")
 		Runtime:removeEventListener("enterFrame", downloadingAssets)
-		--for i=#syncGroup
 		syncGroup:removeSelf()
 		syncGroup = nil
-		--loadingRect:removeSelf()
-		--loadingRect = nil
-		--loadingText:removeSelf()
-		--loadingText = nil
-		
+
 		if listener then onComplete() end
 	end
 end
