@@ -33,6 +33,7 @@ function init()
 	--local displayName = "Color Matrix"
 
 	if gameNetwork then
+		print("initiating gamecenter")
 		gameNetwork.init( "gamecenter", initCallback )
 	else
 		native.showAlert( "gameNetwork", "Library not found!", { "OK" } )
@@ -42,7 +43,7 @@ function init()
 end
 
 -- called after the "init" request has completed
-local function initCallback( event )
+function initCallback( event )
     if event.data then
         loggedIntoGC = true
         native.showAlert( "Success!", "User has logged into Game Center", { "OK" } )
@@ -68,7 +69,7 @@ end
 ---------------------------------------------------
 
 function setGCHighScore(score,level)
-
+	print("sending highScore to gamecenter "..score.." level:"level)
 	gameNetwork.request( "setHighScore",
 	{
 			localPlayerScore = { category="level_"..level, value=score },
