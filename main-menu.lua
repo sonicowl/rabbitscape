@@ -69,9 +69,9 @@ function loadActions()
 		
 	end	
 	
-	actions["openfeint"] = function(event)
+	actions["GameCenter"] = function(event)
 		print("touched "..tostring(event.id))
-		
+		social.showGCPopup()
 	end	
 	
 	actions["licensing"] = function(event)
@@ -146,8 +146,8 @@ function scene:createScene( event )
 		default = "buttonYellow.png",
 		over = "buttonYellowOver.png",
 		onEvent = buttonHandler,
-		id = "openfeint",
-		text = "OPENFEINT",
+		id = "GameCenter",
+		text = "GameCenter",
 		textColor = { 51, 51, 51, 255 },
 		emboss = true,
 		size = 22

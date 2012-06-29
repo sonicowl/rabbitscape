@@ -57,7 +57,7 @@ end
 -- SHOW OPENFEINT 
 ---------------------------------------------------
 
-function showGNPopup()
+function showGCPopup()
 	gameNetwork.show( "leaderboards", { leaderboard = {timeScope="Week"}, listener=dismissCallback } )
 	--FOR OPENFEINT
 	--gameNetwork.show( "leaderboards" )
@@ -67,7 +67,7 @@ end
 -- SETS OPENFEINT SCORE
 ---------------------------------------------------
 
-function setGNHighScore(score,level)
+function setGCHighScore(score,level)
 
 	gameNetwork.request( "setHighScore",
 	{

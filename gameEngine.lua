@@ -395,7 +395,7 @@ function moveRabbit()
 					if gameScore > highScore then
 						gameData:store( storyboard.sceneryId.."-"..storyboard.levelId, gameScore )
 						gameData:save()
-						social.setGNHighScore(gameScore,storyboard.levelId)
+						social.setGCHighScore(gameScore,storyboard.levelId)
 						highScore = gameScore
 					end
 					HUD.callEndingScreen(true,gameScore,highScore)
