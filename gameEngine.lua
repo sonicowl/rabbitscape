@@ -71,6 +71,7 @@ function newLevel(params)
 	secsPlaying = 0
 	msPerFrame = 800/10
 	movingRabbit = false
+	usedCarrot = false
 	
 	-- MAP VARS
 	levelMap = nil
@@ -398,7 +399,8 @@ function moveRabbit()
 						social.setGCHighScore(gameScore,storyboard.levelId)
 						highScore = gameScore
 					end
-					HUD.callEndingScreen(true,gameScore,highScore)
+					---(didWon,score,high,usedCarrot,gameTime,objectsUsed)
+					HUD.callEndingScreen(true,gameScore,highScore,usedCarrot,secsPlaying,rocksPut)
 					return false
 				end
 			end
@@ -618,6 +620,7 @@ function eatCarrot()
 	print("nhac nhac nhac nhac")
 	HUD.toast("nhac nhac nhac nhac")
 	eatingCarrot = true
+	usedCarrot = true
 end
 
 function restartGame()

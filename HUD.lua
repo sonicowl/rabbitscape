@@ -194,6 +194,11 @@ function loadActions()
 	actions["carrotButton"] = function (event)
 		print("touched "..tostring(event.id))
 		gameEngine.eatCarrot()
+		carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
+		carrotUsedBut.x = carrotButton.x	carrotUsedBut.y = carrotButton.y
+		carrotButton.parent:insert(carrotUsedBut)
+		carrotButton:removeSelf()
+		carrotButton = nil
 	end
 	
 	actions["levelSelect"] = function (event)
@@ -263,16 +268,26 @@ function closeGroup(group, listener)
 	local closeClosure = function(event)
 		if listener then listener() end
 		event:removeSelf(); 
-		event = nil; 
+		event = nil;
+		blackAlpha:removeSelf(); 
+		blackAlpha = nil; 
 	end
 	transition.to(group,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
+	transition.to(blackAlpha,{time=900,alpha = 0,transition = easing.inOutExpo})
 end
 
 
-function callEndingScreen(didWon,score,high)	
+function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)	
+
+	blackAlpha = display.newRect(0,0 , _W, _H)
+	blackAlpha:setFillColor(0, 0,	0)
+	blackAlpha.alpha = 0
+	HUD:insert(blackAlpha)
 
 	endGameScreen = display.newGroup()
 	HUD:insert(endGameScreen)
+		
+	
 	
 	local holdingClickBg = display.newRect(0,0,_W,_H)
 	endGameScreen:insert(holdingClickBg)
@@ -284,13 +299,7 @@ function callEndingScreen(didWon,score,high)
 	board.x = _W/2; board.y = _H/2
 	endGameScreen:insert(board)
 
-
-	local content = display.newImageRect("content-howtoplay.png", math.floor(854/2),math.floor(1350/2))
-	content.x = _W/2; content.y = _H/2+20
-	endGameScreen:insert(content)
-
-
-
+	
 	local resetButton = ui.newButton{
 		default = "replay-off.png",
 		over = "replay-on.png",
@@ -298,24 +307,93 @@ function callEndingScreen(didWon,score,high)
 		id = "restartGame",
 	}	
 	
-	local nextLevelButton = ui.newButton{
-		default = "next-off.png",
-		over = "next-on.png",
-		onEvent = buttonHandler,
-		id = "nextLevel",
-	}
 	
 	local menuButton = ui.newButton{
-		default = "menu-off.png",
-		over = "menu-on.png",
+		default = "menu-end-off.png",
+		over = "menu-end-on.png",
 		onEvent = buttonHandler,
 		id = "endToMenu",
 	}
 	
+	local nextLevelButton = nil
+	if didWon then
+		nextLevelButton = ui.newButton{
+			default = "next-off.png",
+			over = "next-on.png",
+			onEvent = buttonHandler,
+			id = "nextLevel",
+		}
+		local title = display.newImageRect("bunny.png",1090/2,1065/2)
+		title.x = _W/2	title.y = _H/2-180
+		endGameScreen:insert(title)
+		
+		local content1 = display.newImageRect("scores.png",424/2,360/2)
+		content1.x = _W/2-80 content1.y = _H/2+120
+		endGameScreen:insert(content1)	
+		local line1 = display.newImageRect("line.png",705/2,10/2)
+		line1.x = _W/2	line1.y = content1.y-content1.contentHeight/2-10
+		endGameScreen:insert(line1)
+		local line2 = display.newImageRect("line.png",705/2,10/2)
+		line2.x = _W/2	line2.y = content1.y+content1.contentHeight/2+10
+		endGameScreen:insert(line2)
+		
+		local secs = gameTime%60
+		local minutes = (gameTime-secs)/60
+		local secsText = secs..""
+		local minutesText = minutes..""
+		if minutes<10 then minutesText = "0"..minutesText end
+		if secs<10 then secsText = "0"..secsText end
+		timeEndText = minutesText..":"..secsText
+		
+		local objectsText = display.newText(objectsUsed, 0, 0, "Poplar Std", 15)	
+		objectsText:setTextColor(197,240,132)	
+
+		local totalTimeText = display.newText(timeEndText, 0, 0, "Poplar Std", 15)	
+		totalTimeText:setTextColor(197,240,132)
+		
+		local carrotsMsg = "NO"
+		if usedCarrot then carrotsMsg = "YES" end
+		local carrotsText = display.newText(carrotsMsg, 0, 0, "Poplar Std", 15)	
+		carrotsText:setTextColor(197,240,132)	
+		
+		local scoreText = display.newText(math.floor(score), 0, 0, "Poplar Std", 30)
+		scoreText:setTextColor(253,222,59)
+		
+		local highText = display.newText(math.floor(high), 0, 0, "Poplar Std", 15)	
+		highText:setTextColor(197,240,132)
+
+		objectsText:setReferencePoint(display.CenterLeftReferencePoint);
+		totalTimeText:setReferencePoint(display.CenterLeftReferencePoint);
+		carrotsText:setReferencePoint(display.CenterLeftReferencePoint);
+		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
+		highText:setReferencePoint(display.CenterLeftReferencePoint);
+		
+		objectsText.x = _W/2+100 	objectsText.y = _H/2+50
+		totalTimeText.x = _W/2+100 		totalTimeText.y = _H/2+90
+		carrotsText.x = _W/2+100	carrotsText.y = _H/2+110
+		scoreText.x = _W/2+100 		scoreText.y = _H/2+150
+		highText.x = _W/2+100 		highText.y = _H/2+180
+		endGameScreen:insert(objectsText)
+		endGameScreen:insert(totalTimeText)
+		endGameScreen:insert(carrotsText)
+		endGameScreen:insert(scoreText)
+		endGameScreen:insert(highText)
+
+	else
+		nextLevelButton = display.newImageRect("next-disabled.png",198,283)
+
+		local title = display.newImageRect("bunny-escaped.png",863/2,1106/2)
+		title.x = _W/2	title.y = _H/2-180
+		endGameScreen:insert(title)
+		
+		local content1 = display.newImageRect("tryagain-ad.png",973/2,449/2)
+		content1.x = _W/2 content1.y = _H/2+130
+		endGameScreen:insert(content1)
+	end
 	
-	resetButton.x = _W/2-50			resetButton.y = _H/2+200
-	nextLevelButton.x = _W/2		nextLevelButton.y = _H/2+200
-	menuButton.x = _W/2+50			menuButton.y = _H/2+200
+	resetButton.x = _W/2-130		resetButton.y = _H/2+300
+	menuButton.x = _W/2				menuButton.y = _H/2+300
+	nextLevelButton.x = _W/2+130	nextLevelButton.y = _H/2+300
 
 	resetButton:scale(.5,.5)
 	nextLevelButton:scale(.5,.5)
@@ -330,6 +408,7 @@ function callEndingScreen(didWon,score,high)
 	
 	endGameScreen.y = -display.contentHeight
 	transition.to(endGameScreen,{time=1000,y=0,transition = easing.inOutExpo})
+	transition.to(blackAlpha,{time=900,alpha = .7,transition = easing.inOutExpo})
 end
 
 
