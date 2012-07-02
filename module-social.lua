@@ -69,7 +69,7 @@ end
 ---------------------------------------------------
 
 function setGCHighScore(score,level)
-	print("sending highScore to gamecenter "..score.." level:"level)
+	print("sending highScore to gamecenter "..score.." level:"..level)
 	gameNetwork.request( "setHighScore",
 	{
 			localPlayerScore = { category="level_"..level, value=score },
