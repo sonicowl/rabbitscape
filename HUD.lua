@@ -162,27 +162,15 @@ function loadActions()
 	actions["restartGame"] = function(event)
 		print("touched "..tostring(event.id))
 		if endGameScreen~=nil and endGameScreen.numChildren ~= nil and endGameScreen.numChildren > 0 then
-			for i = endGameScreen.numChildren, 1,-1 do
-				endGameScreen[i]:removeSelf()
-				endGameScreen[i] = nil
-			end
-			endGameScreen:removeSelf()
-			endGameScreen = nil
+			closeGroup(endGameScreen,restartListener)
+			return true
 		end
 		restartListener()
 	end	
 	
 	actions["nextLevel"] = function(event)
 		print("touched "..tostring(event.id))
-		if endGameScreen~=nil and endGameScreen.numChildren ~= nil and endGameScreen.numChildren > 0 then
-			for i = endGameScreen.numChildren, 1,-1 do
-				endGameScreen[i]:removeSelf()
-				endGameScreen[i] = nil
-			end
-			endGameScreen:removeSelf()
-			endGameScreen = nil
-		end
-		nextLevelListener()
+		closeGroup(endGameScreen,nextLevelListener)
 	end	
 	
 	
@@ -207,10 +195,16 @@ function loadActions()
 		print("touched "..tostring(event.id))
 		gameEngine.eatCarrot()
 	end
+	
 	actions["levelSelect"] = function (event)
 		print("touched "..tostring(event.id))
 		closeMenu(true)
 		levelSelectListener()
+	end
+		
+	actions["endToMenu"] = function (event)
+		print("touched "..tostring(event.id))
+		closeGroup(endGameScreen,levelSelectListener)
 	end
 	
 	actions["options"] = function (event)
@@ -265,10 +259,81 @@ function toast(message)
 	
 end
 
+function closeGroup(group, listener)
+	local closeClosure = function(event)
+		if listener then listener() end
+		event:removeSelf(); 
+		event = nil; 
+	end
+	transition.to(group,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
+end
+
+
+function callEndingScreen(didWon,score,high)	
+
+	endGameScreen = display.newGroup()
+	HUD:insert(endGameScreen)
+	
+	local holdingClickBg = display.newRect(0,0,_W,_H)
+	endGameScreen:insert(holdingClickBg)
+	holdingClickBg.alpha = 0.01
+	local touchClosure = function(event) return true end
+	holdingClickBg:addEventListener("touch", touchClosure)
+	
+	local board = display.newImageRect("board-2.png", math.floor(1053/2),math.floor(1683/2))
+	board.x = _W/2; board.y = _H/2
+	endGameScreen:insert(board)
+
+
+	local content = display.newImageRect("content-howtoplay.png", math.floor(854/2),math.floor(1350/2))
+	content.x = _W/2; content.y = _H/2+20
+	endGameScreen:insert(content)
 
 
 
-function callEndingScreen(didWon,score,high)
+	local resetButton = ui.newButton{
+		default = "replay-off.png",
+		over = "replay-on.png",
+		onEvent = buttonHandler,
+		id = "restartGame",
+	}	
+	
+	local nextLevelButton = ui.newButton{
+		default = "next-off.png",
+		over = "next-on.png",
+		onEvent = buttonHandler,
+		id = "nextLevel",
+	}
+	
+	local menuButton = ui.newButton{
+		default = "menu-off.png",
+		over = "menu-on.png",
+		onEvent = buttonHandler,
+		id = "endToMenu",
+	}
+	
+	
+	resetButton.x = _W/2-50			resetButton.y = _H/2+200
+	nextLevelButton.x = _W/2		nextLevelButton.y = _H/2+200
+	menuButton.x = _W/2+50			menuButton.y = _H/2+200
+
+	resetButton:scale(.5,.5)
+	nextLevelButton:scale(.5,.5)
+	menuButton:scale(.5,.5)
+	
+	
+	endGameScreen:insert(resetButton)
+	endGameScreen:insert(nextLevelButton)
+	endGameScreen:insert(menuButton)
+	
+	
+	
+	endGameScreen.y = -display.contentHeight
+	transition.to(endGameScreen,{time=1000,y=0,transition = easing.inOutExpo})
+end
+
+
+function callEndingSc(didWon,score,high)
 
 	endGameScreen = display.newGroup()
 	HUD:insert(endGameScreen)
