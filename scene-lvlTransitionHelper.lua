@@ -24,15 +24,12 @@ function scene:createScene( event )
         
 end
  
+
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
         local group = self.view
-        -----------------------------------------------------------------------------
-		
-        --      This event requires build 2012.782 or later.
-        
-        -----------------------------------------------------------------------------
-        
+        lastScene = storyboard.getPrevious()
+		print("COMING FROM "..tostring(lastScene))
 end
  
 -- Called immediately after scene has moved onscreen:
