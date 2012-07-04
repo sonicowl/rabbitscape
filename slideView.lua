@@ -221,23 +221,23 @@ function new( dataSet, listener, slideBackground, top, bottom )
 	end
 	
 	function nextImage()
-		tween = transition.to( buttons[imgNum], {time=400, x=(screenW + pad)*-1, transition=easing.outExpo } )
-		tween = transition.to( buttons[imgNum+1], {time=400, x=0, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum], {time=800, x=(screenW + pad)*-1, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum+1], {time=800, x=0, transition=easing.outExpo } )
 		imgNum = imgNum + 1
 		initImage(imgNum)
 	end
 	
 	function prevImage()
-		tween = transition.to( buttons[imgNum], {time=400, x=screenW+pad, transition=easing.outExpo } )
-		tween = transition.to( buttons[imgNum-1], {time=400, x=0, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum], {time=800, x=screenW+pad, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum-1], {time=800, x=0, transition=easing.outExpo } )
 		imgNum = imgNum - 1
 		initImage(imgNum)
 	end
 	
 	function cancelMove()
-		tween = transition.to( buttons[imgNum], {time=400, x=0, transition=easing.outExpo } )
-		tween = transition.to( buttons[imgNum-1], {time=400, x=(screenW + pad)*-1, transition=easing.outExpo } )
-		tween = transition.to( buttons[imgNum+1], {time=400, x=screenW+pad, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum], {time=800, x=0, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum-1], {time=800, x=(screenW + pad)*-1, transition=easing.outExpo } )
+		tween = transition.to( buttons[imgNum+1], {time=800, x=screenW+pad, transition=easing.outExpo } )
 	end
 	
 	function initImage(num)
