@@ -162,7 +162,9 @@ function loadActions()
 	actions["restartGame"] = function(event)
 		print("touched "..tostring(event.id))
 		if endGameScreen~=nil and endGameScreen.numChildren ~= nil and endGameScreen.numChildren > 0 then
-			closeGroup(endGameScreen,restartListener)
+			restartListener()
+			pauseListener()
+			closeGroup(endGameScreen,resumeGameListener)
 			return true
 		end
 		restartListener()
@@ -173,9 +175,17 @@ function loadActions()
 		closeGroup(endGameScreen,nextLevelListener)
 	end	
 	
+		
+	actions["endToMenu"] = function (event)
+		print("touched "..tostring(event.id))
+		restartListener()
+		pauseListener()
+		local transitionClosure = function(event) actions["showMenu"](); resumeGameListener(); end
+		closeGroup(endGameScreen,actions["showMenu"])
+	end
 	
 	actions["resumeGame"] = function(event)
-		print("touched "..tostring(event.id))
+		--print("touched "..tostring(event.id))
 		closeMenu()
 		resumeGameListener()
 	end	
@@ -183,11 +193,11 @@ function loadActions()
 
 	actions["showMenu"] = function(event)
 		if menuDialog == nil then
-			print("touched "..tostring(event.id))
+			--print("touched "..tostring(event.id))
 			pauseListener()
 			showMenu()
 		else
-			actions["resumeGame"](event)
+			actions["resumeGame"]()
 		end
 	end	
 
@@ -205,11 +215,6 @@ function loadActions()
 		print("touched "..tostring(event.id))
 		closeMenu(true)
 		levelSelectListener()
-	end
-		
-	actions["endToMenu"] = function (event)
-		print("touched "..tostring(event.id))
-		closeGroup(endGameScreen,levelSelectListener)
 	end
 	
 	actions["options"] = function (event)
