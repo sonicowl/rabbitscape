@@ -34,9 +34,10 @@ function syncBoxCallback( event )
 			jsonLevels.syncLevels(loadingGroup)
 			hasUpdates = false
 		else
-			sceneDialog = display.newGroup()
-			menuGroup:insert(sceneDialog)
-			dialogsModule.callScenerySelector(sceneDialog,storyboard)
+			storyboard.gotoScene( "scene-scenery-select", "fade", 400 )
+			--sceneDialog = display.newGroup()
+			--menuGroup:insert(sceneDialog)
+			--dialogsModule.callScenerySelector(sceneDialog,storyboard)
 		end
 	end
 end
@@ -50,18 +51,18 @@ function loadActions()
 
 	actions["play"] = function(event)
 		print("touched "..tostring(event.id))
-		--storyboard.gotoScene( "scene-sceneryList", "slideLeft", 400 )
 		if hasUpdates then requestSync()
 		else
-			sceneDialog = display.newGroup()
-			menuGroup:insert(sceneDialog)
-			dialogsModule.callScenerySelector(sceneDialog,storyboard)
+			storyboard.gotoScene( "scene-scenery-select", "fade", 400 )
+			--sceneDialog = display.newGroup()
+			--menuGroup:insert(sceneDialog)
+			--dialogsModule.callScenerySelector(sceneDialog,storyboard)
 		end
 	end
 	
 	actions["help"] = function(event)
 		print("touched "..tostring(event.id))
-		
+		storyboard.gotoScene( "scene-help", "fade", 400 )
 	end	
 	
 	actions["options"] = function(event)

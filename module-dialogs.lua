@@ -16,7 +16,7 @@ function init()
 	jsonLevels.init()
 end
 
-function callScenerySelector(viewGroup,storyboard)	
+function callScenerySelector(viewGroup,storyboard,closeListener)	
 	
 	local holdingClickBg = display.newRect(0,0,_W,_H)
 	viewGroup:insert(holdingClickBg)
@@ -55,7 +55,7 @@ function callScenerySelector(viewGroup,storyboard)
 	
 	function closeButHandler(event)
 		if event.phase == "release"  then
-			local closeClosure = function(event) event:removeSelf(); event = nil; end
+			local closeClosure = function(event) if closeListener then closeListener() end event:removeSelf(); event = nil; end
 			transition.to(viewGroup,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
 		end
 		return true

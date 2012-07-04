@@ -6,76 +6,52 @@
  
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
- 
---POSITION VARS
-_W = display.contentWidth;
-_H = display.contentHeight;
-_VW = display.viewableContentWidth
-_VH = display.viewableContentHeight
-_VH0 = (_H-_VH)/2
-_VW0 = (_W-_VW)/2
- 
+local dialogsModule = require( "module-dialogs" )
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
  
+ 
+function closeButtonListener()
+	storyboard.gotoScene("main-menu","fade",400)
+end
+ 
+ 
+ 
+ 
+ 
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-	lastScene = storyboard.getPrevious()	
+	lastScene = storyboard.getPrevious()
 
+	dialogsModule.init()
+	loadActions()
 	
-	buthandler = function( event )
-		if event.phase == "release"  then
-			storyboard.gotoScene( lastScene, "slideRight", 400 )
-		end
-	end
-
-	local bg = display.newImageRect("l1g.jpg",_VW,_VH)
+	local bg = display.newImageRect("bg2.jpg",_VW,_VH)
 	bg.x = _W/2
 	bg.y = _H/2
 	group:insert(bg)
 	
-	backButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
-		onEvent = buthandler,
-		text = "PLAY GAME",
-		textColor = { 51, 51, 51, 255 },
-		emboss = true,
-		size = 22
-	}
-	backButton.x = _W/2
-	backButton.y = _VH0+_VH-100
-	backButton.xScale = 2
-	backButton.yScale = 2
-	
-	group:insert(backButton)
-        
 end
- 
+
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
         local group = self.view
-        
-        -----------------------------------------------------------------------------
-                
-        --      This event requires build 2012.782 or later.
-        
-        -----------------------------------------------------------------------------
-        
+        lastScene = storyboard.getPrevious()
+		print("COMING FROM "..tostring(lastScene))
 end
  
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
-        local group = self.view
-        storyboard.purgeScene( lastScene )
-        -----------------------------------------------------------------------------
-                
-        --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-        
-        -----------------------------------------------------------------------------
-        
+    local group = self.view
+    storyboard.purgeScene( lastScene )
+	actions = {}
+
+	sceneDialog = display.newGroup()
+	group:insert(sceneDialog)
+	dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
+
 end
  
  
