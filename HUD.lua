@@ -345,21 +345,21 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		if secs<10 then secsText = "0"..secsText end
 		timeEndText = minutesText..":"..secsText
 		
-		local objectsText = display.newText(objectsUsed, 0, 0, "Poplar Std", 15)	
+		local objectsText = display.newText(objectsUsed, 0, 0, "Poplar Std", 30)	
 		objectsText:setTextColor(197,240,132)	
 
-		local totalTimeText = display.newText(timeEndText, 0, 0, "Poplar Std", 15)	
+		local totalTimeText = display.newText(timeEndText, 0, 0, "Poplar Std", 30)	
 		totalTimeText:setTextColor(197,240,132)
 		
 		local carrotsMsg = "NO"
 		if usedCarrot then carrotsMsg = "YES" end
-		local carrotsText = display.newText(carrotsMsg, 0, 0, "Poplar Std", 15)	
+		local carrotsText = display.newText(carrotsMsg, 0, 0, "Poplar Std", 30)	
 		carrotsText:setTextColor(197,240,132)	
 		
-		local scoreText = display.newText(math.floor(score), 0, 0, "Poplar Std", 30)
+		local scoreText = display.newText(math.floor(score), 0, 0, "Poplar Std", 50)
 		scoreText:setTextColor(253,222,59)
 		
-		local highText = display.newText(math.floor(high), 0, 0, "Poplar Std", 15)	
+		local highText = display.newText(math.floor(high), 0, 0, "Poplar Std", 30)	
 		highText:setTextColor(197,240,132)
 
 		objectsText:setReferencePoint(display.CenterLeftReferencePoint);
@@ -368,11 +368,11 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
 		highText:setReferencePoint(display.CenterLeftReferencePoint);
 		
-		objectsText.x = _W/2+100 	objectsText.y = _H/2+50
-		totalTimeText.x = _W/2+100 		totalTimeText.y = _H/2+90
-		carrotsText.x = _W/2+100	carrotsText.y = _H/2+110
-		scoreText.x = _W/2+100 		scoreText.y = _H/2+150
-		highText.x = _W/2+100 		highText.y = _H/2+180
+		objectsText.x = _W/2+80 	objectsText.y = _H/2+40
+		totalTimeText.x = _W/2+80 		totalTimeText.y = _H/2+73
+		carrotsText.x = _W/2+80	carrotsText.y = _H/2+106
+		scoreText.x = _W/2+80 		scoreText.y = _H/2+145
+		highText.x = _W/2+80 		highText.y = _H/2+190
 		endGameScreen:insert(objectsText)
 		endGameScreen:insert(totalTimeText)
 		endGameScreen:insert(carrotsText)
