@@ -14,21 +14,22 @@ local dialogsModule = require( "module-dialogs" )
  
 function closeButtonListener()
 	storyboard.gotoScene("main-menu","fade",400)
+	--if on options and using any "options" should reload tem here
 end
  
  
  
  
- 
+
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
 	lastScene = storyboard.getPrevious()
-
+	
 	dialogsModule.init()
 	loadActions()
 	
-	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
+	local bg = display.newImageRect("bg2.jpg",_VW,_VH)
 	bg.x = _W/2
 	bg.y = _H/2
 	group:insert(bg)
@@ -50,7 +51,8 @@ function scene:enterScene( event )
 
 	sceneDialog = display.newGroup()
 	group:insert(sceneDialog)
-	dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
+	dialogsModule.callOptions(sceneDialog,closeButtonListener,storyboard)
+	
 
 end
  

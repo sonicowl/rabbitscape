@@ -10,7 +10,11 @@ require("ui")
 local dialogsModule = require( "module-dialogs" )
 local gameStore = require("module-store")
 social = require("module-social")
+require("ice")
 
+gameData = ice:loadBox( "gameData" )
+gameData:storeIfNew( "mute", false )
+gameData:save()
 
 _W = display.contentWidth;
 _H = display.contentHeight;
@@ -67,7 +71,7 @@ function loadActions()
 	
 	actions["options"] = function(event)
 		print("touched "..tostring(event.id))
-		
+		storyboard.gotoScene( "scene-options", "fade", 400 )
 	end	
 	
 	actions["GameCenter"] = function(event)
@@ -106,69 +110,77 @@ function scene:createScene( event )
 	loadActions()
 
 
-	local bg = display.newImageRect("bg1.jpg",_VW,_VH)
+	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2;	bg.y = _H/2
 	group:insert(bg)
 	
+	local cityCircle = display.newImageRect("main-hole.png",1002/2,996/2)
+	cityCircle.x = _W/2;	cityCircle.y = _H/2-30
+	group:insert(cityCircle)
+	
+	local mainSign = display.newImageRect("main-sign.png",1094/2,674/2)
+	mainSign.x = _W/2+20;	mainSign.y = _H/2-280
+	group:insert(mainSign)	
+
+	local buildingOL = display.newImageRect("main-building.png",133/2,207/2)
+	buildingOL.x = _W/2+80;	buildingOL.y = _H/2-130
+	group:insert(buildingOL)
+	
+	local littleSigns = display.newImageRect("main-texts.png",500/2,302/2)
+	littleSigns.x = _W/4;	littleSigns.y = _H/2+180
+	group:insert(littleSigns)
+
+
+	
 	playButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "main-play-off.png",
+		over = "main-play-on.png",
 		onEvent = buttonHandler,
 		id = "play",
-		text = "PLAY GAME",
-		textColor = { 51, 51, 51, 255 },
-		emboss = true,
-		size = 22
 	}
 
 	helpButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "main-help-off.png",
+		over = "main-help-on.png",
 		onEvent = buttonHandler,
 		id = "help",
-		text = "HELP",
-		textColor = { 51, 51, 51, 255 },
-		emboss = true,
-		size = 22
 	}
 	
 	optionsButton = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "main-options-off.png",
+		over = "main-options-on.png",
 		onEvent = buttonHandler,
 		id = "options",
-		text = "OPTIONS",
-		textColor = { 51, 51, 51, 255 },
-		emboss = true,
-		size = 22
 	}
 	
 	ofButton= ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "main-ranking-off.png",
+		over = "main-ranking-on.png",
 		onEvent = buttonHandler,
 		id = "GameCenter",
-		text = "GameCenter",
-		textColor = { 51, 51, 51, 255 },
-		emboss = true,
-		size = 22
 	}
 	
-	playButton.x = _W/2;	playButton.y = _H/2-225
-	helpButton.x = _W/2;	helpButton.y = _H/2-75
-	optionsButton.x = _W/2;	optionsButton.y = _H/2+75
-	ofButton.x = _W/2;		ofButton.y = _H/2+225
+	playButton.x = _W/4;	playButton.y = _H/2+300
+	helpButton.x = _W/2+15;	helpButton.y = _H/2+410
+	optionsButton.x = _W/4;	optionsButton.y = _H/2+410
+	ofButton.x = _W/4*3+30;		ofButton.y = _H/2+410
 	
-	playButton:scale(2,2)
-	helpButton:scale(2,2)
-	optionsButton:scale(2,2)
-	ofButton:scale(2,2)
+	playButton:scale(.5,.5)
+	helpButton:scale(.5,.5)
+	optionsButton:scale(.5,.5)
+	ofButton:scale(.5,.5)
 
 	
 	group:insert(playButton)
 	group:insert(helpButton)
 	group:insert(optionsButton)
 	group:insert(ofButton)
+	
+	local mainBunny = display.newImageRect("main-bunny.png",1193/2,823/2)
+	mainBunny.x = _W/2+90;	mainBunny.y = _H/2+215
+	group:insert(mainBunny)
+	
+	storyboard.mute = gameData:retrieve("mute")
 	
 end
 -- Called BEFORE scene has moved onscreen:

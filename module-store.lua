@@ -9,7 +9,8 @@
 
 module(..., package.seeall)
 
-function init()
+function init(listener)
+	if listener then moduleListener = listener end
 	local store = require("store")
 	store.init("apple", storeTransaction )
 	require("ice")
@@ -39,11 +40,11 @@ function storeTransaction( event )
 			if  transaction.productIdentifier == "catch_the_bunny_pro" then
 				storeData:store( "proPurchased", false )
 				storeData:save()
-				if listener then listener() end
+				if moduleListener then moduleListener() end
 			elseif transaction.productIdentifier == "catch_the_bunny_carrots" then
 				storeData:store( "carrotsPurchased", false )
 				storeData:save()
-				if listener then listener() end
+				if moduleListener then moduleListener() end
 			end
 	elseif  transaction.state == "restored" then
 			print("Transaction restored (from previous session)")
@@ -51,11 +52,11 @@ function storeTransaction( event )
 			if  transaction.productIdentifier == "catch_the_bunny_pro" then
 				storeData:store( "proPurchased", false )
 				storeData:save()
-				if listener then listener() end
+				if moduleListener then moduleListener() end
 			elseif transaction.productIdentifier == "catch_the_bunny_carrots" then
 				storeData:store( "carrotsPurchased", false )
 				storeData:save()
-				if listener then listener() end
+				if moduleListener then moduleListener() end
 			end
 	elseif transaction.state == "cancelled" then
 			print("User cancelled transaction")

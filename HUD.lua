@@ -15,6 +15,10 @@ function init(viewGroup,listenersTable)
 	actions = {}
 	dialogsModule = require("module-dialogs")
 	dialogsModule.init()
+	storeModule = require("module-store")
+
+	require("ice")
+	storeData = ice:loadBox( "storeData" )
 	HUD = display.newGroup()
 	viewGroup:insert(HUD)
 	restartListener = listenersTable.restart
@@ -103,20 +107,32 @@ function loadScreenUI()
 		menuButton:scale(.5,.5)
 		menuButton.x = _W/2; 	menuButton.y = _VH0+_VH-45
 
-
-		carrotButton = ui.newButton{
-			default = "carrot-off.png",
-			over = "carrot-on.png",
-			id = "carrotButton",
-			onEvent = buttonHandler,
-			emboss = true
-		}
-		
-		carrotButton.x = _W/2+110; carrotButton.y = _H-50
-		carrotButton:scale(.5,.5)
-		
-
-		screenUI:insert(carrotButton)
+		carrotsPurchased = storeData:retrieve("carrotsPurchased")
+		local loadCarrotButs = function()
+			if carrotUsedBut then carrotUsedBut:removeSelf() carrotUsedBut = nil end
+			carrotButton = ui.newButton{
+				default = "carrot-off.png",
+				over = "carrot-on.png",
+				id = "carrotButton",
+				onEvent = buttonHandler,
+				emboss = true
+			}
+			carrotButton.x = _W/2+110; carrotButton.y = _H-50
+			carrotButton:scale(.5,.5)
+			screenUI:insert(carrotButton)
+		end
+		if carrotsPurchased then
+			loadCarrotButs()
+		else
+			carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
+			carrotUsedBut.x = _W/2+110; carrotUsedBut.y = _H-50
+			local function carrotStoreListener(event)
+				storeModule.init(loadCarrotButs)
+				storeModule.sellingDialog("carrots")
+			end
+			screenUI:insert(carrotUsedBut)
+			carrotUsedBut:addEventListener("touch", carrotStoreListener)
+		end
 	
 
 	end
