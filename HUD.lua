@@ -11,8 +11,9 @@
 
 module(..., package.seeall)
 
-function init(viewGroup,listenersTable)
+function init(viewGroup,storyBoard,listenersTable)
 	actions = {}
+	storyboard = storyBoard
 	dialogsModule = require("module-dialogs")
 	dialogsModule.init()
 	storeModule = require("module-store")
@@ -127,14 +128,14 @@ function loadScreenUI()
 			carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
 			carrotUsedBut.x = _W/2+110; carrotUsedBut.y = _H-50
 			local function carrotStoreListener(event)
-				storeModule.init(loadCarrotButs)
-				storeModule.sellingDialog("carrots")
+				if event.phase == "began" then			
+					storeModule.init(loadCarrotButs)
+					storeModule.sellingDialog("carrots")
+				end
 			end
-			screenUI:insert(carrotUsedBut)
 			carrotUsedBut:addEventListener("touch", carrotStoreListener)
+			screenUI:insert(carrotUsedBut)
 		end
-	
-
 	end
 end
 
@@ -235,12 +236,14 @@ function loadActions()
 	
 	actions["options"] = function (event)
 		print("touched "..tostring(event.id))
-		
+		sceneDialog = display.newGroup()
+		group:insert(sceneDialog)
+		dialogsModule.callOptions(sceneDialog,nil,storyboard)
 	end
 	
 	actions["scores"] = function (event)
 		print("touched "..tostring(event.id))
-		
+		social.showGCPopup()
 	end
 	
 	actions["howtoplay"] = function (event)
@@ -357,7 +360,13 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		local line2 = display.newImageRect("line.png",705/2,10/2)
 		line2.x = _W/2	line2.y = content1.y+content1.contentHeight/2+10
 		endGameScreen:insert(line2)
-		
+		if high == score then 
+			local highButton = display.newImageRect("new-high.png",104/2,110/2)
+			highButton.x =_W/2+180 	highButton.y = _H/2+190
+			endGameScreen:insert(highButton)
+			highButton.alpha = 0
+			transition.to(highButton,{time=1000,delay=1000,alpha=1})
+		end
 		local secs = gameTime%60
 		local minutes = (gameTime-secs)/60
 		local secsText = secs..""
@@ -410,6 +419,17 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		local content1 = display.newImageRect("tryagain-ad.png",973/2,449/2)
 		content1.x = _W/2 content1.y = _H/2+130
 		endGameScreen:insert(content1)
+		
+		local carrotBoxButton = display.newRect((_W/2) , (_H/2+130-content1.contentHeight/2) , content1.contentWidth/2 , (content1.contentHeight))
+		carrotBoxButton.alpha = .01
+		endGameScreen:insert(carrotBoxButton)
+		local function carrotStoreListener(event)
+			if event.phase == "began" then
+				storeModule.init(loadCarrotButs)
+				storeModule.sellingDialog("carrots")
+			end
+		end
+		carrotBoxButton:addEventListener("touch", carrotStoreListener)
 	end
 	
 	resetButton.x = _W/2-130		resetButton.y = _H/2+300

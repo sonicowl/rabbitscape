@@ -14,7 +14,6 @@ module(..., package.seeall)
 
 
 
-
 function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 	
 	-------------- DISPLAY GROUPS
@@ -106,7 +105,22 @@ function getCellTypeIdByTag(map,tag)
 	return false
 end
 
-
+function getPerspectiveBlock(x,y)
+	if y < _H/2 then
+		if x < _W/2 then
+			return 1
+		else
+			return 2
+		end
+	else
+		if x < _W/2 then
+			return 3
+		else
+			return 4
+		end	
+	end
+	
+end
 
 
 function setClusterEffect(cell,isCreate)
@@ -205,7 +219,9 @@ function placeObject(cell, object,listener)
 	changeCell(cell,objectId)
 	local objectType = cell.mapRef.objects[cell.id]
 	if objectType.isDynamic then
-		local tempObject = display.newImageRect(objectType.img,objectType.imgW,objectType.imgH)
+		local imgName = objectType.img
+		if objectType.hasPerspective then imgName = "p"..getPerspectiveBlock(cell.hexX,cell.hexY)..imgName end
+		local tempObject = display.newImageRect(imgName,objectType.imgW,objectType.imgH)
 		tempObject.x = cell.hexX
 		tempObject.y = cell.hexY
 		if objectType.alpha ~= nil then tempObject.alpha = objectType.alpha end

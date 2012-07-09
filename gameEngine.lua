@@ -98,7 +98,7 @@ function newLevel(params)
 	overLayGroup = display.newGroup()
 	sceneGroup:insert(overLayGroup)	
 		
-	HUD.init(sceneGroup,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame,continue = goToNextLevel, levelSelect = backToLevelSelect})
+	HUD.init(sceneGroup,storyboard,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame,continue = goToNextLevel, levelSelect = backToLevelSelect})
 end
 
 
