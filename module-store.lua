@@ -77,6 +77,7 @@ end
 
 function sellingDialog(product)
 	if not isSellingNow then
+		local platform = system.getInfo("platformName")
 		if product == "pro" then
 			if platform == "iPhone OS" then
 				isSellingNow = true
