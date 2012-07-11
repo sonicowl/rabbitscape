@@ -46,7 +46,7 @@ end
 function initCallback( event )
     if event.data then
         loggedIntoGC = true
-        native.showAlert( "Success!", "User has logged into Game Center", { "OK" } )
+        --native.showAlert( "Success!", "User has logged into Game Center", { "OK" } )
     else
         loggedIntoGC = false
         native.showAlert( "Fail", "User is not logged into Game Center", { "OK" } )

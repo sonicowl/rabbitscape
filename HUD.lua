@@ -347,7 +347,7 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 			onEvent = buttonHandler,
 			id = "nextLevel",
 		}
-		local title = display.newImageRect("bunny.png",1090/2,1065/2)
+		local title = display.newImageRect("bunny.png",1032/2,989/2)
 		title.x = _W/2	title.y = _H/2-180
 		endGameScreen:insert(title)
 		
@@ -412,7 +412,7 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 	else
 		nextLevelButton = display.newImageRect("next-disabled.png",198,283)
 
-		local title = display.newImageRect("bunny-escaped.png",863/2,1106/2)
+		local title = display.newImageRect("bunny-escaped.png",691/2,814/2)
 		title.x = _W/2	title.y = _H/2-180
 		endGameScreen:insert(title)
 		
