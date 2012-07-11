@@ -13,7 +13,7 @@ local dialogsModule = require( "module-dialogs" )
  
  
 function closeButtonListener()
-	storyboard.gotoScene("main-menu","fade",400)
+	storyboard.gotoScene("main-menu",{time=100})
 	--if on options and using any "options" should reload tem here
 end
  
@@ -29,7 +29,7 @@ function scene:createScene( event )
 	dialogsModule.init()
 	loadActions()
 	
-	local bg = display.newImageRect("bg2.jpg",_VW,_VH)
+	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2
 	bg.y = _H/2
 	group:insert(bg)

@@ -13,7 +13,7 @@ local dialogsModule = require( "module-dialogs" )
  
  
 function closeButtonListener()
-	storyboard.gotoScene("main-menu","fade",400)
+	storyboard.gotoScene("main-menu",{time=100})
 end
  
  
@@ -26,7 +26,6 @@ function scene:createScene( event )
 	lastScene = storyboard.getPrevious()
 
 	dialogsModule.init()
-	loadActions()
 	
 	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2
@@ -46,7 +45,6 @@ end
 function scene:enterScene( event )
     local group = self.view
     storyboard.purgeScene( lastScene )
-	actions = {}
 
 	sceneDialog = display.newGroup()
 	group:insert(sceneDialog)

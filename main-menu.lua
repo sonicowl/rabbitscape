@@ -29,6 +29,18 @@ function checkUpdatedListener(bool)
 	if bool then hasUpdates = true end
 end
 
+function goOutAnimation(listener)
+	local goOutClosure = function(event) timer.performWithDelay(100,listener) end
+	transition.to(littleSigns,{time=150,alpha=0,transition=easing.inExpo})
+	transition.to(ofButton,{delay=100,time=250,y=ofButton.y+300,transition=easing.inExpo})	
+	transition.to(helpButton,{delay=150,time=250,y=helpButton.y+300,transition=easing.inExpo})
+	transition.to(optionsButton,{delay=200,time=250,y=optionsButton.y+300,transition=easing.inExpo})
+	transition.to(playButton,{delay=250, time=250,y=playButton.y+300,transition=easing.inExpo})
+	transition.to(mainSign,{delay=300, time=250,y=mainSign.y-_H/2,transition=easing.inExpo})
+	transition.to(mainBunny,{delay = 400, time=500,x=mainBunny.x-170,y=mainBunny.y-300,alpha=0,rotation=-30,xScale=.2,yScale=.2,transition=easing.inExpo})
+	transition.to(circleGroup,{delay=900,time=250,x=-_W,transition=easing.inExpo,onComplete=goOutClosure})
+end
+
 function syncBoxCallback( event )
 	if "clicked" == event.action then
 		local i = event.index
@@ -38,7 +50,9 @@ function syncBoxCallback( event )
 			jsonLevels.syncLevels(loadingGroup)
 			hasUpdates = false
 		else
-			storyboard.gotoScene( "scene-scenery-select", "fade", 400 )
+			--storyboard.gotoScene( "scene-scenery-select", "fade", 100 )
+			local butClosure = function(event)	storyboard.gotoScene( "scene-scenery-select", {time=100} ) end
+			goOutAnimation(butClosure)
 			--sceneDialog = display.newGroup()
 			--menuGroup:insert(sceneDialog)
 			--dialogsModule.callScenerySelector(sceneDialog,storyboard)
@@ -57,8 +71,10 @@ function loadActions()
 		print("touched "..tostring(event.id))
 		if hasUpdates then requestSync()
 		else
-			storyboard.gotoScene( "scene-scenery-select", "fade", 400 )
-			--sceneDialog = display.newGroup()
+--			storyboard.gotoScene( "scene-scenery-select", "fade", 100 )
+			local butClosure = function(event)	storyboard.gotoScene( "scene-scenery-select", {time=100} ) end
+			goOutAnimation(butClosure)
+		--sceneDialog = display.newGroup()
 			--menuGroup:insert(sceneDialog)
 			--dialogsModule.callScenerySelector(sceneDialog,storyboard)
 		end
@@ -66,12 +82,18 @@ function loadActions()
 	
 	actions["help"] = function(event)
 		print("touched "..tostring(event.id))
-		storyboard.gotoScene( "scene-help", "fade", 400 )
+		--storyboard.gotoScene( "scene-help", "fade", 100 )
+		local butClosure = function(event)	storyboard.gotoScene( "scene-help", {time=100} ) end
+		goOutAnimation(butClosure)
+		--sceneDialog = display.newGroup()
+		--group:insert(sceneDialog)
+		--dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
 	end	
 	
 	actions["options"] = function(event)
 		print("touched "..tostring(event.id))
-		storyboard.gotoScene( "scene-options", "fade", 400 )
+		local butClosure = function(event)	storyboard.gotoScene( "scene-options", {time=100} ) end
+		goOutAnimation(butClosure)
 	end	
 	
 	actions["GameCenter"] = function(event)
@@ -219,15 +241,15 @@ function scene:enterScene( event )
 	
 	
 	local startClosure2 = function(event)
-		transition.to(mainSign,{time=500,y=mainSign.y+_H/2,transition=easing.outExpo})
-		transition.to(playButton,{delay=200, time=500,y=playButton.y-300,transition=easing.outExpo})
-		transition.to(optionsButton,{delay=300,time=500,y=optionsButton.y-300,transition=easing.outExpo})
-		transition.to(helpButton,{delay=400,time=500,y=helpButton.y-300,transition=easing.outExpo})
-		transition.to(ofButton,{delay=500,time=500,y=ofButton.y-300,transition=easing.outExpo})	
-		transition.to(littleSigns,{delay=700,time=300,alpha=1,transition=easing.inExpo})
+		transition.to(mainSign,{time=500/2,y=mainSign.y+_H/2,transition=easing.outExpo})
+		transition.to(playButton,{delay=200/2, time=500/2,y=playButton.y-300,transition=easing.outExpo})
+		transition.to(optionsButton,{delay=300/2,time=500/2,y=optionsButton.y-300,transition=easing.outExpo})
+		transition.to(helpButton,{delay=400/2,time=500/2,y=helpButton.y-300,transition=easing.outExpo})
+		transition.to(ofButton,{delay=500/2,time=500/2,y=ofButton.y-300,transition=easing.outExpo})	
+		transition.to(littleSigns,{delay=700/2,time=300/2,alpha=1,transition=easing.inExpo})
 	end
 	local startClosure1 = function(event) transition.to(mainBunny,{time=800,x=mainBunny.x+170,y=mainBunny.y+300,alpha=1,rotation=0,xScale=1,yScale=1,transition=easing.outExpo,onComplete=startClosure2})  end
-	transition.to(circleGroup,{time=500,x=0,transition=easing.outExpo,onComplete=startClosure1})
+	transition.to(circleGroup,{time=500/2,x=0,transition=easing.outExpo,onComplete=startClosure1})
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
