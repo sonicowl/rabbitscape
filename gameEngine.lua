@@ -22,7 +22,6 @@ module(..., package.seeall)
 --
 --	PARAMETERS
 --	params.storyBoard	:	scene storyboard
---	params.lastScene	:	last Scene of the game (for purging)
 --	params.viewGroup	:	the scene view group
 --
 --#####################################################--
@@ -36,7 +35,6 @@ function newLevel(params)
 	jsonLevels = require("jsonLevels")
 	jsonLevels.init()
 	storyboard = params.storyBoard
-	lastScene = params.lastScene
 	sceneGroup = params.viewGroup
 	bgGroup = display.newGroup()
 	sceneGroup:insert(bgGroup)
@@ -806,7 +804,6 @@ end
 
 function quitGame()
 	if gameRunning then stopGame() end
-	print("going to "..lastScene)
 	if instance1 then
 		instance1:removeSelf()
 		instance1 = nil
@@ -822,7 +819,6 @@ end
 
 function backToLevelSelect()
 	if gameRunning then stopGame() end
-	print("going to "..lastScene)
 	if instance1 then
 		instance1:removeSelf()
 		instance1 = nil

@@ -28,7 +28,7 @@ function scene:createScene( event )
 	dialogsModule.init()
 	loadActions()
 	
-	local bg = display.newImageRect("bg2.jpg",_VW,_VH)
+	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2
 	bg.y = _H/2
 	group:insert(bg)

@@ -34,8 +34,7 @@ function scene:createScene( event )
 	local stdImgH = 50
 	
 	local defaultCellType = { terrainCost = 10, maxMembers = -1,isDynamic = false, isWalkable = true, isExit=false, canPutObjects = true, tag="grass" ,img="gridRoundGreen.png",imgW=stdImgW*.7, imgH=stdImgH*.7 }
-	lastScene = "scene-sceneryList"
-	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard, lastScene = lastScene})
+	gameEngine.newLevel({defaultCellType = defaultCellType, viewGroup = sceneGroup, storyBoard = storyboard})
 	
 	
 	--appearingWeight: if you stick near a sum of 100 is easier to deal! 
