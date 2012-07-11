@@ -60,7 +60,7 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 	function closeButHandler(event)
 		if event.phase == "release"  then
 			local closeClosure = function(event) if closeListener then closeListener() end event:removeSelf(); event = nil; end
-			transition.to(viewGroup,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 		return true
 	end
@@ -119,7 +119,7 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 	slider.y = slider.y + 50
 	viewGroup:insert(slider)
 	viewGroup.y = -display.contentHeight
-	transition.to(viewGroup,{time=1000,y=0,transition = easing.inOutExpo})
+	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
 end
 
 function callHowToPlay(viewGroup,listener)	
@@ -149,7 +149,7 @@ function callHowToPlay(viewGroup,listener)
 				event:removeSelf(); 
 				event = nil; 
 			end
-			transition.to(viewGroup,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 		return true
 	end
@@ -165,7 +165,7 @@ function callHowToPlay(viewGroup,listener)
 	viewGroup:insert(closeBut)
 	
 	viewGroup.y = -display.contentHeight
-	transition.to(viewGroup,{time=1000,y=0,transition = easing.inOutExpo})
+	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
 end
 
 
@@ -276,7 +276,7 @@ function callOptions(viewGroup,listener,storyboard)
 				event:removeSelf(); 
 				event = nil; 
 			end
-			transition.to(viewGroup,{time=1000,y=-display.contentHeight,transition = easing.inOutExpo,onComplete = closeClosure})
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 		return true
 	end
@@ -292,7 +292,7 @@ function callOptions(viewGroup,listener,storyboard)
 	viewGroup:insert(closeBut)
 	
 	viewGroup.y = -display.contentHeight
-	transition.to(viewGroup,{time=1000,y=0,transition = easing.inOutExpo})
+	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
 end
 
 
