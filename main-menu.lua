@@ -110,27 +110,42 @@ function scene:createScene( event )
 	loadActions()
 
 
-	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
-	bg.x = _W/2;	bg.y = _H/2
-	group:insert(bg)
-	
-	local cityCircle = display.newImageRect("main-hole.png",1002/2,996/2)
+	mainBg = display.newImageRect("bg3.jpg",_VW,_VH)
+	--bg.x = _W/2;	bg.y = _H/2
+	mainBg.x = _W/2;	mainBg.y = _H/2
+	group:insert(mainBg)
+
+	circleGroup = display.newGroup()
+
+	cityCircle = display.newImageRect("main-hole.png",1002/2,996/2)
+	--cityCircle.x = _W/2;	cityCircle.y = _H/2-30
 	cityCircle.x = _W/2;	cityCircle.y = _H/2-30
-	group:insert(cityCircle)
+	circleGroup:insert(cityCircle)
 	
-	local mainSign = display.newImageRect("main-sign.png",1094/2,674/2)
-	mainSign.x = _W/2+20;	mainSign.y = _H/2-280
-	group:insert(mainSign)	
+	mainSign = display.newImageRect("main-sign.png",1094/2,674/2)
+	--mainSign.x = _W/2+20;	mainSign.y = _H/2-280
+	mainSign.x = _W/2+20;	mainSign.y = _H/2-280-_H/2
+	circleGroup:insert(mainSign)	
 
-	local buildingOL = display.newImageRect("main-building.png",133/2,207/2)
+	buildingOL = display.newImageRect("main-building.png",133/2,207/2)
+	--buildingOL.x = _W/2+80;	buildingOL.y = _H/2-130
 	buildingOL.x = _W/2+80;	buildingOL.y = _H/2-130
-	group:insert(buildingOL)
+	circleGroup:insert(buildingOL)
 	
-	local littleSigns = display.newImageRect("main-texts.png",500/2,302/2)
+	littleSigns = display.newImageRect("main-texts.png",500/2,302/2)
+	--littleSigns.x = _W/4;	littleSigns.y = _H/2+180
 	littleSigns.x = _W/4;	littleSigns.y = _H/2+180
-	group:insert(littleSigns)
+	littleSigns.alpha = 0
+	circleGroup:insert(littleSigns)
 
-
+	mainBunny = display.newImageRect("main-bunny.png",1193/2,823/2)
+	--mainBunny.x = _W/2+90;	mainBunny.y = _H/2+215
+	mainBunny.x = _W/2+90-170;	mainBunny.y = _H/2+215-300
+	mainBunny:scale(.2,.2)
+	mainBunny.alpha = 0
+	mainBunny:setReferencePoint(display.BottomCenterReferencePoint);
+	mainBunny.rotation = -30
+	circleGroup:insert(mainBunny)
 	
 	playButton = ui.newButton{
 		default = "main-play-off.png",
@@ -160,10 +175,10 @@ function scene:createScene( event )
 		id = "GameCenter",
 	}
 	
-	playButton.x = _W/4;	playButton.y = _H/2+300
-	helpButton.x = _W/2+15;	helpButton.y = _H/2+410
-	optionsButton.x = _W/4;	optionsButton.y = _H/2+410
-	ofButton.x = _W/4*3+30;		ofButton.y = _H/2+410
+	playButton.x = _W/4;	playButton.y = _H/2+300+300
+	helpButton.x = _W/2+15;	helpButton.y = _H/2+410+300
+	optionsButton.x = _W/4;	optionsButton.y = _H/2+410+300
+	ofButton.x = _W/4*3+30;		ofButton.y = _H/2+410+300
 	
 	playButton:scale(.5,.5)
 	helpButton:scale(.5,.5)
@@ -175,10 +190,8 @@ function scene:createScene( event )
 	group:insert(helpButton)
 	group:insert(optionsButton)
 	group:insert(ofButton)
-	
-	local mainBunny = display.newImageRect("main-bunny.png",1193/2,823/2)
-	mainBunny.x = _W/2+90;	mainBunny.y = _H/2+215
-	group:insert(mainBunny)
+	group:insert(circleGroup)
+	circleGroup.x = -_W
 	
 	storyboard.mute = gameData:retrieve("mute")
 	
@@ -201,6 +214,20 @@ function scene:enterScene( event )
 	local group = self.view
 	storyboard.purgeScene( lastScene )
 	jsonLevels.checkForUpdates(checkUpdatedListener)
+	
+	
+	
+	
+	local startClosure2 = function(event)
+		transition.to(mainSign,{time=500,y=mainSign.y+_H/2,transition=easing.outExpo})
+		transition.to(playButton,{delay=200, time=500,y=playButton.y-300,transition=easing.outExpo})
+		transition.to(optionsButton,{delay=300,time=500,y=optionsButton.y-300,transition=easing.outExpo})
+		transition.to(helpButton,{delay=400,time=500,y=helpButton.y-300,transition=easing.outExpo})
+		transition.to(ofButton,{delay=500,time=500,y=ofButton.y-300,transition=easing.outExpo})	
+		transition.to(littleSigns,{delay=700,time=300,alpha=1,transition=easing.inExpo})
+	end
+	local startClosure1 = function(event) transition.to(mainBunny,{time=800,x=mainBunny.x+170,y=mainBunny.y+300,alpha=1,rotation=0,xScale=1,yScale=1,transition=easing.outExpo,onComplete=startClosure2})  end
+	transition.to(circleGroup,{time=500,x=0,transition=easing.outExpo,onComplete=startClosure1})
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)

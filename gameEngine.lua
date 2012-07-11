@@ -253,14 +253,41 @@ end
 --rabbitsGroup
 function loadRabbitSprites()
 
-	local run6Sheet = sprite.newSpriteSheetFromData( "run-6.png", require("run-6").getSpriteSheetData() )
-	run6Set = sprite.newSpriteSet(run6Sheet,1,42)
-	sprite.add(run6Set,"runS",1,4,6*msPerFrame,1)
-	sprite.add(run6Set,"runSW",8,4,6*msPerFrame,1)
-	sprite.add(run6Set,"runN",15,4,6*msPerFrame,1)
-	sprite.add(run6Set,"runNW",22,4,6*msPerFrame,1)
-	sprite.add(run6Set,"runNE",29,4,6*msPerFrame,1)
-	sprite.add(run6Set,"runSE",36,4,6*msPerFrame,1)
+	local run1Sheet = sprite.newSpriteSheetFromData( "run-1.png", require("run-1").getSpriteSheetData() )
+	run1Set = sprite.newSpriteSet(run1Sheet,1,42)
+	sprite.add(run1Set,"runS",1,4,6*msPerFrame,1)
+	sprite.add(run1Set,"runSW",8,4,6*msPerFrame,1)
+	sprite.add(run1Set,"runN",15,4,6*msPerFrame,1)
+	sprite.add(run1Set,"runNW",22,4,6*msPerFrame,1)
+	sprite.add(run1Set,"runNE",29,4,6*msPerFrame,1)
+	sprite.add(run1Set,"runSE",36,4,6*msPerFrame,1)
+	
+	local run3Sheet = sprite.newSpriteSheetFromData( "run-3.png", require("run-3").getSpriteSheetData() )
+	run2Set = sprite.newSpriteSet(run3Sheet,1,42)
+	sprite.add(run2Set,"runS",1,4,6*msPerFrame,1)
+	sprite.add(run2Set,"runSW",8,4,6*msPerFrame,1)
+	sprite.add(run2Set,"runN",15,4,6*msPerFrame,1)
+	sprite.add(run2Set,"runNW",22,4,6*msPerFrame,1)
+	sprite.add(run2Set,"runNE",29,4,6*msPerFrame,1)
+	sprite.add(run2Set,"runSE",36,4,6*msPerFrame,1)
+	
+	local run10Sheet = sprite.newSpriteSheetFromData( "run-10.png", require("run-10").getSpriteSheetData() )
+	run3Set = sprite.newSpriteSet(run10Sheet,1,42)
+	sprite.add(run3Set,"runS",1,4,6*msPerFrame,1)
+	sprite.add(run3Set,"runSW",8,4,6*msPerFrame,1)
+	sprite.add(run3Set,"runN",15,4,6*msPerFrame,1)
+	sprite.add(run3Set,"runNW",22,4,6*msPerFrame,1)
+	sprite.add(run3Set,"runNE",29,4,6*msPerFrame,1)
+	sprite.add(run3Set,"runSE",36,4,6*msPerFrame,1)
+	
+	local run12Sheet = sprite.newSpriteSheetFromData( "run-12.png", require("run-12").getSpriteSheetData() )
+	run4Set = sprite.newSpriteSet(run12Sheet,1,42)
+	sprite.add(run4Set,"runS",1,4,6*msPerFrame,1)
+	sprite.add(run4Set,"runSW",8,4,6*msPerFrame,1)
+	sprite.add(run4Set,"runN",15,4,6*msPerFrame,1)
+	sprite.add(run4Set,"runNW",22,4,6*msPerFrame,1)
+	sprite.add(run4Set,"runNE",29,4,6*msPerFrame,1)
+	sprite.add(run4Set,"runSE",36,4,6*msPerFrame,1)
 
 end
 
@@ -282,29 +309,105 @@ end
 
 
 function moveRabbitTo(x,y)
-	
+	local realX = levelMap[x][y].hexX+5
+	local realY = levelMap[x][y].hexY+10
 	local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,x,y)
 	if cardinalDirec then
-		if not instance1 then
-			instance1 = sprite.newSprite(run6Set)
-			rabbitsGroup:insert(instance1)
-			instance1.xScale = .5
-			instance1.yScale = .5
-			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
-			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
-		end
-		print("RUNNING RABBIT TO "..cardinalDirec)
-		instance1:prepare("run"..cardinalDirec)
-		instance1:play()
-		movingRabbit = true
-		
 		local tempClosure = function(event) 
 			if event.phase == "end" then
 				movingRabbit = false
 			end
 		end
-		instance1:addEventListener("sprite", tempClosure)
-		rabbitTransition = transition.to(instance1,{x=levelMap[x][y].hexX+5, y= levelMap[x][y].hexY+10,time=4*msPerFrame})	
+		if not instance1 then
+			instance1 = sprite.newSprite(run1Set)
+			rabbitsGroup:insert(instance1)
+			instance1.xScale = .5
+			instance1.yScale = .5
+			instance1.x = realX
+			instance1.y = realY
+			instance2 = sprite.newSprite(run2Set)
+			rabbitsGroup:insert(instance2)
+			instance2.xScale = .5
+			instance2.yScale = .5
+			instance2.x = realX
+			instance2.y = realY
+			instance3 = sprite.newSprite(run3Set)
+			rabbitsGroup:insert(instance3)
+			instance3.xScale = .5
+			instance3.yScale = .5
+			instance3.x = realX
+			instance3.y = realY
+			instance4 = sprite.newSprite(run4Set)
+			rabbitsGroup:insert(instance4)
+			instance4.xScale = .5
+			instance4.yScale = .5
+			instance4.x = realX
+			instance4.y = realY
+		end
+		local perspBlock = mapCreator.getPerspectiveBlock(realX,realY)
+		print("RUNNING RABBIT TO "..cardinalDirec)
+		if perspBlock == 1 then
+			instance1:prepare("run"..cardinalDirec)
+			instance1:play()
+			instance1.alpha = 1
+			instance2.alpha = 0
+			instance3.alpha = 0
+			instance4.alpha = 0
+			instance1:addEventListener("sprite", tempClosure)
+			rabbitTransition = transition.to(instance1,{x=realX, y= realY,time=4*msPerFrame})
+			instance2.x = realX
+			instance2.y = realY
+			instance3.x = realX
+			instance3.y = realY
+			instance4.x = realX
+			instance4.y = realY
+		elseif perspBlock == 2 then	
+			instance2:prepare("run"..cardinalDirec)
+			instance2:play()
+			instance1.alpha = 0
+			instance2.alpha = 1
+			instance3.alpha = 0
+			instance4.alpha = 0		
+			instance2:addEventListener("sprite", tempClosure)
+			rabbitTransition = transition.to(instance2,{x=realX, y= realY,time=4*msPerFrame})	
+			instance1.x = realX
+			instance1.y = realY
+			instance3.x = realX
+			instance3.y = realY
+			instance4.x = realX
+			instance4.y = realY
+		elseif perspBlock == 3 then	
+			instance3:prepare("run"..cardinalDirec)
+			instance3:play()
+			instance1.alpha = 0
+			instance2.alpha = 0
+			instance3.alpha = 1
+			instance4.alpha = 0			
+			instance3:addEventListener("sprite", tempClosure)
+			rabbitTransition = transition.to(instance3,{x=realX, y= realY,time=4*msPerFrame})
+			instance1.x = realX
+			instance1.y = realY
+			instance2.x = realX
+			instance2.y = realY
+			instance4.x = realX
+			instance4.y = realY	
+		elseif perspBlock == 4 then	
+			instance4:prepare("run"..cardinalDirec)
+			instance4:play()
+			instance1.alpha = 0
+			instance2.alpha = 0
+			instance3.alpha = 0
+			instance4.alpha = 1		
+			instance4:addEventListener("sprite", tempClosure)
+			rabbitTransition = transition.to(instance4,{x=realX, y= realY,time=4*msPerFrame})
+			instance1.x = realX
+			instance1.y = realY
+			instance2.x = realX
+			instance2.y = realY
+			instance3.x = realX
+			instance3.y = realY		
+		end	
+		movingRabbit = true
 		rabbit.x = x
 		rabbit.y = y
 	else
@@ -338,6 +441,12 @@ function gameClickListener(event)
 			transition.cancel(rabbitTransition)
 			instance1.x = levelMap[rabbit.x][rabbit.y].hexX+5
 			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance2.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance2.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance3.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance3.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance4.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance4.y = levelMap[rabbit.x][rabbit.y].hexY+10
 		end
 
 		if cell.line == rabbit.y and cell.column == rabbit.x then 
@@ -479,6 +588,12 @@ function escapeRabbit(direction,actualX,actualY)
 	if instance1 then
 		instance1:prepare("run"..direction)
 		instance1:play()
+		instance2:prepare("run"..direction)
+		instance2:play()	
+		instance3:prepare("run"..direction)
+		instance3:play()
+		instance4:prepare("run"..direction)
+		instance4:play()
 		movingRabbit = true
 		local actualCell = levelMap[actualX][actualY]
 		
@@ -500,6 +615,9 @@ function escapeRabbit(direction,actualX,actualY)
 		end
 		instance1:addEventListener("sprite", endingClosure)
 		rabbitTransition = transition.to(instance1,{x= actualCell.hexX+5+xMove*1.1, y= actualCell.hexY+10+yMove*1.1,time=4*msPerFrame})	
+		rabbitTransition = transition.to(instance2,{x= actualCell.hexX+5+xMove*1.1, y= actualCell.hexY+10+yMove*1.1,time=4*msPerFrame})	
+		rabbitTransition = transition.to(instance3,{x= actualCell.hexX+5+xMove*1.1, y= actualCell.hexY+10+yMove*1.1,time=4*msPerFrame})	
+		rabbitTransition = transition.to(instance4,{x= actualCell.hexX+5+xMove*1.1, y= actualCell.hexY+10+yMove*1.1,time=4*msPerFrame})	
 	end
 end
 
@@ -564,7 +682,7 @@ function startGame()
 		rabbit.x = x
 		rabbit.y = y
 		if not instance1 then
-			instance1 = sprite.newSprite(run6Set)
+			instance1 = sprite.newSprite(run1Set)
 			rabbitsGroup:insert(instance1)
 			instance1.xScale = .5
 			instance1.yScale = .5
@@ -572,6 +690,33 @@ function startGame()
 			instance1.y = levelMap[rabbit.x][rabbit.y].hexY+10
 			instance1:prepare("runNW")
 			instance1.currentFrame = 4
+
+			instance2 = sprite.newSprite(run2Set)
+			rabbitsGroup:insert(instance2)
+			instance2.xScale = .5
+			instance2.yScale = .5
+			instance2.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance2.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance2:prepare("runNW")
+			instance2.currentFrame = 4
+			
+			instance3 = sprite.newSprite(run3Set)
+			rabbitsGroup:insert(instance3)
+			instance3.xScale = .5
+			instance3.yScale = .5
+			instance3.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance3.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance3:prepare("runNW")
+			instance3.currentFrame = 4
+			
+			instance4 = sprite.newSprite(run4Set)
+			rabbitsGroup:insert(instance4)
+			instance4.xScale = .5
+			instance4.yScale = .5
+			instance4.x = levelMap[rabbit.x][rabbit.y].hexX+5
+			instance4.y = levelMap[rabbit.x][rabbit.y].hexY+10
+			instance4:prepare("runNW")
+			instance4.currentFrame = 4
 		end
 		movingRabbit = false
 		HUD.loadScreenUI()
@@ -596,6 +741,12 @@ function goToNextLevel()
 	if instance1 then
 		instance1:removeSelf()
 		instance1 = nil
+		instance2:removeSelf()
+		instance2= nil
+		instance3:removeSelf()
+		instance3 = nil
+		instance4:removeSelf()
+		instance4 = nil
 	end
 	-- getNextLevel returns a table with level and scenery
 	nextLevel = nil
@@ -627,6 +778,12 @@ function restartGame()
 	if instance1 then
 		instance1:removeSelf()
 		instance1 = nil
+		instance2:removeSelf()
+		instance2= nil
+		instance3:removeSelf()
+		instance3 = nil
+		instance4:removeSelf()
+		instance4 = nil
 	end
 	gameScore = gameStartScore
 	rocksPut = 0
@@ -653,6 +810,12 @@ function quitGame()
 	if instance1 then
 		instance1:removeSelf()
 		instance1 = nil
+		instance2:removeSelf()
+		instance2= nil
+		instance3:removeSelf()
+		instance3 = nil
+		instance4:removeSelf()
+		instance4 = nil
 	end
 	storyboard.gotoScene( "main-menu", "slideRight", 400 )
 end
@@ -663,6 +826,12 @@ function backToLevelSelect()
 	if instance1 then
 		instance1:removeSelf()
 		instance1 = nil
+		instance2:removeSelf()
+		instance2= nil
+		instance3:removeSelf()
+		instance3 = nil
+		instance4:removeSelf()
+		instance4 = nil
 	end
 	storyboard.gotoScene( "levelsList2", "slideRight", 400 )
 end

@@ -90,7 +90,7 @@ function sellingDialog(product)
 			if platform == "iPhone OS" then
 				isSellingNow = true
 				store.purchase( {"catch_the_bunny_carrots"} )
-				print("purchasing color odyssey")
+				print("purchasing carrots")
 			else
 				--system.openURL("market://details?id=com.sonicowl.colorodissey")
 				print("open store website")

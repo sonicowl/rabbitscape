@@ -101,7 +101,7 @@ function scene:createScene( event )
 	group = self.view
 	lastScene = storyboard.getPrevious()
 	actions = {}
-	local bg = display.newImageRect("l1g.jpg",_VW,_VH)
+	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2; bg.y = _H/2
 	group:insert(bg)
 	
