@@ -237,7 +237,7 @@ function loadActions()
 	actions["options"] = function (event)
 		print("touched "..tostring(event.id))
 		sceneDialog = display.newGroup()
-		group:insert(sceneDialog)
+		HUD:insert(sceneDialog)
 		dialogsModule.callOptions(sceneDialog,nil,storyboard)
 	end
 	

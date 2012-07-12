@@ -697,6 +697,7 @@ function startGame()
 			instance2.y = levelMap[rabbit.x][rabbit.y].hexY+10
 			instance2:prepare("runNW")
 			instance2.currentFrame = 4
+			instance2.alpha = 0
 			
 			instance3 = sprite.newSprite(run3Set)
 			rabbitsGroup:insert(instance3)
@@ -706,6 +707,7 @@ function startGame()
 			instance3.y = levelMap[rabbit.x][rabbit.y].hexY+10
 			instance3:prepare("runNW")
 			instance3.currentFrame = 4
+			instance3.alpha = 0
 			
 			instance4 = sprite.newSprite(run4Set)
 			rabbitsGroup:insert(instance4)
@@ -715,6 +717,7 @@ function startGame()
 			instance4.y = levelMap[rabbit.x][rabbit.y].hexY+10
 			instance4:prepare("runNW")
 			instance4.currentFrame = 4
+			instance4.alpha = 0
 		end
 		movingRabbit = false
 		HUD.loadScreenUI()
