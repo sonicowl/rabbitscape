@@ -172,8 +172,12 @@ function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
-		closeMenu(true)
-		quitListener()
+		
+		local dialogGroup = display.newGroup()
+		HUD:insert(dialogGroup)
+		local menuClosure = function(option) if option then quitListener() else showMenu() end end
+		dialogsModule.callQuitGame(dialogGroup,menuClosure)
+		closeMenu()
 	end
 
 	actions["restartGame"] = function(event)
@@ -643,7 +647,7 @@ function closeMenu(quickClose)
 		closure()
 		return
 	end
-	transition.to(menuButton,{time=300,y=menuButton.y+450,transition=easing.outExpo})
-	transition.to(menuDialog,{time=300,y=450,transition=easing.outExpo,onComplete=closure})
-	transition.to(menuDialog[1],{time=290,alpha=0,transition=easing.outExpo})
+	transition.to(menuButton,{time=400,y=menuButton.y+450,transition=easing.outExpo})
+	transition.to(menuDialog,{time=400,y=450,transition=easing.outExpo,onComplete=closure})
+	transition.to(menuDialog[1],{time=250,alpha=0,transition=easing.outExpo})
 end

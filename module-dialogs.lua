@@ -124,8 +124,9 @@ end
 
 function callHowToPlay(viewGroup,listener)	
 	
-	local holdingClickBg = display.newRect(0,0,_W,_H)
+	local holdingClickBg = display.newRect(0,0,_W,_H*2)
 	viewGroup:insert(holdingClickBg)
+	holdingClickBg:setFillColor(0,0,0)
 	holdingClickBg.alpha = 0.01
 	local touchClosure = function(event) return true end
 	holdingClickBg:addEventListener("touch", touchClosure)
@@ -150,6 +151,7 @@ function callHowToPlay(viewGroup,listener)
 				event = nil; 
 			end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
 		end
 		return true
 	end
@@ -166,9 +168,117 @@ function callHowToPlay(viewGroup,listener)
 	
 	viewGroup.y = -display.contentHeight
 	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
+	transition.to(holdingClickBg,{time=800,alpha=.6,transition = easing.outExpo})
 end
 
 
+function callQuitGame(viewGroup,listener)	
+	
+	local holdingClickBg = display.newRect(0,0,_W,_H*2)
+	viewGroup:insert(holdingClickBg)
+	holdingClickBg:setFillColor(0,0,0)
+	holdingClickBg.alpha = 0.01
+	local touchClosure = function(event) return true end
+	holdingClickBg:addEventListener("touch", touchClosure)
+	
+	local board = display.newImageRect("board-1.png", math.floor(1055/2),math.floor(858/2))
+	board.x = _W/2; board.y = _H/2
+	viewGroup:insert(board)
+
+	local boardIcon = display.newImageRect("title-quit.png", math.floor(362/2),math.floor(312/2))
+	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
+	viewGroup:insert(boardIcon)
+
+	local text1shadow = display.newText("DO YOU REALLY", 0, 0, "Poplar Std", 50)
+	text1shadow:setTextColor(0, 0, 0)
+	local text1 = display.newText("DO YOU REALLY", 0, 0, "Poplar Std", 50)
+	text1:setTextColor(255, 255, 255)
+	viewGroup:insert(text1shadow)
+	viewGroup:insert(text1)
+	text1.x = _W*.5;					text1.y = _H/2-75
+	text1shadow.x = text1.x + 2;	text1shadow.y = text1.y + 2
+
+	local text2shadow = display.newText("WANT TO QUIT?", 0, 0, "Poplar Std", 50)
+	text2shadow:setTextColor(0, 0, 0)
+	local text2 = display.newText("WANT TO QUIT?", 0, 0, "Poplar Std", 50)
+	text2:setTextColor(255, 255, 255)
+	viewGroup:insert(text2shadow)
+	viewGroup:insert(text2)
+	text2.x = _W*.5;					text2.y = _H/2-25
+	text2shadow.x = text2.x + 2;	text2shadow.y = text2.y + 2
+	
+	
+	
+	
+	function cancelButHandler(event)
+		if event.phase == "release"  then
+			local closeClosure = function(event)
+				event:removeSelf(); 
+				event = nil; 
+				if listener then listener(false) end
+			end
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
+		end
+		return true
+	end	
+	
+	function quitButHandler(event)
+		if event.phase == "release"  then
+			local closeClosure = function(event)
+				event:removeSelf(); 
+				event = nil; 
+				if listener then listener(true) end
+			end
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
+		end
+		return true
+	end
+
+	local cancelBut = ui.newButton{
+		default = "bt-1-off.png",
+		over = "bt-1-on.png",
+		onEvent = cancelButHandler,
+	}
+	cancelBut:scale(.5,.5)
+	cancelBut.x = board.x+board.contentWidth/4
+	cancelBut.y = board.y+80
+	viewGroup:insert(cancelBut)
+	
+	local quitBut = ui.newButton{
+		default = "bt-1-off.png",
+		over = "bt-1-on.png",
+		onEvent = quitButHandler,
+	}
+	quitBut:scale(.5,.5)
+	quitBut.x = board.x-board.contentWidth/4
+	quitBut.y = board.y+80
+	viewGroup:insert(quitBut)
+	
+	local text3shadow = display.newText("QUIT", 0, 0, "Poplar Std", 40)
+	text3shadow:setTextColor(0, 0, 0)
+	local text3 = display.newText("QUIT", 0, 0, "Poplar Std", 40)
+	text3:setTextColor(255, 255, 255)
+	viewGroup:insert(text3shadow)
+	viewGroup:insert(text3)
+	text3.x = board.x-board.contentWidth/4;		text3.y = board.y+150
+	text3shadow.x = text3.x + 2;	text3shadow.y = text3.y + 2
+
+	local text4shadow = display.newText("CANCEL", 0, 0, "Poplar Std", 40)
+	text4shadow:setTextColor(0, 0, 0)
+	local text4 = display.newText("CANCEL", 0, 0, "Poplar Std", 40)
+	text4:setTextColor(255, 255, 255)
+	viewGroup:insert(text4shadow)
+	viewGroup:insert(text4)
+	text4.x = board.x+board.contentWidth/4;		text4.y = board.y+150
+	text4shadow.x = text4.x + 2;	text4shadow.y = text4.y + 2	
+	
+	
+	viewGroup.y = -display.contentHeight
+	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
+	transition.to(holdingClickBg,{time=800,alpha=.6,transition = easing.outExpo})
+end
 
 
 
