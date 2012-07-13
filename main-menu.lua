@@ -237,24 +237,36 @@ function scene:enterScene( event )
 	storyboard.purgeScene( lastScene )
 	jsonLevels.checkForUpdates(checkUpdatedListener)
 	
+
+	soundIntro = audio.loadStream("stream-intro.wav")
+	soundElementIn = audio.loadSound("sound-element-in.wav")
+	soundWee = audio.loadSound("sound-wee.wav")
+
+	
+	local audioClosure1 = function() if not storyboard.mute then audio.play(soundElementIn) end end
+	local audioClosure2 = function() if not storyboard.mute then audio.play(soundWee) end end
 	
 	
+	
+	if not storyboard.mute then audio.play(soundIntro,{loops=-1}) end	
 	
 	local startClosure2 = function(event)
-		transition.to(mainSign,{time=500/2,y=mainSign.y+_H/2,transition=easing.outExpo})
-		transition.to(playButton,{delay=200/2, time=500/2,y=playButton.y-300,transition=easing.outExpo})
-		transition.to(optionsButton,{delay=300/2,time=500/2,y=optionsButton.y-300,transition=easing.outExpo})
-		transition.to(helpButton,{delay=400/2,time=500/2,y=helpButton.y-300,transition=easing.outExpo})
-		transition.to(ofButton,{delay=500/2,time=500/2,y=ofButton.y-300,transition=easing.outExpo})	
-		transition.to(littleSigns,{delay=700/2,time=300/2,alpha=1,transition=easing.inExpo})
+		transition.to(mainSign,{time=500/2,y=mainSign.y+_H/2,transition=easing.outExpo,onStart=audioClosure1})
+		transition.to(playButton,{delay=200/2, time=500/2,y=playButton.y-300,transition=easing.outExpo,onStart=audioClosure1})
+		transition.to(optionsButton,{delay=300/2,time=500/2,y=optionsButton.y-300,transition=easing.outExpo,onStart=audioClosure1})
+		transition.to(helpButton,{delay=400/2,time=500/2,y=helpButton.y-300,transition=easing.outExpo,onStart=audioClosure1})
+		transition.to(ofButton,{delay=500/2,time=500/2,y=ofButton.y-300,transition=easing.outExpo,onStart=audioClosure1})	
+		transition.to(littleSigns,{delay=700/2,time=300/2,alpha=1,transition=easing.inExpo,onStart=audioClosure1})
 	end
-	local startClosure1 = function(event) transition.to(mainBunny,{time=800,x=mainBunny.x+170,y=mainBunny.y+300,alpha=1,rotation=0,xScale=1,yScale=1,transition=easing.outExpo,onComplete=startClosure2})  end
-	transition.to(circleGroup,{time=500/2,x=0,transition=easing.outExpo,onComplete=startClosure1})
+	local startClosure1 = function(event) transition.to(mainBunny,{time=800,x=mainBunny.x+170,y=mainBunny.y+300,alpha=1,rotation=0,xScale=1,yScale=1,transition=easing.outExpo,onStart=audioClosure2,onComplete=startClosure2})  end
+	transition.to(circleGroup,{time=500/2,x=0,transition=easing.outExpo,onComplete=startClosure1,onStart=audioClosure1})
 	-----------------------------------------------------------------------------
 		
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
 	
 	-----------------------------------------------------------------------------
+
+	
 	
 end
 
@@ -269,6 +281,10 @@ function scene:exitScene( event )
 	
 	-----------------------------------------------------------------------------
 	
+	audio.dispose(soundIntro)
+	audio.dispose(soundElementIn)
+	audio.dispose(soundWee)
+
 end
 
 
