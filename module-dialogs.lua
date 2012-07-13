@@ -22,6 +22,9 @@ end
 
 function callScenerySelector(viewGroup,storyboard,closeListener)	
 	
+	soundStageButton = audio.loadSound("sound-stage-button.wav")
+		
+	
 	local holdingClickBg = display.newRect(0,0,_W,_H)
 	viewGroup:insert(holdingClickBg)
 	holdingClickBg.alpha = 0.01
@@ -74,6 +77,9 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 		end
 		storyboard.sceneryId = sceneryList[imgNum].id
 		storyboard.gotoScene( "levelsList2", "slideUp", 400 )
+		if not storyboard.mute then audio.play(soundStageButton) end
+		soundDisposeClosure = function() audio.stop() audio.dispose(soundStageButton) end
+		timer.performWithDelay(200,soundDisposeClosure)
 	end
 
 	local closeBut = ui.newButton{

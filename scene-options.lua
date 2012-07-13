@@ -54,7 +54,8 @@ function scene:enterScene( event )
 	group:insert(sceneDialog)
 	dialogsModule.callOptions(sceneDialog,closeButtonListener,storyboard)
 	
-
+	soundOptions = audio.loadStream("stream-ambience.wav")
+	if not storyboard.mute then audio.play(soundOptions,{loops=-1}) end	
 end
  
  
@@ -67,7 +68,9 @@ function scene:exitScene( event )
         --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
         
         -----------------------------------------------------------------------------
-        
+        audio.stop()
+		audio.dispose(soundOptions)
+		soundOptions = nil
 end
  
 -- Called AFTER scene has finished moving offscreen:

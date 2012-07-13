@@ -61,6 +61,9 @@ function scene:enterScene( event )
 	sceneDialog = display.newGroup()
 	group:insert(sceneDialog)
 	dialogsModule.callScenerySelector(sceneDialog,storyboard,closeButtonListener)
+	
+	soundSceneries = audio.loadStream("stream-internal1.wav")
+	if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
 end
  
  

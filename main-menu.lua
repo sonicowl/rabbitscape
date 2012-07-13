@@ -280,7 +280,7 @@ function scene:exitScene( event )
 	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
 	
 	-----------------------------------------------------------------------------
-	
+	audio.stop()
 	audio.dispose(soundIntro)
 	audio.dispose(soundElementIn)
 	audio.dispose(soundWee)
