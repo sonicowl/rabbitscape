@@ -97,8 +97,10 @@ function scene:enterScene( event )
 	storyboard.purgeScene( lastScene )
 
 	soundAmbience = audio.loadStream("stream-scenery1.wav")
-	soundJump = audio.loadStream("sound-jump.wav")
-	soundCarrot = audio.loadStream("sound-carrot.wav")
+	soundJump = audio.loadSound("sound-jump.wav")
+	soundCarrot = audio.loadSound("sound-carrot.wav")
+	soundPlaceObject = audio.loadSound("sound-objects.wav")
+	soundBlocked = audio.loadSound("sound-blocked.wav")
 	if not storyboard.mute then audio.play(soundAmbience,{loops=-1}) end	
 end
 
@@ -111,9 +113,14 @@ function scene:exitScene( event )
 	audio.dispose(soundAmbience)
 	audio.dispose(soundJump)
 	audio.dispose(soundCarrot)
+	audio.dispose(soundPlaceObject)
+	audio.dispose(soundBlocked)
+
 	soundAmbience = nil
 	soundJump = nil
 	soundCarrot = nil
+	soundPlaceObject = nil
+	soundBlocked = nil
 	
 end
 

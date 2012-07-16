@@ -469,6 +469,7 @@ function gameClickListener(event)
 			gameScore = gameScore - gameScore*.01
 			mapCreator.placeObject(cell, objTag)
 			mapCreator.updateHexGrid(levelMap)
+			if not storyboard.mute then audio.play(soundPlaceObject) end
 			if eatingCarrot then
 				eatingCarrot = false
 				return false
@@ -476,6 +477,7 @@ function gameClickListener(event)
 				timer.performWithDelay(100, moveRabbit )
 			end
 		else
+			if not storyboard.mute then audio.play(soundBlocked) end
 			print("clicking "..cell.line..","..cell.column.." cant put objects here")
 		end
 	end
@@ -515,7 +517,8 @@ function moveRabbit()
 			local tempX = path[table.getn(path)-1].x
 			local tempY = path[table.getn(path)-1].y
 			moveRabbitTo(tempX,tempY)
-			if not storyboard.mute then audio.play(soundJump) end
+			local soundClosure = function() if not storyboard.mute then audio.play(soundJump) end end
+			timer.performWithDelay(150,soundClosure)
 			
 			--CHECK IF IT ARRIVED ON A EXIT CELL
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].tag == "endCell" then 

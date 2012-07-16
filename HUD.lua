@@ -90,10 +90,10 @@ function loadScreenUI()
 	
 	
 		bar.x = _VW/2					bar.y = _VH0+_VH-50
-		objectsTag.x = _VW0+130;		objectsTag.y = _VH0+_VH-45;	
+		objectsTag.x = _VW0+130;		objectsTag.y = _VH0+_VH-40;	
 		timeTag.x = _VW0+_VW-130;			timeTag.y = _VH0+_VH-45;	
 		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-42
-		rocksText.x = _VW0 + 30;		rocksText.y = _VH0+_VH-45
+		rocksText.x = _VW0 + 30;		rocksText.y = _VH0+_VH-40
 		resetButton.x =_W/2-110; 		resetButton.y = _VH0+_VH-45		
 		
 		menuButton = ui.newButton{
@@ -366,7 +366,7 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		endGameScreen:insert(line2)
 		if high == score then 
 			local highButton = display.newImageRect("new-high.png",104/2,110/2)
-			highButton.x =_W/2+180 	highButton.y = _H/2+190
+			highButton.x =_W/2+170 	highButton.y = _H/2+190
 			endGameScreen:insert(highButton)
 			highButton.alpha = 0
 			transition.to(highButton,{time=1000,delay=1000,alpha=1})
@@ -417,7 +417,7 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		nextLevelButton = display.newImageRect("next-disabled.png",198,283)
 
 		local title = display.newImageRect("bunny-escaped.png",691/2,814/2)
-		title.x = _W/2	title.y = _H/2-180
+		title.x = _W/2+25	title.y = _H/2-180
 		endGameScreen:insert(title)
 		
 		local content1 = display.newImageRect("tryagain-ad.png",973/2,449/2)
