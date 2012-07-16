@@ -25,8 +25,8 @@ function storeTransaction( event )
 
 	-- Handler that gets notified when the alert closes
 	local onAgree = function( event )
-	        if "clicked" == event.action then
-	        end
+	    if "clicked" == event.action then
+	    end
 	end
 
 	local transaction = event.transaction

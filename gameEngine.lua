@@ -97,6 +97,7 @@ function newLevel(params)
 	sceneGroup:insert(overLayGroup)	
 		
 	HUD.init(sceneGroup,storyboard,{restart = restartListener, quit = quitGame, resume = resumeGame, pause = stopGame,continue = goToNextLevel, levelSelect = backToLevelSelect})
+	
 end
 
 
@@ -514,6 +515,7 @@ function moveRabbit()
 			local tempX = path[table.getn(path)-1].x
 			local tempY = path[table.getn(path)-1].y
 			moveRabbitTo(tempX,tempY)
+			if not storyboard.mute then audio.play(soundJump) end
 			
 			--CHECK IF IT ARRIVED ON A EXIT CELL
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].tag == "endCell" then 
@@ -770,7 +772,8 @@ end
 function eatCarrot()
 	--START BUNNY ANIMATION OF EATING CARROT
 	print("nhac nhac nhac nhac")
-	HUD.toast("nhac nhac nhac nhac")
+	--HUD.toast("nhac nhac nhac nhac")
+	if not storyboard.mute then audio.play(soundCarrot) end
 	eatingCarrot = true
 	usedCarrot = true
 end

@@ -96,13 +96,24 @@ function scene:enterScene( event )
 	local sceneGroup = self.view
 	storyboard.purgeScene( lastScene )
 
-	
+	soundAmbience = audio.loadStream("stream-scenery1.wav")
+	soundJump = audio.loadStream("sound-jump.wav")
+	soundCarrot = audio.loadStream("sound-carrot.wav")
+	if not storyboard.mute then audio.play(soundAmbience,{loops=-1}) end	
 end
 
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local sceneGroup = self.view
+	
+	audio.stop()
+	audio.dispose(soundAmbience)
+	audio.dispose(soundJump)
+	audio.dispose(soundCarrot)
+	soundAmbience = nil
+	soundJump = nil
+	soundCarrot = nil
 	
 end
 

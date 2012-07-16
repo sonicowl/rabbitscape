@@ -37,8 +37,9 @@ local imageNumberText, imageNumberTextShadow
 
 
 
-function new( dataSet, listener, slideBackground, top, bottom )	
-
+function new( dataSet, listener, isMute , slideBackground, top, bottom )	
+	
+	mute = isMute
 	local pad = 20
 	local top = top or 0 
 	local bottom = bottom or 0
@@ -225,6 +226,7 @@ function new( dataSet, listener, slideBackground, top, bottom )
 		tween = transition.to( buttons[imgNum+1], {time=800, x=0, transition=easing.outExpo } )
 		imgNum = imgNum + 1
 		initImage(imgNum)
+		if not mute and soundSlide then audio.play(soundSlide) end	
 	end
 	
 	function prevImage()
@@ -232,6 +234,7 @@ function new( dataSet, listener, slideBackground, top, bottom )
 		tween = transition.to( buttons[imgNum-1], {time=800, x=0, transition=easing.outExpo } )
 		imgNum = imgNum - 1
 		initImage(imgNum)
+		if not mute and soundSlide then audio.play(soundSlide) end	
 	end
 	
 	function cancelMove()

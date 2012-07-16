@@ -14,7 +14,7 @@ local dialogsModule = require( "module-dialogs" )
  
 function closeButtonListener()
 	local closeClosure = function() storyboard.gotoScene("main-menu",{time=100}) end
-	timer.performWithDelay(100,closeClosure)
+	timer.performWithDelay(150,closeClosure)
 end
  
  
@@ -63,6 +63,7 @@ function scene:enterScene( event )
 	dialogsModule.callScenerySelector(sceneDialog,storyboard,closeButtonListener)
 	
 	soundSceneries = audio.loadStream("stream-internal1.wav")
+	soundSlide = audio.loadSound("sound-slide.wav")
 	if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
 end
  
@@ -76,7 +77,11 @@ function scene:exitScene( event )
         --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
         
         -----------------------------------------------------------------------------
-        
+	audio.stop()
+	audio.dispose(soundSceneries)
+	audio.dispose(soundSlide)
+	soundSceneries = nil
+	soundSlide = nil
 end
  
 -- Called AFTER scene has finished moving offscreen:

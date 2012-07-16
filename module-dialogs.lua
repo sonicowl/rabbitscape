@@ -22,8 +22,7 @@ end
 
 function callScenerySelector(viewGroup,storyboard,closeListener)	
 	
-	soundStageButton = audio.loadSound("sound-stage-button.wav")
-		
+	soundStageButton = audio.loadSound("sound-stage-button.wav")	
 	
 	local holdingClickBg = display.newRect(0,0,_W,_H)
 	viewGroup:insert(holdingClickBg)
@@ -121,7 +120,7 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 		{default = "stage3-off.png",over = "stage3-on.png"},
 		{default = "stage4-off.png",over = "stage4-on.png"}
 	}	
-	slider = slideView.new( sceneryList,listener )
+	slider = slideView.new( sceneryList,listener, storyboard.mute )
 	slider.y = slider.y + 50
 	viewGroup:insert(slider)
 	viewGroup.y = -display.contentHeight
