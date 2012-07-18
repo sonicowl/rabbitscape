@@ -823,7 +823,7 @@ function quitGame()
 		instance4:removeSelf()
 		instance4 = nil
 	end
-	storyboard.gotoScene( "main-menu", "slideRight", 400 )
+	storyboard.gotoScene( "main-menu", "fade", 400 )
 end
 
 function backToLevelSelect()
@@ -838,7 +838,7 @@ function backToLevelSelect()
 		instance4:removeSelf()
 		instance4 = nil
 	end
-	storyboard.gotoScene( "levelsList2", "slideRight", 400 )
+	storyboard.gotoScene( "scene-level-select", "fade", 400 )
 end
 
 
