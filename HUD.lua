@@ -90,9 +90,9 @@ function loadScreenUI()
 	
 	
 		bar.x = _VW/2					bar.y = _VH0+_VH-50
-		objectsTag.x = _VW0+130;		objectsTag.y = _VH0+_VH-40;	
+		objectsTag.x = _VW0+130;		objectsTag.y = _VH0+_VH-45;	
 		timeTag.x = _VW0+_VW-130;			timeTag.y = _VH0+_VH-45;	
-		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-42
+		timeText.x = _VW0 + 20;			timeText.y = _VH0+_VH-45
 		rocksText.x = _VW0 + 30;		rocksText.y = _VH0+_VH-40
 		resetButton.x =_W/2-110; 		resetButton.y = _VH0+_VH-45		
 		

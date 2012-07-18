@@ -230,7 +230,11 @@ function loadSceneryLevels(scenery,baseDir)
 			if tempScenery then
 				if scenery == tempScenery.sceneryId then
 					for i=1, #tempScenery.levels do
-						table.insert(levelsTable, tempScenery.levels[i].levelId)
+						local tempLevel = {}
+						tempLevel.levelId = tempScenery.levels[i].levelId
+						tempLevel.default = tempScenery.levels[i].icons[1]
+						tempLevel.over = tempScenery.levels[i].icons[2]
+						table.insert(levelsTable, tempLevel)
 					end
 				end
 			end

@@ -20,7 +20,7 @@ function init()
 	storeModule.init()
 end
 
-function callScenerySelector(viewGroup,storyboard,closeListener)	
+function callScenerySelector(viewGroup,storyboard,closeStageListener)	
 	
 	soundStageButton = audio.loadSound("sound-stage-button.wav")	
 	
@@ -49,7 +49,7 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 
 	sceneryList = jsonLevels.loadSceneryTable()
 	
-	function buttonHandler(event)
+	local function buttonHandler(event)
 		print(event.phase)
 		if event.phase == "release"  then
 			print("touched "..tostring(event.id))
@@ -61,7 +61,7 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 	
 	function closeButHandler(event)
 		if event.phase == "release"  then
-			local closeClosure = function(event) if closeListener then closeListener() end event:removeSelf(); event = nil; end
+			local closeClosure = function(event) if closeStageListener then closeStageListener() end event:removeSelf(); event = nil; end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 		return true
@@ -75,7 +75,7 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 			storyboard.getFromResources = false
 		end
 		storyboard.sceneryId = sceneryList[imgNum].id
-		storyboard.gotoScene( "levelsList2", "slideUp", 400 )
+		storyboard.gotoScene( "scene-level-select", {time=100})
 		if not storyboard.mute then audio.play(soundStageButton) end
 		soundDisposeClosure = function() audio.stop() audio.dispose(soundStageButton) end
 		timer.performWithDelay(200,soundDisposeClosure)
@@ -123,6 +123,120 @@ function callScenerySelector(viewGroup,storyboard,closeListener)
 	slider = slideView.new( sceneryList,listener, storyboard.mute )
 	slider.y = slider.y + 50
 	viewGroup:insert(slider)
+	viewGroup.y = -display.contentHeight
+	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
+end
+
+
+function callLevelSelector(viewGroup,storyboard,closeListener)	
+	
+	soundStageButton = audio.loadSound("sound-stage-button.wav")	
+	
+	local holdingClickBg = display.newRect(0,0,_W,_H)
+	viewGroup:insert(holdingClickBg)
+	holdingClickBg.alpha = 0.01
+	local touchClosure = function(event) return true end
+	holdingClickBg:addEventListener("touch", touchClosure)
+	
+	local board = display.newImageRect("board-2.png", math.floor(1053/2),math.floor(1683/2))
+	board.x = _W/2; board.y = _H/2
+	viewGroup:insert(board)
+
+	local boardIcon = display.newImageRect("title-levelselect.png", math.floor(362/2),math.floor(312/2))
+	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
+	viewGroup:insert(boardIcon)
+
+	local pickTextShadow = display.newText("PICK  A  LEVEL", 0, 0, "Poplar Std", 50)
+	pickTextShadow:setTextColor(0, 0, 0)
+	local pickText = display.newText("PICK  A  LEVEL", 0, 0, "Poplar Std", 50)
+	pickText:setTextColor(255, 255, 255)
+	viewGroup:insert(pickTextShadow)
+	viewGroup:insert(pickText)
+	pickText.x = _W*.5;					pickText.y = _H/2-220
+	pickTextShadow.x = pickText.x + 2;	pickTextShadow.y = pickText.y + 2
+
+	local levelsTable = nil
+	if storyboard.getFromResources then
+		levelsTable = jsonLevels.loadSceneryLevels(storyboard.sceneryId,system.ResourceDirectory)
+	else
+		levelsTable = jsonLevels.loadSceneryLevels(storyboard.sceneryId)
+	end
+	--sceneryList = jsonLevels.loadSceneryTable()
+	
+	function buttonHandler(event)
+		print(event.phase)
+		if event.phase == "release"  then
+			print("touched "..tostring(event.id))
+			slider:page(event.id)
+		end
+		return true
+	end
+	
+	
+	function closeButHandler(event)
+		if event.phase == "release"  then
+			local closeClosure = function(event) if closeListener then closeListener() end event:removeSelf(); event = nil; end
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+		end
+		return true
+	end
+	
+	function buttonListener(event)
+		if ("release" == event.phase) and (event.id) then
+			print( "USER CLICKED LEVEL "..event.id)
+			storyboard.levelId = event.id
+			storyboard.gotoScene( "gameScene", "fade", 1000 )
+			if not storyboard.mute then audio.play(soundStageButton) end
+			soundDisposeClosure = function() audio.stop() audio.dispose(soundStageButton) end
+			timer.performWithDelay(200,soundDisposeClosure)
+		end
+	end
+		
+	local closeBut = ui.newButton{
+		default = "close-off.png",
+		over = "close-on.png",
+		onEvent = closeButHandler,
+	}
+	closeBut:scale(.5,.5)
+	closeBut.x = board.x+board.contentWidth/2-10	closeBut.y = board.y - board.contentHeight/2+10
+	viewGroup:insert(closeBut)
+
+	local buttonData = {
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"},
+		{default = "icldefault.png",over = "icldefault.png"}
+	}	
+	
+	for i = 1, #levelsTable do
+		buttonData[i].default = levelsTable[i].default
+		buttonData[i].over = levelsTable[i].over
+		buttonData[i].levelId = levelsTable[i].levelId
+	end
+	
+	local levelCounter = 1
+	for i = 1, 3 do
+		for j = 1,3 do
+			local tempLevelBut = ui.newButton{
+				default = buttonData[levelCounter].default,
+				over = buttonData[levelCounter].over,
+				id = buttonData[levelCounter].levelId,
+				onEvent = buttonListener,
+			}
+			tempLevelBut:scale(.5,.5)
+			tempLevelBut.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
+			tempLevelBut.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
+			viewGroup:insert(tempLevelBut)
+			levelCounter = levelCounter+1
+		end
+	end
+	
+	
 	viewGroup.y = -display.contentHeight
 	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
 end

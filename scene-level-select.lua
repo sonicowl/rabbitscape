@@ -12,8 +12,8 @@ local dialogsModule = require( "module-dialogs" )
 ---------------------------------------------------------------------------------
  
  
-function closeStageListener()
-	local closeClosure = function() storyboard.gotoScene("main-menu",{time=100}) end
+function closeButtonListener()
+	local closeClosure = function() storyboard.gotoScene("scene-scenery-select",{time=100}) end
 	timer.performWithDelay(150,closeClosure)
 end
  
@@ -27,7 +27,6 @@ function scene:createScene( event )
 	lastScene = storyboard.getPrevious()
 
 	dialogsModule.init()
-	loadActions()
 	
 	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2
@@ -60,7 +59,7 @@ function scene:enterScene( event )
 
 	sceneDialog = display.newGroup()
 	group:insert(sceneDialog)
-	dialogsModule.callScenerySelector(sceneDialog,storyboard,closeStageListener)
+	dialogsModule.callLevelSelector(sceneDialog,storyboard,closeButtonListener)
 	
 	soundSceneries = audio.loadStream("stream-internal1.wav")
 	soundSlide = audio.loadSound("sound-slide.wav")
