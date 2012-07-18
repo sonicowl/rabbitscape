@@ -81,7 +81,8 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 				--event = nil
 				audio.stop()
 				audio.dispose(soundStageButton)
-				storyboard.gotoScene( "scene-level-select", {time=100})
+				local closeClosure2 = function() storyboard.gotoScene("scene-level-select",{time=100}) end
+				timer.performWithDelay(150,closeClosure2)
 			end
 		transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 	end
