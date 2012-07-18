@@ -41,6 +41,7 @@ function init(viewGroup,storyBoard,listenersTable)
 	GAMEBOX_FRAME_W0 = (_W-GAMEBOX_FRAME_W)/2
 	GAMEBOX_FRAME_H0 = (_H-GAMEBOX_FRAME_H)/2
 	screenUI=nil
+	transitioning = false
 	loadActions()
 
 end
@@ -213,12 +214,14 @@ function loadActions()
 	
 
 	actions["showMenu"] = function(event)
-		if menuDialog == nil then
-			--print("touched "..tostring(event.id))
-			pauseListener()
-			showMenu()
-		else
-			actions["resumeGame"]()
+		if not transitioning then
+			if menuDialog == nil then
+				--print("touched "..tostring(event.id))
+				pauseListener()
+				showMenu()
+			else
+				actions["resumeGame"]()
+			end
 		end
 	end	
 
@@ -626,10 +629,11 @@ function showMenu()
 	
 	menuDialog.y = 450
 	HUD:insert(menuButton)	
+	local menuTweenClosure = function() transitioning = false end
 	transition.to(menuButton,{time=300,y=menuButton.y-450,transition=easing.outExpo})
 	transition.to(menuDialog,{time=300,y=0,transition=easing.outExpo})
 	transition.to(myRect,{time=300,alpha=.4,transition=easing.outExpo})
-
+	transitioning = true
 end
 
 function closeMenu(quickClose)
@@ -641,8 +645,9 @@ function closeMenu(quickClose)
 		menuDialog:removeSelf()
 		menuDialog = nil	
 		screenUI:insert(menuButton)	
-			
+		transitioning = false		
 	end
+	transitioning = true
 	if quickClose then	
 		closure()
 		return

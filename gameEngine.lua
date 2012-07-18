@@ -795,6 +795,8 @@ function restartGame()
 	gameScore = gameStartScore
 	rocksPut = 0
 	gameStartTime = system.getTimer()
+	Runtime:removeEventListener( "touch", gameClickListener )
+	Runtime:removeEventListener("enterFrame",updateScore)
 	return startGame()
 end
 

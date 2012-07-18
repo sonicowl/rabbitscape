@@ -18,6 +18,7 @@ function init()
 	gameData = ice:loadBox( "gameData" )
 	storeModule = require("module-store")
 	storeModule.init()
+	dialogTransitioning = false
 end
 
 function callScenerySelector(viewGroup,storyboard,closeStageListener)	
@@ -60,9 +61,10 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 	
 	
 	function closeButHandler(event)
-		if event.phase == "release"  then
-			local closeClosure = function(event) if closeStageListener then closeStageListener() end event:removeSelf(); event = nil; end
+		if event.phase == "release" and not dialogTransitioning then
+			local closeClosure = function(event) if closeStageListener then dialogTransitioning = false closeStageListener() end event:removeSelf(); event = nil; end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			dialogTransitioning = true
 		end
 		return true
 	end
@@ -180,15 +182,16 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 	
 	
 	function closeButHandler(event)
-		if event.phase == "release"  then
-			local closeClosure = function(event) event:removeSelf(); event = nil; if closeListener then closeListener() end  end
+		if event.phase == "release" and not dialogTransitioning then
+			local closeClosure = function(event) dialogTransitioning = false event:removeSelf(); event = nil; if closeListener then closeListener() end  end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			dialogTransitioning = true
 		end
 		return true
 	end
 	
 	function buttonListener(event)
-		if ("release" == event.phase) and (event.id) then
+		if ("release" == event.phase) and (event.id) and not dialogTransitioning then
 			print( "USER CLICKED LEVEL "..event.id)
 			storyboard.levelId = event.id
 			if not storyboard.mute then audio.play(soundStageButton) end
@@ -203,9 +206,10 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 				--event = nil
 				audio.stop()
 				audio.dispose(soundStageButton)
+				dialogTransitioning = false
 				storyboard.gotoScene( "gameScene", {time=100} )
 			end
-			
+			dialogTransitioning = true
 			transition.to(blackFade, {time=700, alpha=1})
 			transition.to(viewGroup,{time=700,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
@@ -284,12 +288,14 @@ function callHowToPlay(viewGroup,listener)
 	viewGroup:insert(content)
 	
 	function closeButHandler(event)
-		if event.phase == "release"  then
+		if event.phase == "release" and not dialogTransitioning then
 			local closeClosure = function(event)
+				dialogTransitioning = false
 				if listener then listener() end
 				event:removeSelf(); 
 				event = nil; 
 			end
+			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
 		end
@@ -329,18 +335,18 @@ function callQuitGame(viewGroup,listener)
 	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
 	viewGroup:insert(boardIcon)
 
-	local text1shadow = display.newText("DO YOU REALLY", 0, 0, "Poplar Std", 50)
+	local text1shadow = display.newText("DO  YOU  REALLY", 0, 0, "Poplar Std", 50)
 	text1shadow:setTextColor(0, 0, 0)
-	local text1 = display.newText("DO YOU REALLY", 0, 0, "Poplar Std", 50)
+	local text1 = display.newText("DO  YOU  REALLY", 0, 0, "Poplar Std", 50)
 	text1:setTextColor(255, 255, 255)
 	viewGroup:insert(text1shadow)
 	viewGroup:insert(text1)
 	text1.x = _W*.5;					text1.y = _H/2-75
 	text1shadow.x = text1.x + 2;	text1shadow.y = text1.y + 2
 
-	local text2shadow = display.newText("WANT TO QUIT?", 0, 0, "Poplar Std", 50)
+	local text2shadow = display.newText("WANT  TO  QUIT?", 0, 0, "Poplar Std", 50)
 	text2shadow:setTextColor(0, 0, 0)
-	local text2 = display.newText("WANT TO QUIT?", 0, 0, "Poplar Std", 50)
+	local text2 = display.newText("WANT  TO  QUIT?", 0, 0, "Poplar Std", 50)
 	text2:setTextColor(255, 255, 255)
 	viewGroup:insert(text2shadow)
 	viewGroup:insert(text2)
@@ -351,12 +357,14 @@ function callQuitGame(viewGroup,listener)
 	
 	
 	function cancelButHandler(event)
-		if event.phase == "release"  then
+		if event.phase == "release" and not dialogTransitioning then
 			local closeClosure = function(event)
+				dialogTransitioning = false
 				event:removeSelf(); 
 				event = nil; 
 				if listener then listener(false) end
 			end
+			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
 		end
@@ -364,12 +372,14 @@ function callQuitGame(viewGroup,listener)
 	end	
 	
 	function quitButHandler(event)
-		if event.phase == "release"  then
+		if event.phase == "release" and not dialogTransitioning then
 			local closeClosure = function(event)
+				dialogTransitioning = false
 				event:removeSelf(); 
 				event = nil; 
 				if listener then listener(true) end
 			end
+			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
 		end
@@ -382,7 +392,7 @@ function callQuitGame(viewGroup,listener)
 		onEvent = cancelButHandler,
 	}
 	cancelBut:scale(.5,.5)
-	cancelBut.x = board.x+board.contentWidth/4
+	cancelBut.x = board.x+board.contentWidth/4-50
 	cancelBut.y = board.y+80
 	viewGroup:insert(cancelBut)
 	
@@ -392,7 +402,7 @@ function callQuitGame(viewGroup,listener)
 		onEvent = quitButHandler,
 	}
 	quitBut:scale(.5,.5)
-	quitBut.x = board.x-board.contentWidth/4
+	quitBut.x = board.x-board.contentWidth/4+50
 	quitBut.y = board.y+80
 	viewGroup:insert(quitBut)
 	
@@ -402,7 +412,7 @@ function callQuitGame(viewGroup,listener)
 	text3:setTextColor(255, 255, 255)
 	viewGroup:insert(text3shadow)
 	viewGroup:insert(text3)
-	text3.x = board.x-board.contentWidth/4;		text3.y = board.y+150
+	text3.x = board.x-board.contentWidth/4+50;		text3.y = board.y+150
 	text3shadow.x = text3.x + 2;	text3shadow.y = text3.y + 2
 
 	local text4shadow = display.newText("CANCEL", 0, 0, "Poplar Std", 40)
@@ -411,7 +421,7 @@ function callQuitGame(viewGroup,listener)
 	text4:setTextColor(255, 255, 255)
 	viewGroup:insert(text4shadow)
 	viewGroup:insert(text4)
-	text4.x = board.x+board.contentWidth/4;		text4.y = board.y+150
+	text4.x = board.x+board.contentWidth/4-50;		text4.y = board.y+150
 	text4shadow.x = text4.x + 2;	text4shadow.y = text4.y + 2	
 	
 	
@@ -516,12 +526,14 @@ function callOptions(viewGroup,listener,storyboard)
 
 	
 	function closeButHandler(event)
-		if event.phase == "release"  then
+		if event.phase == "release" and not dialogTransitioning then
 			local closeClosure = function(event)
 				if listener then listener() end
 				event:removeSelf(); 
 				event = nil; 
+				dialogTransitioning = false
 			end
+			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 		return true
