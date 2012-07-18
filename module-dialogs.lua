@@ -75,10 +75,15 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 			storyboard.getFromResources = false
 		end
 		storyboard.sceneryId = sceneryList[imgNum].id
-		storyboard.gotoScene( "scene-level-select", {time=100})
 		if not storyboard.mute then audio.play(soundStageButton) end
-		soundDisposeClosure = function() audio.stop() audio.dispose(soundStageButton) end
-		timer.performWithDelay(200,soundDisposeClosure)
+		local closeClosure = function()
+				event:removeSelf()
+				event = nil
+				audio.stop()
+				audio.dispose(soundStageButton)
+				storyboard.gotoScene( "scene-level-select", {time=100})
+			end
+		transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 	end
 
 	local closeBut = ui.newButton{
@@ -175,7 +180,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 	
 	function closeButHandler(event)
 		if event.phase == "release"  then
-			local closeClosure = function(event) if closeListener then closeListener() end event:removeSelf(); event = nil; end
+			local closeClosure = function(event) event:removeSelf(); event = nil; if closeListener then closeListener() end  end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 		return true
@@ -185,10 +190,22 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 		if ("release" == event.phase) and (event.id) then
 			print( "USER CLICKED LEVEL "..event.id)
 			storyboard.levelId = event.id
-			storyboard.gotoScene( "gameScene", "fade", 1000 )
 			if not storyboard.mute then audio.play(soundStageButton) end
-			soundDisposeClosure = function() audio.stop() audio.dispose(soundStageButton) end
-			timer.performWithDelay(200,soundDisposeClosure)
+			
+			local blackFade = display.newRect(0,0,_W,_H*2)
+			viewGroup:insert(blackFade)
+			blackFade.alpha = 0
+			
+			local closeClosure = function()
+				--event:removeSelf()
+				--event = nil
+				audio.stop()
+				audio.dispose(soundStageButton)
+				storyboard.gotoScene( "gameScene", "fade", 1000 )
+			end
+			
+			transition.to(blackFade, {time=700, alpha=1})
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 	end
 		
@@ -222,10 +239,12 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 	local levelCounter = 1
 	for i = 1, 3 do
 		for j = 1,3 do
+			local tempId = nil
+			if buttonData[levelCounter].levelId then tempId = levelCounter end
 			local tempLevelBut = ui.newButton{
 				default = buttonData[levelCounter].default,
 				over = buttonData[levelCounter].over,
-				id = buttonData[levelCounter].levelId,
+				id = tempId,
 				onEvent = buttonListener,
 			}
 			tempLevelBut:scale(.5,.5)
