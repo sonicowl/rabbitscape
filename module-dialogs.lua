@@ -76,9 +76,9 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 		end
 		storyboard.sceneryId = sceneryList[imgNum].id
 		if not storyboard.mute then audio.play(soundStageButton) end
-		local closeClosure = function()
-				event:removeSelf()
-				event = nil
+		local closeClosure = function(event)
+				--event:removeSelf()
+				--event = nil
 				audio.stop()
 				audio.dispose(soundStageButton)
 				storyboard.gotoScene( "scene-level-select", {time=100})
@@ -194,6 +194,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 			
 			local blackFade = display.newRect(0,0,_W,_H*2)
 			viewGroup:insert(blackFade)
+			blackFade:setFillColor(0,0,0)
 			blackFade.alpha = 0
 			
 			local closeClosure = function()
@@ -201,11 +202,11 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 				--event = nil
 				audio.stop()
 				audio.dispose(soundStageButton)
-				storyboard.gotoScene( "gameScene", "fade", 1000 )
+				storyboard.gotoScene( "gameScene", {time=100} )
 			end
 			
 			transition.to(blackFade, {time=700, alpha=1})
-			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			transition.to(viewGroup,{time=700,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 	end
 		

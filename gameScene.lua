@@ -82,6 +82,11 @@ function scene:createScene( event )
 	end
 	
 	gameEngine.startGame()
+	
+	blackFadeIn = display.newRect(0,0,_W,_H)
+	blackFadeIn:setFillColor(0,0,0)
+	sceneGroup:insert(blackFadeIn)
+	
 end
 
 -- Called BEFORE scene has moved onscreen:
@@ -102,6 +107,14 @@ function scene:enterScene( event )
 	soundPlaceObject = audio.loadSound("sound-objects.wav")
 	soundBlocked = audio.loadSound("sound-blocked.wav")
 	if not storyboard.mute then audio.play(soundAmbience,{loops=-1}) end	
+	
+	local FadeInClosure = function(event)
+		event:removeSelf()
+		event = nil
+	end
+	
+	transition.to(blackFadeIn,{time=400,onComplete=FadeInClosure,alpha=0})
+	
 end
 
 
