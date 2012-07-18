@@ -487,14 +487,12 @@ function callOptions(viewGroup,listener,storyboard)
 	end
 
 	local buyCarrots = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "carrot-box-off.png",
+		over = "carrot-box-on.png",
 		onEvent = buyCarrotsHandler,
-		text = "BUY CARROTS BASKET",
-		textColor = { 51, 51, 51, 255 },
 	}
-	--buyCarrots:scale(.5,.5)
-	buyCarrots.x = _W/2
+	buyCarrots:scale(.3,.3)
+	buyCarrots.x = board.x + board.contentWidth/4
 	buyCarrots.y = _H/2+200
 	viewGroup:insert(buyCarrots)
 
@@ -507,15 +505,13 @@ function callOptions(viewGroup,listener,storyboard)
 	end
 
 	local unlockAll = ui.newButton{
-		default = "buttonYellow.png",
-		over = "buttonYellowOver.png",
+		default = "unlock-all-levels-off.png",
+		over = "unlock-all-levels-on.png",
 		onEvent = unlockAllHandler,
-		text = "UNLOCK ALL LEVELS",
-		textColor = { 51, 51, 51, 255 },
 	}
-	--unlockAll:scale(.5,.5)
-	unlockAll.x = _W/2
-	unlockAll.y = _H/2+300
+	unlockAll:scale(.3,.3)
+	unlockAll.x = board.x - board.contentWidth/4
+	unlockAll.y = _H/2+200
 	viewGroup:insert(unlockAll)
 
 	

@@ -221,7 +221,19 @@ function placeObject(cell, object,listener)
 	if objectType.isDynamic then
 		local imgName = objectType.img
 		if objectType.hasPerspective then imgName = "p"..getPerspectiveBlock(cell.hexX,cell.hexY)..imgName end
-		local tempObject = display.newImageRect(imgName,objectType.imgW,objectType.imgH)
+		if objectType.isAnimated then
+			spriteSheetName = imgName:sub(1,imgName:len()-4)
+			print("spriteName = "..spriteSheetName)
+			local tempSheet = sprite.newSpriteSheetFromData( imgName, require(spriteSheetName).getSpriteSheetData() )
+			local tempSet = sprite.newSpriteSet(tempSheet,1,8)
+			sprite.add(tempSet,"loop",1,8,1000)
+			tempObject = sprite.newSprite(tempSet)
+			tempObject:prepare("loop")
+			tempObject:play()
+			tempObject:scale(.5,.5)
+		else
+			tempObject = display.newImageRect(imgName,objectType.imgW,objectType.imgH)
+		end
 		tempObject.x = cell.hexX
 		tempObject.y = cell.hexY
 		if objectType.alpha ~= nil then tempObject.alpha = objectType.alpha end
