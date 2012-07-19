@@ -509,7 +509,7 @@ function moveRabbit()
 						social.setGCHighScore(gameScore,storyboard.levelId)
 						highScore = gameScore
 					end
-					---(didWon,score,high,usedCarrot,gameTime,objectsUsed)
+					unlockNextLevel()
 					HUD.callEndingScreen(true,gameScore,highScore,usedCarrot,secsPlaying,rocksPut)
 					return false
 				end
@@ -741,6 +741,19 @@ function restartListener()
 	restartGame()
 end
 
+function unlockNextLevel()
+	nextLevel = nil
+	if storyboard.getFromResources then
+		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId,system.ResourceDirectory)
+	else
+		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)		
+	end
+	if nextLevel then
+		gameData:store( "unlocked-"..nextLevel.scenery.."-"..nextLevel.level,true)
+		gameData:save()
+	end
+end
+
 
 
 function goToNextLevel()
@@ -795,6 +808,7 @@ function restartGame()
 	gameScore = gameStartScore
 	rocksPut = 0
 	gameStartTime = system.getTimer()
+	HUD.reloadCarrotsButton()
 	Runtime:removeEventListener( "touch", gameClickListener )
 	Runtime:removeEventListener("enterFrame",updateScore)
 	return startGame()

@@ -140,6 +140,38 @@ function loadScreenUI()
 	end
 end
 
+function reloadCarrotsButton()
+	carrotsPurchased = storeData:retrieve("carrotsPurchased")
+	local loadCarrotButs = function()
+		if carrotUsedBut then carrotUsedBut:removeSelf() carrotUsedBut = nil end
+		carrotButton = ui.newButton{
+			default = "carrot-off.png",
+			over = "carrot-on.png",
+			id = "carrotButton",
+			onEvent = buttonHandler,
+			emboss = true
+		}
+		carrotButton.x = _W/2+110; carrotButton.y = _H-50
+		carrotButton:scale(.5,.5)
+		screenUI:insert(carrotButton)
+	end
+	if carrotsPurchased then
+		loadCarrotButs()
+	elseif not carrotUsedBut then
+		carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
+		carrotUsedBut.x = _W/2+110; carrotUsedBut.y = _H-50
+		local function carrotStoreListener(event)
+			if event.phase == "began" then			
+				storeModule.init(loadCarrotButs)
+				storeModule.sellingDialog("carrots")
+			end
+		end
+		carrotUsedBut:addEventListener("touch", carrotStoreListener)
+		screenUI:insert(carrotUsedBut)
+	end
+end
+
+
 function hideScreenUI()
 	if screenUI ~= nil then
 		transition.to(screenUI,{y=200,time=200,delay=150,transition=easing.outExpo})

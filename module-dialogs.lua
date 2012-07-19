@@ -243,20 +243,37 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 	end
 	
 	local levelCounter = 1
+	
 	for i = 1, 3 do
 		for j = 1,3 do
 			local tempId = nil
 			if buttonData[levelCounter].levelId then tempId = levelCounter end
-			local tempLevelBut = ui.newButton{
-				default = buttonData[levelCounter].default,
-				over = buttonData[levelCounter].over,
-				id = tempId,
-				onEvent = buttonListener,
-			}
+			local tempLevelBut;
+			if gameData:retrieve( "unlocked-"..storyboard.sceneryId.."-"..levelCounter) then
+				tempLevelBut = ui.newButton{
+					default = buttonData[levelCounter].default,
+					over = buttonData[levelCounter].over,
+					id = tempId,
+					onEvent = buttonListener,
+				}
+				viewGroup:insert(tempLevelBut)
+			else
+				tempLevelBut = ui.newButton{
+					default = buttonData[levelCounter].default,
+					over = buttonData[levelCounter].over,
+				}
+				viewGroup:insert(tempLevelBut)
+				if tempId then
+					local tempLock = display.newImageRect("locked.png",188/2,208/2)
+					tempLock.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
+					tempLock.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
+					viewGroup:insert(tempLock)
+				end
+			end
 			tempLevelBut:scale(.5,.5)
 			tempLevelBut.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
 			tempLevelBut.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
-			viewGroup:insert(tempLevelBut)
+			
 			levelCounter = levelCounter+1
 		end
 	end

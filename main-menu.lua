@@ -14,6 +14,7 @@ require("ice")
 
 gameData = ice:loadBox( "gameData" )
 gameData:storeIfNew( "mute", false )
+gameData:storeIfNew( "unlocked-".."The Park".."-".."1", true )
 gameData:save()
 
 _W = display.contentWidth;

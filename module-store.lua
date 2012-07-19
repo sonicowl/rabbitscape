@@ -37,11 +37,11 @@ function storeTransaction( event )
 			print("receipt", transaction.receipt)
 			print("transactionIdentifier", transaction.identifier)
 			print("date", transaction.date)
-			if  transaction.productIdentifier == "catch_the_bunny_pro" then
+			if  transaction.productIdentifier == "extra_levels" then
 				storeData:store( "proPurchased", false )
 				storeData:save()
 				if moduleListener then moduleListener() end
-			elseif transaction.productIdentifier == "catch_the_bunny_carrots" then
+			elseif transaction.productIdentifier == "carrot_basket" then
 				storeData:store( "carrotsPurchased", false )
 				storeData:save()
 				if moduleListener then moduleListener() end
@@ -49,11 +49,11 @@ function storeTransaction( event )
 	elseif  transaction.state == "restored" then
 			print("Transaction restored (from previous session)")
 			print("productIdentifier", transaction.productIdentifier)
-			if  transaction.productIdentifier == "catch_the_bunny_pro" then
+			if  transaction.productIdentifier == "extra_levels" then
 				storeData:store( "proPurchased", false )
 				storeData:save()
 				if moduleListener then moduleListener() end
-			elseif transaction.productIdentifier == "catch_the_bunny_carrots" then
+			elseif transaction.productIdentifier == "carrot_basket" then
 				storeData:store( "carrotsPurchased", false )
 				storeData:save()
 				if moduleListener then moduleListener() end
@@ -81,7 +81,7 @@ function sellingDialog(product)
 		if product == "pro" then
 			if platform == "iPhone OS" then
 				isSellingNow = true
-				store.purchase( {"catch_the_bunny_pro"} )
+				store.purchase( {"extra_levels"} )
 			else
 				--system.openURL("market://details?id=com.sonicowl.colorpro")
 				print("open store website")
@@ -89,7 +89,7 @@ function sellingDialog(product)
 		elseif product == "carrots" then
 			if platform == "iPhone OS" then
 				isSellingNow = true
-				store.purchase( {"catch_the_bunny_carrots"} )
+				store.purchase( {"carrot_basket"} )
 				print("purchasing carrots")
 			else
 				--system.openURL("market://details?id=com.sonicowl.colorodissey")
