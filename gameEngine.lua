@@ -252,7 +252,7 @@ end
 --rabbitsGroup
 function loadRabbitSprites()
 
-	local run1Sheet = sprite.newSpriteSheetFromData( "run-1.png", require("run-1").getSpriteSheetData() )
+	local run1Sheet = sprite.newSpriteSheetFromData( "1.png", require("1").getSpriteSheetData() )
 	run1Set = sprite.newSpriteSet(run1Sheet,1,42)
 	sprite.add(run1Set,"runS",1,4,6*msPerFrame,1)
 	sprite.add(run1Set,"runSW",8,4,6*msPerFrame,1)
@@ -261,7 +261,7 @@ function loadRabbitSprites()
 	sprite.add(run1Set,"runNE",29,4,6*msPerFrame,1)
 	sprite.add(run1Set,"runSE",36,4,6*msPerFrame,1)
 	
-	local run3Sheet = sprite.newSpriteSheetFromData( "run-3.png", require("run-3").getSpriteSheetData() )
+	local run3Sheet = sprite.newSpriteSheetFromData( "3.png", require("3").getSpriteSheetData() )
 	run2Set = sprite.newSpriteSet(run3Sheet,1,42)
 	sprite.add(run2Set,"runS",1,4,6*msPerFrame,1)
 	sprite.add(run2Set,"runSW",8,4,6*msPerFrame,1)
@@ -270,7 +270,7 @@ function loadRabbitSprites()
 	sprite.add(run2Set,"runNE",29,4,6*msPerFrame,1)
 	sprite.add(run2Set,"runSE",36,4,6*msPerFrame,1)
 	
-	local run10Sheet = sprite.newSpriteSheetFromData( "run-10.png", require("run-10").getSpriteSheetData() )
+	local run10Sheet = sprite.newSpriteSheetFromData( "10.png", require("10").getSpriteSheetData() )
 	run3Set = sprite.newSpriteSet(run10Sheet,1,42)
 	sprite.add(run3Set,"runS",1,4,6*msPerFrame,1)
 	sprite.add(run3Set,"runSW",8,4,6*msPerFrame,1)
@@ -279,7 +279,7 @@ function loadRabbitSprites()
 	sprite.add(run3Set,"runNE",29,4,6*msPerFrame,1)
 	sprite.add(run3Set,"runSE",36,4,6*msPerFrame,1)
 	
-	local run12Sheet = sprite.newSpriteSheetFromData( "run-12.png", require("run-12").getSpriteSheetData() )
+	local run12Sheet = sprite.newSpriteSheetFromData( "12.png", require("12").getSpriteSheetData() )
 	run4Set = sprite.newSpriteSet(run12Sheet,1,42)
 	sprite.add(run4Set,"runS",1,4,6*msPerFrame,1)
 	sprite.add(run4Set,"runSW",8,4,6*msPerFrame,1)
@@ -517,8 +517,7 @@ function moveRabbit()
 			local tempX = path[table.getn(path)-1].x
 			local tempY = path[table.getn(path)-1].y
 			moveRabbitTo(tempX,tempY)
-			local soundClosure = function() if not storyboard.mute then audio.play(soundJump) end end
-			timer.performWithDelay(150,soundClosure)
+			if not storyboard.mute then timer.performWithDelay(150,function() audio.play(soundJump) end) end
 			
 			--CHECK IF IT ARRIVED ON A EXIT CELL
 			if levelMap.objects[levelMap[rabbit.x][rabbit.y].id].tag == "endCell" then 
@@ -535,10 +534,12 @@ function moveRabbit()
 				local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,nearExit.x,nearExit.y)
 				local escapeClosure2 = function(event) 
 					escapeRabbit(cardinalDirec,nearExit.x,nearExit.y) 
+					if not storyboard.mute then timer.performWithDelay(150,function() audio.play(soundJump) end) end
 				end
 				local escapeClosure = function(event)
 					timer.performWithDelay(5*msPerFrame, escapeClosure2 )
 					moveRabbitTo(nearExit.x,nearExit.y)
+					if not storyboard.mute then timer.performWithDelay(150,function() audio.play(soundJump) end) end
 				end
 				timer.performWithDelay(5*msPerFrame, escapeClosure )
 

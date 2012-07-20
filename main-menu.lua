@@ -91,6 +91,16 @@ function loadActions()
 		--dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
 	end	
 	
+	actions["credits"] = function(event)
+		print("touched "..tostring(event.id))
+		--storyboard.gotoScene( "scene-help", "fade", 100 )
+		local butClosure = function(event)	storyboard.gotoScene( "scene-credits", {time=100} ) end
+		goOutAnimation(butClosure)
+		--sceneDialog = display.newGroup()
+		--group:insert(sceneDialog)
+		--dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
+	end	
+	
 	actions["options"] = function(event)
 		print("touched "..tostring(event.id))
 		local butClosure = function(event)	storyboard.gotoScene( "scene-options", {time=100} ) end
@@ -131,6 +141,13 @@ function scene:createScene( event )
 	
 	actions = {}
 	loadActions()
+	
+	creditsButton = ui.newButton{
+		default = "licensing-bt-off.png",
+		over = "licensing-bt-on.png",
+		onEvent = buttonHandler,
+		id = "credits",
+	}
 
 
 	mainBg = display.newImageRect("bg3.jpg",_VW,_VH)
@@ -198,17 +215,20 @@ function scene:createScene( event )
 		id = "GameCenter",
 	}
 	
+	creditsButton.x = _W/4*3+100;	creditsButton.y = _VH0+25
 	playButton.x = _W/4;	playButton.y = _H/2+300+300
 	helpButton.x = _W/2+15;	helpButton.y = _H/2+410+300
 	optionsButton.x = _W/4;	optionsButton.y = _H/2+410+300
 	ofButton.x = _W/4*3+30;		ofButton.y = _H/2+410+300
 	
+	creditsButton:scale(.5,.5)
 	playButton:scale(.5,.5)
 	helpButton:scale(.5,.5)
 	optionsButton:scale(.5,.5)
 	ofButton:scale(.5,.5)
 
 	
+	group:insert(creditsButton)
 	group:insert(playButton)
 	group:insert(helpButton)
 	group:insert(optionsButton)

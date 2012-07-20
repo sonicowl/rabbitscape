@@ -106,6 +106,10 @@ function scene:enterScene( event )
 	soundCarrot = audio.loadSound("sound-carrot.wav")
 	soundPlaceObject = audio.loadSound("sound-objects.wav")
 	soundBlocked = audio.loadSound("sound-blocked.wav")
+	soundDuration = audio.getDuration(soundAmbience)*.9
+	if soundDuration and soundDuration > 1 then
+		audio.seek(math.random(soundDuration), soundAmbience)
+	end
 	if not storyboard.mute then audio.play(soundAmbience,{loops=-1}) end	
 	
 	local FadeInClosure = function(event)

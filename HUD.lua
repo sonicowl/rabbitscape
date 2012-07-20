@@ -156,7 +156,7 @@ function reloadCarrotsButton()
 		screenUI:insert(carrotButton)
 	end
 	if carrotsPurchased then
-		loadCarrotButs()
+		if not carrotButton then loadCarrotButs() end
 	elseif not carrotUsedBut then
 		carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
 		carrotUsedBut.x = _W/2+110; carrotUsedBut.y = _H-50
@@ -386,9 +386,16 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 			onEvent = buttonHandler,
 			id = "nextLevel",
 		}
+		local title2 = display.newImageRect("bunny.png",1032/2,989/2)
+		title2.x = _W/2	title2.y = _H/2-180
+		endGameScreen:insert(title2)
 		local title = display.newImageRect("bunny.png",1032/2,989/2)
 		title.x = _W/2	title.y = _H/2-180
 		endGameScreen:insert(title)
+		local tween2
+		local tween1 = function(event) transition.to(event,{time=500,alpha =1,onComplete=tween2}) end
+		tween2 = function(event) transition.to(event,{time=500,alpha=0,onComplete=tween1}) end
+		tween2(title2)
 		
 		local content1 = display.newImageRect("scores.png",424/2,360/2)
 		content1.x = _W/2-80 content1.y = _H/2+120

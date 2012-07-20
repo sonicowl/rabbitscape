@@ -335,6 +335,58 @@ function callHowToPlay(viewGroup,listener)
 end
 
 
+function callCredits(viewGroup,listener)	
+	
+	local holdingClickBg = display.newRect(0,0,_W,_H*2)
+	viewGroup:insert(holdingClickBg)
+	holdingClickBg:setFillColor(0,0,0)
+	holdingClickBg.alpha = 0.01
+	local touchClosure = function(event) return true end
+	holdingClickBg:addEventListener("touch", touchClosure)
+	
+	local board = display.newImageRect("board-2.png", math.floor(1053/2),math.floor(1683/2))
+	board.x = _W/2; board.y = _H/2
+	viewGroup:insert(board)
+
+	local boardIcon = display.newImageRect("title-credits.png", math.floor(362/2),math.floor(312/2))
+	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
+	viewGroup:insert(boardIcon)
+
+	--local content = display.newImageRect("content-howtoplay.png", math.floor(854/2),math.floor(1350/2))
+	--content.x = _W/2; content.y = _H/2+20
+	--viewGroup:insert(content)
+	
+	function closeButHandler(event)
+		if event.phase == "release" and not dialogTransitioning then
+			local closeClosure = function(event)
+				dialogTransitioning = false
+				if listener then listener() end
+				event:removeSelf(); 
+				event = nil; 
+			end
+			dialogTransitioning = true
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
+		end
+		return true
+	end
+
+	local closeBut = ui.newButton{
+		default = "close-off.png",
+		over = "close-on.png",
+		onEvent = closeButHandler,
+	}
+	closeBut:scale(.5,.5)
+	closeBut.x = board.x+board.contentWidth/2-10
+	closeBut.y = board.y - board.contentHeight/2+10
+	viewGroup:insert(closeBut)
+	
+	viewGroup.y = -display.contentHeight
+	transition.to(viewGroup,{time=800,y=0,transition = easing.outExpo})
+	transition.to(holdingClickBg,{time=800,alpha=.6,transition = easing.outExpo})
+end
+
+
 function callQuitGame(viewGroup,listener)	
 	
 	local holdingClickBg = display.newRect(0,0,_W,_H*2)
