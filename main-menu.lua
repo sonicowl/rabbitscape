@@ -11,10 +11,13 @@ local dialogsModule = require( "module-dialogs" )
 local gameStore = require("module-store")
 social = require("module-social")
 require("ice")
+transitioning = true
 
 gameData = ice:loadBox( "gameData" )
 gameData:storeIfNew( "mute", false )
 gameData:storeIfNew( "unlocked-".."The Park".."-".."1", true )
+gameData:storeIfNew( "free-".."The Park".."-".."1", true )
+gameData:storeIfNew( "free-".."The Park".."-".."2", true )
 gameData:save()
 
 _W = display.contentWidth;
@@ -31,7 +34,7 @@ function checkUpdatedListener(bool)
 end
 
 function goOutAnimation(listener)
-	local goOutClosure = function(event) timer.performWithDelay(100,listener) end
+	local goOutClosure = function(event) timer.performWithDelay(100,listener) transitioning = false end
 	transition.to(littleSigns,{time=150,alpha=0,transition=easing.inExpo})
 	transition.to(ofButton,{delay=100,time=250,y=ofButton.y+300,transition=easing.inExpo})	
 	transition.to(helpButton,{delay=150,time=250,y=helpButton.y+300,transition=easing.inExpo})
@@ -51,12 +54,9 @@ function syncBoxCallback( event )
 			jsonLevels.syncLevels(loadingGroup)
 			hasUpdates = false
 		else
-			--storyboard.gotoScene( "scene-scenery-select", "fade", 100 )
 			local butClosure = function(event)	storyboard.gotoScene( "scene-scenery-select", {time=100} ) end
 			goOutAnimation(butClosure)
-			--sceneDialog = display.newGroup()
-			--menuGroup:insert(sceneDialog)
-			--dialogsModule.callScenerySelector(sceneDialog,storyboard)
+			transitioning = true
 		end
 	end
 end
@@ -72,39 +72,31 @@ function loadActions()
 		print("touched "..tostring(event.id))
 		if hasUpdates then requestSync()
 		else
---			storyboard.gotoScene( "scene-scenery-select", "fade", 100 )
 			local butClosure = function(event)	storyboard.gotoScene( "scene-scenery-select", {time=100} ) end
 			goOutAnimation(butClosure)
-		--sceneDialog = display.newGroup()
-			--menuGroup:insert(sceneDialog)
-			--dialogsModule.callScenerySelector(sceneDialog,storyboard)
+			transitioning = true
 		end
 	end
 	
 	actions["help"] = function(event)
 		print("touched "..tostring(event.id))
-		--storyboard.gotoScene( "scene-help", "fade", 100 )
 		local butClosure = function(event)	storyboard.gotoScene( "scene-help", {time=100} ) end
 		goOutAnimation(butClosure)
-		--sceneDialog = display.newGroup()
-		--group:insert(sceneDialog)
-		--dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
+		transitioning = true
 	end	
 	
 	actions["credits"] = function(event)
 		print("touched "..tostring(event.id))
-		--storyboard.gotoScene( "scene-help", "fade", 100 )
 		local butClosure = function(event)	storyboard.gotoScene( "scene-credits", {time=100} ) end
 		goOutAnimation(butClosure)
-		--sceneDialog = display.newGroup()
-		--group:insert(sceneDialog)
-		--dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
+		transitioning = true
 	end	
 	
 	actions["options"] = function(event)
 		print("touched "..tostring(event.id))
 		local butClosure = function(event)	storyboard.gotoScene( "scene-options", {time=100} ) end
 		goOutAnimation(butClosure)
+		transitioning = true
 	end	
 	
 	actions["GameCenter"] = function(event)
@@ -112,13 +104,8 @@ function loadActions()
 		social.showGCPopup()
 	end	
 	
-	actions["licensing"] = function(event)
-		print("touched "..tostring(event.id))
-		
-	end
-	
 	buttonHandler = function( event )	-- General function for all buttons (uses "actions" table above)
-		if ("release" == event.phase) then
+		if ("release" == event.phase) and not transitioning then
 			actions[event.id](event)
 		end
 		return true  --SO SIMPLE AND SO CONFUSING.... THIS PREVENTS FROM PROPAGATING TO OTHER BUTTONS
@@ -278,6 +265,7 @@ function scene:enterScene( event )
 		transition.to(helpButton,{delay=400/2,time=500/2,y=helpButton.y-300,transition=easing.outExpo,onStart=audioClosure1})
 		transition.to(ofButton,{delay=500/2,time=500/2,y=ofButton.y-300,transition=easing.outExpo,onStart=audioClosure1})	
 		transition.to(littleSigns,{delay=700/2,time=300/2,alpha=1,transition=easing.inExpo,onStart=audioClosure1})
+		timer.performWithDelay(700, function() transitioning = false end)
 	end
 	local startClosure1 = function(event) transition.to(mainBunny,{time=800,x=mainBunny.x+170,y=mainBunny.y+300,alpha=1,rotation=0,xScale=1,yScale=1,transition=easing.outExpo,onStart=audioClosure2,onComplete=startClosure2})  end
 	transition.to(circleGroup,{time=500/2,x=0,transition=easing.outExpo,onComplete=startClosure1,onStart=audioClosure1})

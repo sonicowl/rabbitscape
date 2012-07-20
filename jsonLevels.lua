@@ -12,6 +12,9 @@ module(..., package.seeall)
 
 function init()
 	json = require "json"
+	require("ice")
+	gameData = ice:loadBox( "gameData" )
+	storeData = ice:loadBox("storeData")
 end
 
 function saveMap(map)
@@ -284,7 +287,11 @@ function getNextLevel(sceneryId,levelId,baseDir)
 	local sceneryLvls = loadSceneryLevels(sceneryId,baseDir)
 	if levelId < #sceneryLvls then
 		--get next level
-		return {level = levelId+1,scenery = sceneryId}
+		if (gameData:retrieve("free-"..sceneryId.."-"..levelId+1) or storeData:retrieve("proPurchased")) then
+			return {level = levelId+1,scenery = sceneryId}
+		else
+			return false
+		end
 	else
 		--get next scenery then next level
 		local sceneriesTable = loadSceneryTable()
@@ -292,7 +299,11 @@ function getNextLevel(sceneryId,levelId,baseDir)
 			--change to next scenery
 			for i=1, #sceneriesTable do
 				if sceneriesTable[i].id == sceneryId then
-					return {level = 1,scenery = sceneriesTable[i+1]}
+					if (gameData:retrieve("free-"..sceneriesTable[i+1].id.."-".."1") or storeData:retrieve("proPurchased")) then
+						return {level = 1,scenery = sceneriesTable[i+1].id}
+					else
+						return false
+					end
 				end
 			end
 		else

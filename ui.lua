@@ -89,16 +89,24 @@ end
 -- Button class
 
 function newButton( params )
-	local button, default, over, size, font, textColor, offset
+	local button, default, over, size, font, textColor, offset, baseDir
 	
 	if params.default then
 		button = display.newGroup()
-		default = display.newImage( params.default )
+		if params.baseDir then
+			default = display.newImage( params.default, baseDir )	
+		else
+			default = display.newImage( params.default )
+		end
 		button:insert( default, true )
 	end
 	
 	if params.over then
-		over = display.newImage( params.over )
+		if params.baseDir then
+			over = display.newImage( params.over, baseDir )
+		else
+			over = display.newImage( params.over )
+		end
 		over.isVisible = false
 		button:insert( over, true )
 	end

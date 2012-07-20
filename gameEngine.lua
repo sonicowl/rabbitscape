@@ -750,8 +750,8 @@ function unlockNextLevel()
 		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)		
 	end
 	if nextLevel then
-		gameData:store( "unlocked-"..nextLevel.scenery.."-"..nextLevel.level,true)
-		gameData:save()
+			gameData:store( "unlocked-"..nextLevel.scenery.."-"..nextLevel.level,true)
+			gameData:save()
 	end
 end
 

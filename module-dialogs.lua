@@ -16,6 +16,7 @@ function init()
 	jsonLevels.init()
 	require("ice")
 	gameData = ice:loadBox( "gameData" )
+	storeData = ice:loadBox("storeData")
 	storeModule = require("module-store")
 	storeModule.init()
 	dialogTransitioning = false
@@ -70,23 +71,26 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 	end
 	
 	function listener(imgNum)
-		print( "USER CLICKED LEVEL "..imgNum)
-		if sceneryList.resources then 
-			storyboard.getFromResources = true
-		else
-			storyboard.getFromResources = false
-		end
-		storyboard.sceneryId = sceneryList[imgNum].id
-		if not storyboard.mute then audio.play(soundStageButton) end
-		local closeClosure = function(event)
-				--event:removeSelf()
-				--event = nil
-				audio.stop()
-				audio.dispose(soundStageButton)
-				local closeClosure2 = function() storyboard.gotoScene("scene-level-select",{time=100}) end
-				timer.performWithDelay(150,closeClosure2)
+		if not dialogTransitioning then
+			print( "USER CLICKED LEVEL "..imgNum)
+			if sceneryList.resources then 
+				storyboard.getFromResources = true
+			else
+				storyboard.getFromResources = false
 			end
-		transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			storyboard.sceneryId = sceneryList[imgNum].id
+			if not storyboard.mute then audio.play(soundStageButton) end
+			local closeClosure = function(event)
+					--event:removeSelf()
+					--event = nil
+					audio.stop()
+					audio.dispose(soundStageButton)
+					local closeClosure2 = function() storyboard.gotoScene("scene-level-select",{time=100}) dialogTransitioning = false end
+					timer.performWithDelay(150,closeClosure2)
+				end
+			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
+			dialogTransitioning = true
+		end
 	end
 
 	local closeBut = ui.newButton{
@@ -249,8 +253,11 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 			local tempId = nil
 			if buttonData[levelCounter].levelId then tempId = levelCounter end
 			local tempLevelBut;
-			if gameData:retrieve( "unlocked-"..storyboard.sceneryId.."-"..levelCounter) then
+			if gameData:retrieve( "unlocked-"..storyboard.sceneryId.."-"..levelCounter) and (gameData:retrieve("free-"..storyboard.sceneryId.."-"..levelCounter) or storeData:retrieve("proPurchased")) then
+				baseDir = nil
+				if not storyboard.getFromResources then baseDir = system.DocumentsDirectory end
 				tempLevelBut = ui.newButton{
+					baseDir = baseDir,
 					default = buttonData[levelCounter].default,
 					over = buttonData[levelCounter].over,
 					id = tempId,
@@ -259,6 +266,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 				viewGroup:insert(tempLevelBut)
 			else
 				tempLevelBut = ui.newButton{
+					baseDir = baseDir,
 					default = buttonData[levelCounter].default,
 					over = buttonData[levelCounter].over,
 				}

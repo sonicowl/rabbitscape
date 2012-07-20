@@ -16,7 +16,7 @@ function init(listener)
 	require("ice")
 	storeData = ice:loadBox( "storeData" )
 	storeData:storeIfNew( "proPurchased", false )
-	storeData:storeIfNew( "carrotsPurchased", true )
+	storeData:storeIfNew( "carrotsPurchased", false )
 	storeData:save()
 end
 

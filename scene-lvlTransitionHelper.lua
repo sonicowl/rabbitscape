@@ -37,7 +37,7 @@ function scene:enterScene( event )
         local group = self.view
 		print("entering transition helper from "..lastScene)
 		storyboard.purgeScene( "gameScene" )
-        storyboard.gotoScene( "gameScene", "fade", 500 )
+        storyboard.gotoScene( "gameScene", {time=500})
         -----------------------------------------------------------------------------
                 
         --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
