@@ -38,23 +38,24 @@ function storeTransaction( event )
 			print("transactionIdentifier", transaction.identifier)
 			print("date", transaction.date)
 			if  transaction.productIdentifier == "extra_levels" then
-				storeData:store( "proPurchased", false )
+				storeData:store( "proPurchased", true )
 				storeData:save()
 				if moduleListener then moduleListener() end
 			elseif transaction.productIdentifier == "carrot_basket" then
-				storeData:store( "carrotsPurchased", false )
+				storeData:store( "carrotsPurchased", true )
 				storeData:save()
 				if moduleListener then moduleListener() end
 			end
+			local alert = native.showAlert("Success", "Your transaction was succeeded", { "OK" }, onAgree )
 	elseif  transaction.state == "restored" then
 			print("Transaction restored (from previous session)")
 			print("productIdentifier", transaction.productIdentifier)
 			if  transaction.productIdentifier == "extra_levels" then
-				storeData:store( "proPurchased", false )
+				storeData:store( "proPurchased", true )
 				storeData:save()
 				if moduleListener then moduleListener() end
 			elseif transaction.productIdentifier == "carrot_basket" then
-				storeData:store( "carrotsPurchased", false )
+				storeData:store( "carrotsPurchased", true )
 				storeData:save()
 				if moduleListener then moduleListener() end
 			end
