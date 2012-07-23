@@ -44,6 +44,7 @@ function storeTransaction( event )
 			elseif transaction.productIdentifier == "carrot_basket" then
 				storeData:store( "carrotsPurchased", true )
 				storeData:save()
+				print("storing carrotsPurchased as TRUE")
 				if moduleListener then moduleListener() end
 			end
 			local alert = native.showAlert("Success", "Your transaction was succeeded", { "OK" }, onAgree )
@@ -57,6 +58,7 @@ function storeTransaction( event )
 			elseif transaction.productIdentifier == "carrot_basket" then
 				storeData:store( "carrotsPurchased", true )
 				storeData:save()
+				print("storing carrotsPurchased as TRUE")
 				if moduleListener then moduleListener() end
 			end
 	elseif transaction.state == "cancelled" then

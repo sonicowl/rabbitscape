@@ -111,7 +111,7 @@ function loadScreenUI()
 
 		carrotsPurchased = storeData:retrieve("carrotsPurchased")
 		local loadCarrotButs = function()
-			if carrotUsedBut then carrotUsedBut:removeSelf() carrotUsedBut = nil end
+			if carrotUsedBut then carrotUsedBut = nil end
 			carrotButton = ui.newButton{
 				default = "carrot-off.png",
 				over = "carrot-on.png",
@@ -141,9 +141,12 @@ function loadScreenUI()
 end
 
 function reloadCarrotsButton()
+
+	storeData = ice:loadBox( "storeData" )
 	carrotsPurchased = storeData:retrieve("carrotsPurchased")
+	print("reloading Carrots BUTTON. CarrotsPurchased: "..tostring(carrotsPurchased))
 	local loadCarrotButs = function()
-		if carrotUsedBut then carrotUsedBut:removeSelf() carrotUsedBut = nil end
+		if carrotUsedBut then print("removing carrotusedBut") carrotUsedBut:removeSelf() carrotUsedBut = nil end
 		carrotButton = ui.newButton{
 			default = "carrot-off.png",
 			over = "carrot-on.png",
@@ -156,8 +159,10 @@ function reloadCarrotsButton()
 		screenUI:insert(carrotButton)
 	end
 	if carrotsPurchased then
-		if not carrotButton then loadCarrotButs() end
+		print("CARROTS PURCHASED, LOADING NORMAL BUTTON")
+		if not carrotButton then print("no button yet, putting now")loadCarrotButs() end
 	elseif not carrotUsedBut then
+		print("CARROTS NOT PURCHASED AND NO BUTTON YET")
 		carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
 		carrotUsedBut.x = _W/2+110; carrotUsedBut.y = _H-50
 		local function carrotStoreListener(event)
@@ -168,6 +173,8 @@ function reloadCarrotsButton()
 		end
 		carrotUsedBut:addEventListener("touch", carrotStoreListener)
 		screenUI:insert(carrotUsedBut)
+	else
+		print("carrots not purchased and button already there")
 	end
 end
 
@@ -445,10 +452,10 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		highText:setReferencePoint(display.CenterLeftReferencePoint);
 		
 		objectsText.x = _W/2+80 	objectsText.y = _H/2+50
-		totalTimeText.x = _W/2+80 		totalTimeText.y = _H/2+83
-		carrotsText.x = _W/2+80	carrotsText.y = _H/2+116
-		scoreText.x = _W/2+80 		scoreText.y = _H/2+155
-		highText.x = _W/2+80 		highText.y = _H/2+200
+		totalTimeText.x = _W/2+80 		totalTimeText.y = _H/2+80
+		carrotsText.x = _W/2+80	carrotsText.y = _H/2+110
+		scoreText.x = _W/2+80 		scoreText.y = _H/2+165
+		highText.x = _W/2+80 		highText.y = _H/2+205
 		endGameScreen:insert(objectsText)
 		endGameScreen:insert(totalTimeText)
 		endGameScreen:insert(carrotsText)
