@@ -79,7 +79,7 @@ end
 function sellingDialog(product)
 	if not isSellingNow then
 		local platform = system.getInfo("platformName")
-		if product == "pro" then
+		if product == "pro" and not storeData:retrieve( "proPurchased") then
 			if platform == "iPhone OS" then
 				isSellingNow = true
 				store.purchase( {"extra_levels"} )
@@ -87,7 +87,7 @@ function sellingDialog(product)
 				--system.openURL("market://details?id=com.sonicowl.colorpro")
 				print("open store website")
 			end
-		elseif product == "carrots" then
+		elseif product == "carrots" and not storeData:retrieve( "carrotsPurchased") then
 			if platform == "iPhone OS" then
 				isSellingNow = true
 				store.purchase( {"carrot_basket"} )

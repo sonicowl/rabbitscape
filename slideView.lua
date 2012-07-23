@@ -69,7 +69,7 @@ function new( dataSet, listener, isMute , slideBackground, top, bottom )
 	imageNumberTextShadow:setTextColor(0, 0, 0)
 	navBar:insert(imageNumberTextShadow)
 	navBar:insert(imageNumberText)
-	imageNumberText.x = _W*.5;							imageNumberText.y = _H/2+220
+	imageNumberText.x = _W*.5;							imageNumberText.y = _H/2+250
 	imageNumberTextShadow.x = imageNumberText.x + 2;	imageNumberTextShadow.y = imageNumberText.y + 2
 	
 

@@ -40,6 +40,7 @@ function newLevel(params)
 	sceneGroup:insert(bgGroup)
 
 	gameData = ice:loadBox( "gameData" )
+	storeData = ice:loadBox("storeData")
 	gameData:storeIfNew( storyboard.sceneryId.."-"..storyboard.levelId, 0 )
 	gameData:save()
 	
@@ -775,13 +776,13 @@ function goToNextLevel()
 	else
 		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)		
 	end
-	if nextLevel == false then
-		storyboard.gotoScene( "main-menu", "fade", 1000 )
-		storyboard.gameComplete = true
-	else
+	if nextLevel and ((gameData:retrieve("free-"..nextLevel.scenery.."-"..nextLevel.level+1) or storeData:retrieve("proPurchased"))) then
 		storyboard.sceneryId = nextLevel.scenery
 		storyboard.levelId = nextLevel.level
 		storyboard.gotoScene( "scene-lvlTransitionHelper", "fade", 500 )
+	else
+		storyboard.gotoScene( "main-menu", "fade", 1000 )
+		storyboard.gameComplete = true
 	end
 end
 
@@ -806,6 +807,8 @@ function restartGame()
 		instance4:removeSelf()
 		instance4 = nil
 	end
+	eatingCarrot = false
+	usedCarrot = false
 	gameScore = gameStartScore
 	rocksPut = 0
 	gameStartTime = system.getTimer()
