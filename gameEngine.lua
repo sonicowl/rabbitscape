@@ -776,7 +776,7 @@ function goToNextLevel()
 	else
 		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)		
 	end
-	if nextLevel and ((gameData:retrieve("free-"..nextLevel.scenery.."-"..nextLevel.level+1) or storeData:retrieve("proPurchased"))) then
+	if nextLevel and (gameData:retrieve("free-"..nextLevel.scenery.."-"..nextLevel.level) or storeData:retrieve("proPurchased")) then
 		storyboard.sceneryId = nextLevel.scenery
 		storyboard.levelId = nextLevel.level
 		storyboard.gotoScene( "scene-lvlTransitionHelper", "fade", 500 )
