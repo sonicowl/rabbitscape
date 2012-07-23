@@ -13,7 +13,7 @@ local dialogsModule = require( "module-dialogs" )
  
  
 function closeButtonListener()
-	local closeClosure = function() storyboard.gotoScene("main-menu",{time=100}) end
+	local closeClosure = function() storyboard.gotoScene("scene-main",{time=100}) end
 	timer.performWithDelay(100,closeClosure)
 end
  

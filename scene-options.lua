@@ -13,7 +13,7 @@ local dialogsModule = require( "module-dialogs" )
  
  
 function closeButtonListener()
-	local closeClosure = function() storyboard.gotoScene("main-menu",{time=100}) end
+	local closeClosure = function() storyboard.gotoScene("scene-main",{time=100}) end
 	timer.performWithDelay(100,closeClosure)
 	--if on options and using any "options" should reload tem here
 end
@@ -54,8 +54,8 @@ function scene:enterScene( event )
 	group:insert(sceneDialog)
 	dialogsModule.callOptions(sceneDialog,closeButtonListener,storyboard)
 	
-	soundOptions = audio.loadStream("stream-ambience.wav")
-	if not storyboard.mute then audio.play(soundOptions,{loops=-1}) end	
+	--soundOptions = audio.loadStream("stream-ambience.wav")
+	--if not storyboard.mute then audio.play(soundOptions,{loops=-1}) end	
 end
  
  
@@ -68,9 +68,9 @@ function scene:exitScene( event )
         --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
         
         -----------------------------------------------------------------------------
-        audio.stop()
-		audio.dispose(soundOptions)
-		soundOptions = nil
+        --audio.stop()
+		--audio.dispose(soundOptions)
+		--soundOptions = nil
 end
  
 -- Called AFTER scene has finished moving offscreen:

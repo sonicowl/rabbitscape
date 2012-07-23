@@ -781,7 +781,7 @@ function goToNextLevel()
 		storyboard.levelId = nextLevel.level
 		storyboard.gotoScene( "scene-lvlTransitionHelper", "fade", 500 )
 	else
-		storyboard.gotoScene( "main-menu", "fade", 1000 )
+		storyboard.gotoScene( "scene-main", "fade", 1000 )
 		storyboard.gameComplete = true
 	end
 end
@@ -843,7 +843,7 @@ function quitGame()
 		instance4:removeSelf()
 		instance4 = nil
 	end
-	storyboard.gotoScene( "main-menu", "fade", 400 )
+	storyboard.gotoScene( "scene-main", "fade", 400 )
 end
 
 function backToLevelSelect()

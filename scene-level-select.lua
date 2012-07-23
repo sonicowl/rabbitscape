@@ -61,9 +61,9 @@ function scene:enterScene( event )
 	group:insert(sceneDialog)
 	dialogsModule.callLevelSelector(sceneDialog,storyboard,closeButtonListener)
 	
-	soundSceneries = audio.loadStream("stream-internal1.wav")
-	soundSlide = audio.loadSound("sound-slide.wav")
-	if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
+	--soundSceneries = audio.loadStream("stream-internal1.wav")
+	--soundSlide = audio.loadSound("sound-slide.wav")
+	--if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
 end
  
  
@@ -77,10 +77,12 @@ function scene:exitScene( event )
         
         -----------------------------------------------------------------------------
 	audio.stop()
-	audio.dispose(soundSceneries)
-	audio.dispose(soundSlide)
-	soundSceneries = nil
-	soundSlide = nil
+	audio.dispose(storyboard.bgMusic)
+	storyboard.bgMusic = nil
+	--audio.dispose(soundSceneries)
+	--audio.dispose(soundSlide)
+	--soundSceneries = nil
+	--soundSlide = nil
 end
  
 -- Called AFTER scene has finished moving offscreen:

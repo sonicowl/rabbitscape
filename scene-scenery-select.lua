@@ -13,7 +13,7 @@ local dialogsModule = require( "module-dialogs" )
  
  
 function closeStageListener()
-	local closeClosure = function() storyboard.gotoScene("main-menu",{time=100}) end
+	local closeClosure = function() storyboard.gotoScene("scene-main",{time=100}) end
 	timer.performWithDelay(150,closeClosure)
 end
  
@@ -62,9 +62,9 @@ function scene:enterScene( event )
 	group:insert(sceneDialog)
 	dialogsModule.callScenerySelector(sceneDialog,storyboard,closeStageListener)
 	
-	soundSceneries = audio.loadStream("stream-internal1.wav")
+	--soundSceneries = audio.loadStream("stream-internal1.wav")
 	soundSlide = audio.loadSound("sound-slide.wav")
-	if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
+	--if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
 end
  
  
@@ -77,10 +77,10 @@ function scene:exitScene( event )
         --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
         
         -----------------------------------------------------------------------------
-	audio.stop()
-	audio.dispose(soundSceneries)
+	--audio.stop()
+	--audio.dispose(soundSceneries)
 	audio.dispose(soundSlide)
-	soundSceneries = nil
+	--soundSceneries = nil
 	soundSlide = nil
 end
  

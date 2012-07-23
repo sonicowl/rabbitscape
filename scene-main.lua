@@ -28,6 +28,8 @@ _VH0 = (_H-_VH)/2
 _VW0 = (_W-_VW)/2
 hasUpdates = false
 
+audio.reserveChannels( 1 )
+
 
 function checkUpdatedListener(bool)
 	if bool then hasUpdates = true end
@@ -246,7 +248,8 @@ function scene:enterScene( event )
 	jsonLevels.checkForUpdates(checkUpdatedListener)
 	
 
-	soundIntro = audio.loadStream("stream-intro.wav")
+	storyboard.bgMusic = audio.loadStream("comical_game.mp3")
+	--soundIntro = audio.loadStream("stream-intro.wav")
 	soundElementIn = audio.loadSound("sound-element-in.wav")
 	soundWee = audio.loadSound("sound-wee.wav")
 
@@ -256,7 +259,7 @@ function scene:enterScene( event )
 	
 	
 	
-	if not storyboard.mute then audio.play(soundIntro,{loops=-1}) end	
+	if not storyboard.mute then audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) end	
 	
 	local startClosure2 = function(event)
 		transition.to(mainSign,{time=500/2,y=mainSign.y+_H/2,transition=easing.outExpo,onStart=audioClosure1})
@@ -289,8 +292,8 @@ function scene:exitScene( event )
 	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
 	
 	-----------------------------------------------------------------------------
-	audio.stop()
-	audio.dispose(soundIntro)
+	--audio.stop()
+	--audio.dispose(soundIntro)
 	audio.dispose(soundElementIn)
 	audio.dispose(soundWee)
 

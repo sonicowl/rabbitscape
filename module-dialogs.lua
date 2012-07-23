@@ -83,7 +83,7 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 			local closeClosure = function(event)
 					--event:removeSelf()
 					--event = nil
-					audio.stop()
+					--audio.stop()
 					audio.dispose(soundStageButton)
 					local closeClosure2 = function() storyboard.gotoScene("scene-level-select",{time=100}) dialogTransitioning = false end
 					timer.performWithDelay(150,closeClosure2)
@@ -208,7 +208,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 			local closeClosure = function()
 				--event:removeSelf()
 				--event = nil
-				audio.stop()
+				--audio.stop()
 				audio.dispose(soundStageButton)
 				dialogTransitioning = false
 				storyboard.gotoScene( "gameScene", {time=100} )

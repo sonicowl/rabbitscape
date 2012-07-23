@@ -15,4 +15,4 @@ io.output():setvbuf('no')
 local storyboard = require "storyboard"
 
 -- load first scene
-storyboard.gotoScene( "main-menu", "fade", 400 )
+storyboard.gotoScene( "scene-main", "fade", 400 )
