@@ -245,46 +245,97 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 		buttonData[i].over = levelsTable[i].over
 		buttonData[i].levelId = levelsTable[i].levelId
 	end
-	
-	local levelCounter = 1
-	
-	for i = 1, 3 do
-		for j = 1,3 do
-			local tempId = nil
-			if buttonData[levelCounter].levelId then tempId = levelCounter end
-			local tempLevelBut;
-			if gameData:retrieve( "unlocked-"..storyboard.sceneryId.."-"..levelCounter) and (gameData:retrieve("free-"..storyboard.sceneryId.."-"..levelCounter) or storeData:retrieve("proPurchased")) then
-				baseDir = nil
-				if not storyboard.getFromResources then baseDir = system.DocumentsDirectory end
-				tempLevelBut = ui.newButton{
-					baseDir = baseDir,
-					default = buttonData[levelCounter].default,
-					over = buttonData[levelCounter].over,
-					id = tempId,
-					onEvent = buttonListener,
-				}
-				viewGroup:insert(tempLevelBut)
-			else
-				tempLevelBut = ui.newButton{
-					baseDir = baseDir,
-					default = buttonData[levelCounter].default,
-					over = buttonData[levelCounter].over,
-				}
-				viewGroup:insert(tempLevelBut)
-				if tempId then
-					local tempLock = display.newImageRect("locked.png",188/2,208/2)
-					tempLock.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
-					tempLock.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
-					viewGroup:insert(tempLock)
-				end
+	buttonsGroup = display.newGroup()
+	viewGroup:insert(buttonsGroup)
+
+
+	function callUnlockDialog(callBackListener)
+		local holdingClickBg = display.newRect(0,0,_W,_H)
+		viewGroup:insert(holdingClickBg)
+		holdingClickBg.alpha = 0.01
+		local touchClosure = function(event) return true end
+		holdingClickBg:addEventListener("touch", touchClosure)
+
+		local function purchaseItCallBack( event )
+			if "clicked" == event.action then
+					local i = event.index
+					if 1 == i then
+						local callBackClosure = function()
+							holdingClickBg:removeSelf()
+							holdingClickBg = nil
+							callBackListener()
+						end
+						storeModule.init(callBackClosure)
+						storeModule.sellingDialog("pro")
+					elseif 2 == i then
+						print('dont want to buy it now!')
+						storyboard.gotoScene( "scene-main", "fade", 1000 )
+						storyboard.gameComplete = true
+					end
 			end
-			tempLevelBut:scale(.5,.5)
-			tempLevelBut.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
-			tempLevelBut.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
-			
-			levelCounter = levelCounter+1
+		end
+		
+		local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play all levels!", 
+			{ "Buy it!", "Not now!" }, purchaseItCallBack )
+		end
+	end	
+	
+	local loadLevelButtons = function()
+		local levelCounter = 1
+		
+		--DELETE BUTTONS IF EXIST ANY
+		if buttonsGroup.numChildren > 0 then
+			for i = buttonsGroup.numChildren, 1, -1 do
+				buttonsGroup[i]:removeSelf()
+				buttonsGroup[i] = nil
+			end
+		end
+		
+		for i = 1, 3 do
+			for j = 1,3 do
+				local tempId = nil
+				if buttonData[levelCounter].levelId then tempId = levelCounter end
+				local tempLevelBut;
+				
+				if gameData:retrieve( "unlocked-"..storyboard.sceneryId.."-"..levelCounter) and ( gameData:retrieve("free-"..storyboard.sceneryId.."-"..levelCounter) or storeData:retrieve("proPurchased") ) then
+					baseDir = nil
+					if not storyboard.getFromResources then baseDir = system.DocumentsDirectory end
+					tempLevelBut = ui.newButton{
+						baseDir = baseDir,
+						default = buttonData[levelCounter].default,
+						over = buttonData[levelCounter].over,
+						id = tempId,
+						onEvent = buttonListener,
+					}
+					buttonsGroup:insert(tempLevelBut)
+				else
+					local lockedButtonListener = function()
+						callUnlockDialog(loadLevelButtons)
+					end
+					tempLevelBut = ui.newButton{
+						baseDir = baseDir,
+						default = buttonData[levelCounter].default,
+						over = buttonData[levelCounter].over,
+						onEvent = lockedButtonListener,
+					}
+					buttonsGroup:insert(tempLevelBut)
+					if tempId then
+						local tempLock = display.newImageRect("locked.png",188/2,208/2)
+						tempLock.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
+						tempLock.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
+						buttonsGroup:insert(tempLock)
+					end
+				end
+				
+				tempLevelBut:scale(.5,.5)
+				tempLevelBut.x = board.x-board.contentWidth/2+board.contentWidth/10*j*3	-board.contentWidth/10
+				tempLevelBut.y = board.y -board.contentHeight/2 + 180 + board.contentHeight/5*i
+				
+				levelCounter = levelCounter+1
+			end
 		end
 	end
+	
 	
 	
 	viewGroup.y = -display.contentHeight
@@ -546,10 +597,10 @@ function callOptions(viewGroup,listener,storyboard)
 				gameData:store("mute", false )
 				gameData:save()
 			else
-				print("heeere")
 				soundButOff.alpha = 1
-				soundButOn.alpha = 0				
+				soundButOn.alpha = 0		
 				storyboard.mute = true
+				audio.stop()
 				gameData:store( "mute", true )
 				gameData:save()
 			end
@@ -568,6 +619,7 @@ function callOptions(viewGroup,listener,storyboard)
 	
 	function buyCarrotsHandler(event)
 		if event.phase == "release"  then
+			storeModule.init(nil)
 			storeModule.sellingDialog("carrots")
 		end
 		return true
@@ -586,6 +638,7 @@ function callOptions(viewGroup,listener,storyboard)
 	
 	function unlockAllHandler(event)
 		if event.phase == "release"  then
+			storeModule.init(nil)
 			storeModule.sellingDialog("pro")
 		end
 		return true

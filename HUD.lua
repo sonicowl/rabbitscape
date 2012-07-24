@@ -282,9 +282,14 @@ function loadActions()
 	
 	actions["options"] = function (event)
 		print("touched "..tostring(event.id))
+		local optionsCloseListener = function() 
+			if not audio.isChannelPlaying(1) and not storyboard.mute then 
+				audio.play(soundAmbience,{loops=-1,channel=1}) 
+			end
+		end
 		sceneDialog = display.newGroup()
 		HUD:insert(sceneDialog)
-		dialogsModule.callOptions(sceneDialog,nil,storyboard)
+		dialogsModule.callOptions(sceneDialog,optionsCloseListener,storyboard)
 	end
 	
 	actions["scores"] = function (event)
@@ -505,83 +510,32 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 	transition.to(blackAlpha,{time=900,alpha = .7,transition = easing.inOutExpo})
 end
 
+function callUnlockDialog(callBackListener)
 
-function callEndingSc(didWon,score,high)
+	local holdingClickBg = display.newRect(0,0,_W,_H)
+	HUD:insert(holdingClickBg)
+	holdingClickBg.alpha = 0.01
+	local touchClosure = function(event) return true end
+	holdingClickBg:addEventListener("touch", touchClosure)
 
-	endGameScreen = display.newGroup()
-	HUD:insert(endGameScreen)
-
-	local blackAlpha = display.newRect(0,0 , _W, _H)
-	blackAlpha:setFillColor(0, 0, 0)
-	blackAlpha.alpha = 0
-	
-	local myRect2 = display.newRect(_W/2-225, _H/2-100 , 450, 200)
-	myRect2.strokeWidth = 3
-	myRect2:setFillColor(0, 0, 0)
-	myRect2.alpha = 0.6
-	myRect2:setStrokeColor(255, 255, 255)
-	
-	local msg = nil
-	local scoreMsg = ""
-	local highMsg = ""
-	if didWon then
-		msg = "YOU CATCHED THE BUNNY!"
-		scoreMsg = "SCORE: "..math.floor(score).." POINTS"
-		highMsg = "HIGHSCORE: "..math.floor(high).." POINTS"
-	else
-		msg = "OH NO! BUNNY ESCAPED!"
+	local function purchaseItCallBack( event )
+		if "clicked" == event.action then
+				local i = event.index
+				if 1 == i then
+					storeModule.init(callBackListener)
+					storeModule.sellingDialog("pro")
+				elseif 2 == i then
+					print('dont want to buy it now!')
+					storyboard.gotoScene( "scene-main", "fade", 1000 )
+					storyboard.gameComplete = true
+				end
+		end
 	end
 	
-	local myText = display.newText(msg, 0, 0, "Poplar Std", 30)
-	myText:setTextColor(255, 255, 255)
-	local scoreText = display.newText(scoreMsg, 0, 0, "Poplar Std", 30)
-	local highText = display.newText(highMsg, 0, 0, "Poplar Std", 15)
-	
-	
-	local resetButton = ui.newButton{
-		default = "buttonRed.png",
-		over = "buttonRedOver.png",
-		onEvent = buttonHandler,
-		id = "restartGame",
-		text = "RETRY",
-		emboss = true
-	}	
-	
-	
-	local nextLevelButton = ui.newButton{
-		default = "buttonGreen.png",
-		over = "buttonGreenOver.png",
-		onEvent = buttonHandler,
-		id = "nextLevel",
-		text = "CONTINUE",
-		emboss = true
-	}
-	
-	--TODO: NEED TO FUTURE CHECK IF THE LEVEL IS ALREADY PASSED ONCE
-	if not didWon then
-		nextLevelButton.alpha = 0
+	local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play all levels!", 
+		{ "Buy it!", "Not now!" }, purchaseItCallBack )
 	end
-	
-	
-	myText.x = _W/2;		myText.y = _H/2-70
-	scoreText.x = _W/2;		scoreText.y = _H/2-40
-	highText.x = _W/2;		highText.y = _H/2-15
-	resetButton.x = _W/2-10-resetButton.contentWidth/2; 	resetButton.y = _H/2+40
-	nextLevelButton.x = _W/2+10+nextLevelButton.contentWidth/2; 	nextLevelButton.y = _H/2+40
-	
-	
-	endGameScreen:insert(blackAlpha)
-	endGameScreen:insert(myRect2)
-	endGameScreen:insert(myText)
-	endGameScreen:insert(scoreText)
-	endGameScreen:insert(highText)
-	endGameScreen:insert(resetButton)
-	endGameScreen:insert(nextLevelButton)
-	
-	transition.to(screenUI,{time=200,y=200,delay=100})
-	transition.to(blackAlpha,{time=300,alpha=.4})
 end
-
 
 
 

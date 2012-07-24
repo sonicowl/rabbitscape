@@ -110,7 +110,7 @@ function scene:enterScene( event )
 	if soundDuration and soundDuration > 1 then
 		audio.seek(math.random(soundDuration), soundAmbience)
 	end
-	if not storyboard.mute then audio.play(soundAmbience,{loops=-1}) end	
+	if not storyboard.mute then audio.play(soundAmbience,{loops=-1,channel=1}) end	
 	
 	local FadeInClosure = function(event)
 		event:removeSelf()

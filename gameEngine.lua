@@ -744,7 +744,7 @@ function restartListener()
 end
 
 function unlockNextLevel()
-	nextLevel = nil
+	local nextLevel = nil
 	if storyboard.getFromResources then
 		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId,system.ResourceDirectory)
 	else
@@ -776,10 +776,20 @@ function goToNextLevel()
 	else
 		nextLevel = jsonLevels.getNextLevel(storyboard.sceneryId,storyboard.levelId)		
 	end
-	if nextLevel and (gameData:retrieve("free-"..nextLevel.scenery.."-"..nextLevel.level) or storeData:retrieve("proPurchased")) then
-		storyboard.sceneryId = nextLevel.scenery
-		storyboard.levelId = nextLevel.level
-		storyboard.gotoScene( "scene-lvlTransitionHelper", "fade", 500 )
+	if nextLevel then
+	
+		local nextLevelListener = function()
+			storyboard.sceneryId = nextLevel.scenery
+			storyboard.levelId = nextLevel.level
+			storyboard.gotoScene( "scene-lvlTransitionHelper", "fade", 500 )
+		end
+		
+		if (gameData:retrieve("free-"..nextLevel.scenery.."-"..nextLevel.level) or storeData:retrieve("proPurchased")) then
+			nextLevelListener()
+		else
+			---here is the implementation needed
+			HUD.callUnlockDialog(nextLevelListener)
+		end
 	else
 		storyboard.gotoScene( "scene-main", "fade", 1000 )
 		storyboard.gameComplete = true
