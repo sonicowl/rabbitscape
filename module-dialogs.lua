@@ -250,33 +250,33 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 
 
 	function callUnlockDialog(callBackListener)
-		local holdingClickBg = display.newRect(0,0,_W,_H)
-		viewGroup:insert(holdingClickBg)
-		holdingClickBg.alpha = 0.01
-		local touchClosure = function(event) return true end
-		holdingClickBg:addEventListener("touch", touchClosure)
-
-		local function purchaseItCallBack( event )
-			if "clicked" == event.action then
-					local i = event.index
-					if 1 == i then
-						local callBackClosure = function()
-							holdingClickBg:removeSelf()
-							holdingClickBg = nil
-							callBackListener()
+		if not storeData:retrieve("proPurchased") then
+			local holdingClickBg = display.newRect(0,0,_W,_H)
+			viewGroup:insert(holdingClickBg)
+			holdingClickBg.alpha = 0.01
+			local touchClosure = function(event) return true end
+			holdingClickBg:addEventListener("touch", touchClosure)
+	
+			local function purchaseItCallBack( event )
+				if "clicked" == event.action then
+						local i = event.index
+						if 1 == i then
+							local callBackClosure = function()
+								holdingClickBg:removeSelf()
+								holdingClickBg = nil
+								callBackListener()
+							end
+							storeModule.init(callBackClosure)
+							storeModule.sellingDialog("pro")
+						elseif 2 == i then
+							print('dont want to buy it now!')
 						end
-						storeModule.init(callBackClosure)
-						storeModule.sellingDialog("pro")
-					elseif 2 == i then
-						print('dont want to buy it now!')
-						storyboard.gotoScene( "scene-main", "fade", 1000 )
-						storyboard.gameComplete = true
-					end
+				end
 			end
+	
+			local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play all levels!", 
+				{ "Buy it!", "Not now!" }, purchaseItCallBack )
 		end
-		
-		local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play all levels!", 
-			{ "Buy it!", "Not now!" }, purchaseItCallBack )
 	end	
 	
 	local loadLevelButtons = function()
@@ -334,7 +334,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 			end
 		end
 	end
-	
+	loadLevelButtons()
 	
 	
 	viewGroup.y = -display.contentHeight
@@ -596,6 +596,7 @@ function callOptions(viewGroup,listener,storyboard)
 				gameData:store("mute", false )
 				gameData:save()
 			else
+				print("muted")
 				soundButOff.alpha = 1
 				soundButOn.alpha = 0		
 				storyboard.mute = true
@@ -608,7 +609,12 @@ function callOptions(viewGroup,listener,storyboard)
 	
 	soundButOff.x = _W*.5+160;	soundButOff.y = _H/2-220
 	soundButOn.x = _W*.5+160;	soundButOn.y = _H/2-220
-	soundButOff.alpha = 0
+	if gameData:retrieve("mute") then
+		soundButOn.alpha = 0
+	else
+		soundButOff.alpha = 0
+	end
+	
 	soundButOn.id = true
 	soundButOff.id = false
 	soundButOn:addEventListener("touch",soundButListener)

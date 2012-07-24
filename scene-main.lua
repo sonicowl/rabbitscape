@@ -13,12 +13,7 @@ social = require("module-social")
 require("ice")
 transitioning = true
 
-gameData = ice:loadBox( "gameData" )
-gameData:storeIfNew( "mute", false )
-gameData:storeIfNew( "unlocked-".."The Park".."-".."1", true )
-gameData:storeIfNew( "free-".."The Park".."-".."1", true )
-gameData:storeIfNew( "free-".."The Park".."-".."2", true )
-gameData:save()
+
 
 _W = display.contentWidth;
 _H = display.contentHeight;
@@ -121,6 +116,14 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
+
+	gameData = ice:loadBox( "gameData" )
+	gameData:storeIfNew( "mute", false )
+	gameData:storeIfNew( "unlocked-".."The Park".."-".."1", true )
+	gameData:storeIfNew( "free-".."The Park".."-".."1", true )
+	gameData:storeIfNew( "free-".."The Park".."-".."2", true )
+	gameData:save()
+
 	menuGroup = group
 	lastScene = storyboard.getPrevious()
 	print("COMING FROM "..tostring(lastScene))
@@ -226,7 +229,8 @@ function scene:createScene( event )
 	circleGroup.x = -_W
 	
 	storyboard.mute = gameData:retrieve("mute")
-	
+	print("mute prefs:"..tostring(storyboard.mute))
+
 end
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
