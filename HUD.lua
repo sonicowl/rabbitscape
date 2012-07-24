@@ -13,7 +13,7 @@ function init(viewGroup,storyBoard,listenersTable)
 	actions = {}
 	storyboard = storyBoard
 	dialogsModule = require("module-dialogs")
-	dialogsModule.init()
+	dialogsModule.init(storyBoard)
 	storeModule = require("module-store")
 
 	require("ice")
@@ -211,7 +211,7 @@ function loadActions()
 
 	actions["sceneBack"] = function(event)
 		print("touched "..tostring(event.id))
-		
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		local dialogGroup = display.newGroup()
 		HUD:insert(dialogGroup)
 		local menuClosure = function(option) if option then quitListener() else showMenu() end end
@@ -221,6 +221,7 @@ function loadActions()
 
 	actions["restartGame"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		if endGameScreen~=nil and endGameScreen.numChildren ~= nil and endGameScreen.numChildren > 0 then
 			restartListener()
 			pauseListener()
@@ -232,12 +233,14 @@ function loadActions()
 	
 	actions["nextLevel"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		closeGroup(endGameScreen,nextLevelListener)
 	end	
 	
 		
 	actions["endToMenu"] = function (event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		restartListener()
 		pauseListener()
 		local transitionClosure = function(event) actions["showMenu"](); resumeGameListener(); end
@@ -246,6 +249,7 @@ function loadActions()
 	
 	actions["resumeGame"] = function(event)
 		--print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		closeMenu()
 		gridBefore = gameData:retrieve("gridVisible")
 		gameData = ice:loadBox("gameData")
