@@ -263,6 +263,7 @@ function loadActions()
 	
 
 	actions["showMenu"] = function(event)
+		if not storyboard.mute and event then audio.play(defaultClickSound) end 
 		if not transitioning then
 			if menuDialog == nil then
 				--print("touched "..tostring(event.id))
@@ -276,6 +277,7 @@ function loadActions()
 
 	actions["carrotButton"] = function (event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		gameEngine.eatCarrot()
 		carrotUsedBut = display.newImageRect("carrot-used.png", 139/2, 139/2)
 		carrotUsedBut.x = carrotButton.x	carrotUsedBut.y = carrotButton.y
@@ -286,12 +288,14 @@ function loadActions()
 	
 	actions["levelSelect"] = function (event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		closeMenu(true)
 		levelSelectListener()
 	end
 	
 	actions["options"] = function (event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		local optionsCloseListener = function() 
 			if not audio.isChannelPlaying(1) and not storyboard.mute then 
 				audio.play(soundAmbience,{loops=-1,channel=1}) 
@@ -304,11 +308,13 @@ function loadActions()
 	
 	actions["scores"] = function (event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		social.showGCPopup()
 	end
 	
 	actions["howtoplay"] = function (event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		local dialogGroup = display.newGroup()
 		HUD:insert(dialogGroup)
 		local menuClosure = function(event) showMenu() print("calling listener") end

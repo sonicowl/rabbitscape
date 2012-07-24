@@ -50,6 +50,13 @@ function scene:enterScene( event )
 	sceneDialog = display.newGroup()
 	group:insert(sceneDialog)
 	dialogsModule.callHowToPlay(sceneDialog,closeButtonListener)
+	
+	if not storyboard.bgMusic then
+		storyboard.bgMusic = audio.loadStream("comical_game.mp3")
+	end
+	if not audio.isChannelPlaying(1) and not storyboard.mute then 
+		audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) 
+	end
 
 end
  

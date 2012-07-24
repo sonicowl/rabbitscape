@@ -54,6 +54,12 @@ function scene:enterScene( event )
 	group:insert(sceneDialog)
 	dialogsModule.callOptions(sceneDialog,closeButtonListener,storyboard)
 	
+	if not storyboard.bgMusic then
+		storyboard.bgMusic = audio.loadStream("comical_game.mp3")
+	end
+	if not audio.isChannelPlaying(1) and not storyboard.mute then 
+		audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) 
+	end
 	--soundOptions = audio.loadStream("stream-ambience.wav")
 	--if not storyboard.mute then audio.play(soundOptions,{loops=-1}) end	
 end

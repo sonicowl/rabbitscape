@@ -266,7 +266,6 @@ function scene:enterScene( event )
 	jsonLevels.checkForUpdates(checkUpdatedListener)
 	
 
-	storyboard.bgMusic = audio.loadStream("comical_game.mp3")
 	--soundIntro = audio.loadStream("stream-intro.wav")
 	soundElementIn = audio.loadSound("sound-element-in.wav")
 	soundWee = audio.loadSound("sound-wee.wav")
@@ -276,9 +275,12 @@ function scene:enterScene( event )
 	local audioClosure1 = function() if not storyboard.mute then audio.play(soundElementIn) end end
 	local audioClosure2 = function() if not storyboard.mute then audio.play(soundWee) end end
 	
-	
-	
-	if not storyboard.mute then audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) end	
+	if not storyboard.bgMusic then
+		storyboard.bgMusic = audio.loadStream("comical_game.mp3")
+	end
+	if not audio.isChannelPlaying(1) and not storyboard.mute then 
+		audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) 
+	end
 	
 	local startClosure2 = function(event)
 		transition.to(mainSign,{time=500/2,y=mainSign.y+_H/2,transition=easing.outExpo,onStart=audioClosure1})

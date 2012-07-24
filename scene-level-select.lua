@@ -61,6 +61,15 @@ function scene:enterScene( event )
 	group:insert(sceneDialog)
 	dialogsModule.callLevelSelector(sceneDialog,storyboard,closeButtonListener)
 	
+	
+	if not storyboard.bgMusic then
+		storyboard.bgMusic = audio.loadStream("comical_game.mp3")
+	end
+	if not audio.isChannelPlaying(1) and not storyboard.mute then 
+		audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) 
+	end
+	
+
 	--soundSceneries = audio.loadStream("stream-internal1.wav")
 	--soundSlide = audio.loadSound("sound-slide.wav")
 	--if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
