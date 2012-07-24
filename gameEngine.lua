@@ -511,7 +511,7 @@ function moveRabbit()
 						highScore = gameScore
 					end
 					unlockNextLevel()
-					HUD.callEndingScreen(true,gameScore,highScore,usedCarrot,secsPlaying,rocksPut)
+					timer.performWithDelay(1000,function() HUD.callEndingScreen(true,gameScore,highScore,usedCarrot,secsPlaying,rocksPut) end)
 					if not storyboard.mute then audio.play(soundVictory) end
 					return false
 				end

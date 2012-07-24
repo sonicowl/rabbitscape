@@ -263,6 +263,7 @@ end
 
 
 function createHexGrid(map) 
+	gameData = ice:loadBox("gameData")
 	if gameData:retrieve("gridVisible") then
 		for j=1,table.getn(map) do
 			if map[j] ~= nil then
@@ -285,7 +286,7 @@ function createHexGrid(map)
 				end
 			end
 		end
-		if not hexGrid then displayGroup.alpha = 0 end
+		if not hexGrid and displayGroup then displayGroup.alpha = 0 end
 	end
 end
 
