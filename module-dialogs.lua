@@ -620,7 +620,51 @@ function callOptions(viewGroup,listener,storyboard)
 	soundButOn:addEventListener("touch",soundButListener)
 	soundButOff:addEventListener("touch",soundButListener)
 	viewGroup:insert(soundButOff)
-	viewGroup:insert(soundButOn)
+	viewGroup:insert(soundButOn)	
+	
+
+	local gridText = display.newText("SHOW GRID", 0, 0, "Poplar Std", 50)
+	gridText:setTextColor(255, 255, 255)
+	gridText.x = _W*.5-100;					gridText.y = _H/2-120
+	viewGroup:insert(gridText)
+	
+	local gridButOff = display.newImageRect("bt-2-off.png",243/2,148/2)
+	local gridButOn = display.newImageRect("bt-2-on.png",243/2,148/2)
+	local function gridButListener(event)
+		print("evennt"..event.phase)
+		if event.phase == "began" then
+			if not event.target.id then
+				gridButOff.alpha = 0
+				gridButOn.alpha = 1
+				storyboard.mute = false
+				gameData:store("gridVisible", true )
+				gameData:save()
+			else
+				print("GRID OFF")
+				gridButOff.alpha = 1
+				gridButOn.alpha = 0	
+				gameData:store( "gridVisible", false )
+				gameData:save()
+			end
+		end
+	end
+	
+	gridButOff.x = _W*.5+160;	gridButOff.y = _H/2-120
+	gridButOn.x = _W*.5+160;	gridButOn.y = _H/2-120
+	if not gameData:retrieve("gridVisible") then
+		gridButOn.alpha = 0
+	else
+		gridButOff.alpha = 0
+	end
+	
+	gridButOn.id = true
+	gridButOff.id = false
+	gridButOn:addEventListener("touch",gridButListener)
+	gridButOff:addEventListener("touch",gridButListener)
+	viewGroup:insert(gridButOff)
+	viewGroup:insert(gridButOn)
+	
+	
 	
 	function buyCarrotsHandler(event)
 		if event.phase == "release"  then

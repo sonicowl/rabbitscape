@@ -512,6 +512,7 @@ function moveRabbit()
 					end
 					unlockNextLevel()
 					HUD.callEndingScreen(true,gameScore,highScore,usedCarrot,secsPlaying,rocksPut)
+					if not storyboard.mute then audio.play(soundVictory) end
 					return false
 				end
 			end
@@ -525,6 +526,8 @@ function moveRabbit()
 				stopGame()
 				print("YOU LOOSE")
 				HUD.callEndingScreen(false)
+				if not storyboard.mute then audio.play(soundLaugh) end
+				if not storyboard.mute then audio.play(soundFail) end
 			end
 			
 			--AQUI VAI TE UM ESQUEMA PRA TRES PULINHOS!
@@ -532,6 +535,8 @@ function moveRabbit()
 			if nearExit then
 				stopGame()
 				print("YOU LOOSE")
+				if not storyboard.mute then audio.play(soundLaugh) end
+				if not storyboard.mute then audio.play(soundFail) end
 				local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,nearExit.x,nearExit.y)
 				local escapeClosure2 = function(event) 
 					escapeRabbit(cardinalDirec,nearExit.x,nearExit.y) 

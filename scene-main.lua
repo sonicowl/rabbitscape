@@ -122,6 +122,8 @@ function scene:createScene( event )
 	gameData:storeIfNew( "unlocked-".."The Park".."-".."1", true )
 	gameData:storeIfNew( "free-".."The Park".."-".."1", true )
 	gameData:storeIfNew( "free-".."The Park".."-".."2", true )
+	gameData:storeIfNew( "gridVisible", true )
+	
 	gameData:save()
 
 	menuGroup = group
@@ -149,10 +151,17 @@ function scene:createScene( event )
 
 	circleGroup = display.newGroup()
 
-	cityCircle = display.newImageRect("main-hole.png",1002/2,996/2)
+	--cityCircle = display.newImageRect("main-hole.png",1002/2,996/2)
 	--cityCircle.x = _W/2;	cityCircle.y = _H/2-30
-	cityCircle.x = _W/2;	cityCircle.y = _H/2-30
-	circleGroup:insert(cityCircle)
+	circleButton = ui.newButton{
+		default = "main-hole.png",
+		over = "hole-2.png",
+		onEvent = buttonHandler,
+		id = "play",
+	}
+	circleButton:scale(.5,.5)
+	circleButton.x = _W/2;	circleButton.y = _H/2-30
+	circleGroup:insert(circleButton)
 	
 	mainSign = display.newImageRect("main-sign.png",1094/2,674/2)
 	--mainSign.x = _W/2+20;	mainSign.y = _H/2-280

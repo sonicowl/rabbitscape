@@ -3,9 +3,7 @@
 -- Version 1.0
 -- Author: Thiago Ramos
 -- Functions:
---		hexDistance
---		hex_accessible
---		findPath
+--		
 -----------------------------------------
 
 
@@ -19,6 +17,7 @@ function init(viewGroup,storyBoard,listenersTable)
 	storeModule = require("module-store")
 
 	require("ice")
+	gameData = ice:loadBox("gameData")
 	storeData = ice:loadBox( "storeData" )
 	HUD = display.newGroup()
 	viewGroup:insert(HUD)
@@ -248,6 +247,13 @@ function loadActions()
 	actions["resumeGame"] = function(event)
 		--print("touched "..tostring(event.id))
 		closeMenu()
+		gridBefore = gameData:retrieve("gridVisible")
+		gameData = ice:loadBox("gameData")
+		gridAfter = gameData:retrieve("gridVisible")
+		print("gridBefore:"..tostring(gridBefore).." gridAfter:"..tostring(gridAfter))
+		if gridBefore ~= gridAfter then
+			gameEngine.setGrid()
+		end
 		resumeGameListener()
 	end	
 	
@@ -439,10 +445,10 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		local totalTimeText = display.newText(timeEndText, 0, 0, "Poplar Std", 30)	
 		totalTimeText:setTextColor(197,240,132)
 		
-		local carrotsMsg = "NO"
-		if usedCarrot then carrotsMsg = "YES" end
-		local carrotsText = display.newText(carrotsMsg, 0, 0, "Poplar Std", 30)	
-		carrotsText:setTextColor(197,240,132)	
+		--local carrotsMsg = "NO"
+		--if usedCarrot then carrotsMsg = "YES" end
+		--local carrotsText = display.newText(carrotsMsg, 0, 0, "Poplar Std", 30)	
+		--carrotsText:setTextColor(197,240,132)	
 		
 		local scoreText = display.newText(math.floor(score), 0, 0, "Poplar Std", 50)
 		scoreText:setTextColor(253,222,59)
@@ -452,18 +458,18 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 
 		objectsText:setReferencePoint(display.CenterLeftReferencePoint);
 		totalTimeText:setReferencePoint(display.CenterLeftReferencePoint);
-		carrotsText:setReferencePoint(display.CenterLeftReferencePoint);
+		--carrotsText:setReferencePoint(display.CenterLeftReferencePoint);
 		scoreText:setReferencePoint(display.CenterLeftReferencePoint);
 		highText:setReferencePoint(display.CenterLeftReferencePoint);
 		
 		objectsText.x = _W/2+80 	objectsText.y = _H/2+50
 		totalTimeText.x = _W/2+80 		totalTimeText.y = _H/2+80
-		carrotsText.x = _W/2+80	carrotsText.y = _H/2+110
+		--carrotsText.x = _W/2+80	carrotsText.y = _H/2+110
 		scoreText.x = _W/2+80 		scoreText.y = _H/2+165
 		highText.x = _W/2+80 		highText.y = _H/2+205
 		endGameScreen:insert(objectsText)
 		endGameScreen:insert(totalTimeText)
-		endGameScreen:insert(carrotsText)
+		--endGameScreen:insert(carrotsText)
 		endGameScreen:insert(scoreText)
 		endGameScreen:insert(highText)
 

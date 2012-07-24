@@ -16,6 +16,9 @@ module(..., package.seeall)
 
 function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 	
+	require("ice")
+	gameData = ice:loadBox("gameData")
+	
 	-------------- DISPLAY GROUPS
 	hexGroup = display.newGroup()
 	rabbitGroup = display.newGroup()
@@ -67,7 +70,9 @@ function createHexMap(x,y,w,h,lines,columns,defaultCellType,viewGroup)
 			levelMap[tempColumn][tempLine].mapRef = levelMap
 		end
 	end
-	createHexGrid(levelMap) 
+	if gameData:retrieve("gridVisible") then
+		createHexGrid(levelMap) 
+	end
 	return levelMap
 end
 
@@ -218,7 +223,7 @@ function placeObject(cell, object,listener)
 	local objectId = getCellTypeIdByTag(cell.mapRef,object)
 	changeCell(cell,objectId)
 	local objectType = cell.mapRef.objects[cell.id]
-	if objectType.isDynamic then
+	if objectType.isDynamic and (gameData:retrieve("gridVisible") or object ~= "endCell") then
 		local imgName = objectType.img
 		if objectType.hasPerspective then imgName = "p"..getPerspectiveBlock(cell.hexX,cell.hexY)..imgName end
 		if objectType.isAnimated then
@@ -258,28 +263,30 @@ end
 
 
 function createHexGrid(map) 
-	for j=1,table.getn(map) do
-		if map[j] ~= nil then
-			for i=1,table.getn(map[j]) do
-				if map[j][i] and map.objects[map[j][i].id].tag ~= "rock" and map.objects[map[j][i].id].tag ~= "endCell" then
-					local hexCell = map[j][i]
-					local tempHexagon = display.newImageRect(map.objects[1].img,hexCell.hexW*.9,hexCell.hexH)
-					tempHexagon.x = hexCell.hexX
-					tempHexagon.y = hexCell.hexY
-					--if map.objects[1].alpha ~= nil then tempHexagon.alpha = map.objects[1].alpha end
-					hexGroup:insert(tempHexagon)
-					
-					--add a label
-					if displayTexts then
-						if hexCell.text == nil then	hexCell.text = display.newText("",hexCell.hexX,hexCell.hexY,native.systemFont,22) end
-						hexCell.text.text = hexCell.terrainCost
-						numbersGroup:insert(hexCell.text)
+	if gameData:retrieve("gridVisible") then
+		for j=1,table.getn(map) do
+			if map[j] ~= nil then
+				for i=1,table.getn(map[j]) do
+					if map[j][i] and map.objects[map[j][i].id].tag ~= "rock" and map.objects[map[j][i].id].tag ~= "endCell" then
+						local hexCell = map[j][i]
+						local tempHexagon = display.newImageRect(map.objects[1].img,hexCell.hexW*.9,hexCell.hexH)
+						tempHexagon.x = hexCell.hexX
+						tempHexagon.y = hexCell.hexY
+						--if map.objects[1].alpha ~= nil then tempHexagon.alpha = map.objects[1].alpha end
+						hexGroup:insert(tempHexagon)
+						
+						--add a label
+						if displayTexts then
+							if hexCell.text == nil then	hexCell.text = display.newText("",hexCell.hexX,hexCell.hexY,native.systemFont,22) end
+							hexCell.text.text = hexCell.terrainCost
+							numbersGroup:insert(hexCell.text)
+						end
 					end
 				end
 			end
 		end
+		if not hexGrid then displayGroup.alpha = 0 end
 	end
-	if not hexGrid then displayGroup.alpha = 0 end
 end
 
 function updateHexGrid(map)

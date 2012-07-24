@@ -106,6 +106,12 @@ function scene:enterScene( event )
 	soundCarrot = audio.loadSound("sound-carrot.wav")
 	soundPlaceObject = audio.loadSound("sound-objects.wav")
 	soundBlocked = audio.loadSound("sound-blocked.wav")
+	soundFail = audio.loadSound("sound-fail.mp3")
+	soundVictory = audio.loadSound("sound-victory.mp3")
+	soundLaugh = audio.loadSound("sound-laugh.wav")
+	
+	
+	
 	soundDuration = audio.getDuration(soundAmbience)*.9
 	if soundDuration and soundDuration > 1 then
 		audio.seek(math.random(soundDuration), soundAmbience)
@@ -132,12 +138,18 @@ function scene:exitScene( event )
 	audio.dispose(soundCarrot)
 	audio.dispose(soundPlaceObject)
 	audio.dispose(soundBlocked)
+	audio.dispose(soundFail)
+	audio.dispose(soundVictory)
+	audio.dispose(soundLaugh)
 
 	soundAmbience = nil
 	soundJump = nil
 	soundCarrot = nil
 	soundPlaceObject = nil
 	soundBlocked = nil
+	soundFail = nil
+	soundVictory = nil
+	soundLaugh = nil
 	
 end
 
