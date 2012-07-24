@@ -357,6 +357,7 @@ function refreshObjects(map,cellTag)
 			end
 		end
 	end
+	updateHexGrid(map)
 end
 
 
