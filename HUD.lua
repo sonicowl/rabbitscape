@@ -534,7 +534,6 @@ function callUnlockDialog(callBackListener)
 	
 	local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play all levels!", 
 		{ "Buy it!", "Not now!" }, purchaseItCallBack )
-	end
 end
 
 
