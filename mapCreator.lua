@@ -223,7 +223,8 @@ function placeObject(cell, object,listener)
 	local objectId = getCellTypeIdByTag(cell.mapRef,object)
 	changeCell(cell,objectId)
 	local objectType = cell.mapRef.objects[cell.id]
-	if objectType.isDynamic and (gameData:retrieve("gridVisible") or object ~= "endCell") then
+	if not gameData:retrieve("gridVisible") and object == "endCell" then objectType.isDynamic = false end
+	if objectType.isDynamic then
 		local imgName = objectType.img
 		if objectType.hasPerspective then imgName = "p"..getPerspectiveBlock(cell.hexX,cell.hexY)..imgName end
 		if objectType.isAnimated then
@@ -231,11 +232,12 @@ function placeObject(cell, object,listener)
 			print("spriteName = "..spriteSheetName)
 			local tempSheet = sprite.newSpriteSheetFromData( imgName, require(spriteSheetName).getSpriteSheetData() )
 			local tempSet = sprite.newSpriteSet(tempSheet,1,8)
-			sprite.add(tempSet,"loop",1,8,1000)
+			sprite.add(tempSet,"loop",1,7,1000,-2)
 			tempObject = sprite.newSprite(tempSet)
 			tempObject:prepare("loop")
 			tempObject:play()
-			tempObject:scale(.5,.5)
+			tempObject:scale(.4,.4)
+			tempObject.alpha = .7
 		else
 			tempObject = display.newImageRect(imgName,objectType.imgW,objectType.imgH)
 		end
@@ -286,8 +288,8 @@ function createHexGrid(map)
 				end
 			end
 		end
-		if not hexGrid and displayGroup then displayGroup.alpha = 0 end
 	end
+	if not hexGrid or not gameData:retrieve("gridVisible")  and hexGroup then hexGroup.alpha = 0 end
 end
 
 function updateHexGrid(map)
@@ -333,11 +335,14 @@ function setHexGrid(map)
 			map.objects[getCellTypeIdByTag(map,dynamicExits[i])].isDynamic = true
 			refreshObjects(map,dynamicExits[i])
 		end
+		map.objects[getCellTypeIdByTag(map,"endCell")].isDynamic = true
+		refreshObjects(map,"endCell")
 	end
 end
 
 
 function refreshObjects(map,cellTag)
+	gameData = ice:loadBox("gameData")
 	for j=1,#map do
 		if map[j] then
 			for i=1,#map[j] do

@@ -465,7 +465,7 @@ function callEndingScreen(didWon,score,high,usedCarrot,gameTime,objectsUsed)
 		objectsText.x = _W/2+80 	objectsText.y = _H/2+50
 		totalTimeText.x = _W/2+80 		totalTimeText.y = _H/2+80
 		--carrotsText.x = _W/2+80	carrotsText.y = _H/2+110
-		scoreText.x = _W/2+80 		scoreText.y = _H/2+135
+		scoreText.x = _W/2+80 		scoreText.y = _H/2+145
 		highText.x = _W/2+80 		highText.y = _H/2+205
 		endGameScreen:insert(objectsText)
 		endGameScreen:insert(totalTimeText)
