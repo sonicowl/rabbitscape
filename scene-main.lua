@@ -67,6 +67,7 @@ function loadActions()
 
 	actions["play"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		if hasUpdates then requestSync()
 		else
 			local butClosure = function(event)	storyboard.gotoScene( "scene-scenery-select", {time=100} ) end
@@ -77,6 +78,7 @@ function loadActions()
 	
 	actions["help"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		local butClosure = function(event)	storyboard.gotoScene( "scene-help", {time=100} ) end
 		goOutAnimation(butClosure)
 		transitioning = true
@@ -84,6 +86,7 @@ function loadActions()
 	
 	actions["credits"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		local butClosure = function(event)	storyboard.gotoScene( "scene-credits", {time=100} ) end
 		goOutAnimation(butClosure)
 		transitioning = true
@@ -91,6 +94,7 @@ function loadActions()
 	
 	actions["options"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		local butClosure = function(event)	storyboard.gotoScene( "scene-options", {time=100} ) end
 		goOutAnimation(butClosure)
 		transitioning = true
@@ -98,6 +102,7 @@ function loadActions()
 	
 	actions["GameCenter"] = function(event)
 		print("touched "..tostring(event.id))
+		if not storyboard.mute then audio.play(defaultClickSound) end 
 		social.showGCPopup()
 	end	
 	
@@ -130,7 +135,7 @@ function scene:createScene( event )
 	lastScene = storyboard.getPrevious()
 	print("COMING FROM "..tostring(lastScene))
 	social.init()
-	dialogsModule.init()
+	dialogsModule.init(storyboard)
 	gameStore.init()
 	
 	actions = {}
@@ -265,6 +270,7 @@ function scene:enterScene( event )
 	--soundIntro = audio.loadStream("stream-intro.wav")
 	soundElementIn = audio.loadSound("sound-element-in.wav")
 	soundWee = audio.loadSound("sound-wee.wav")
+	defaultClickSound = audio.loadSound("sound-stage-button.wav")	
 
 	
 	local audioClosure1 = function() if not storyboard.mute then audio.play(soundElementIn) end end

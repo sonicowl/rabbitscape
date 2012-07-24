@@ -26,7 +26,7 @@ function scene:createScene( event )
 	local group = self.view
 	lastScene = storyboard.getPrevious()
 
-	dialogsModule.init()
+	dialogsModule.init(storyboard)
 	
 	local bg = display.newImageRect("bg3.jpg",_VW,_VH)
 	bg.x = _W/2

@@ -9,12 +9,13 @@
 
 module(..., package.seeall)
 
-function init()
+function init(storyBoard)
 	require ("ui")
 	slideView = require("slideView")
 	jsonLevels = require ("jsonLevels")
 	jsonLevels.init()
 	require("ice")
+	storyboard = storyBoard
 	gameData = ice:loadBox( "gameData" )
 	storeData = ice:loadBox("storeData")
 	storeModule = require("module-store")
@@ -66,6 +67,7 @@ function callScenerySelector(viewGroup,storyboard,closeStageListener)
 			local closeClosure = function(event) if closeStageListener then dialogTransitioning = false closeStageListener() end event:removeSelf(); event = nil; end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			dialogTransitioning = true
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 		end
 		return true
 	end
@@ -190,6 +192,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 			local closeClosure = function(event) dialogTransitioning = false event:removeSelf(); event = nil; if closeListener then closeListener() end  end
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			dialogTransitioning = true
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 		end
 		return true
 	end
@@ -370,6 +373,7 @@ function callHowToPlay(viewGroup,listener)
 				event:removeSelf(); 
 				event = nil; 
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
@@ -422,6 +426,7 @@ function callCredits(viewGroup,listener)
 				event:removeSelf(); 
 				event = nil; 
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
@@ -491,6 +496,7 @@ function callQuitGame(viewGroup,listener)
 				event = nil; 
 				if listener then listener(false) end
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
@@ -506,6 +512,7 @@ function callQuitGame(viewGroup,listener)
 				event = nil; 
 				if listener then listener(true) end
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 			transition.to(holdingClickBg,{time=750,alpha = 0.01,transition = easing.inExpo})
@@ -604,6 +611,7 @@ function callOptions(viewGroup,listener,storyboard)
 				gameData:store( "mute", true )
 				gameData:save()
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 		end
 	end
 	
@@ -646,6 +654,7 @@ function callOptions(viewGroup,listener,storyboard)
 				gameData:store( "gridVisible", false )
 				gameData:save()
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 		end
 	end
 	
@@ -670,6 +679,7 @@ function callOptions(viewGroup,listener,storyboard)
 		if event.phase == "release"  then
 			storeModule.init(nil)
 			storeModule.sellingDialog("carrots")
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 		end
 		return true
 	end
@@ -689,6 +699,7 @@ function callOptions(viewGroup,listener,storyboard)
 		if event.phase == "release"  then
 			storeModule.init(nil)
 			storeModule.sellingDialog("pro")
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 		end
 		return true
 	end
@@ -712,6 +723,7 @@ function callOptions(viewGroup,listener,storyboard)
 				event = nil; 
 				dialogTransitioning = false
 			end
+			if not storyboard.mute then audio.play(defaultClickSound) end 
 			dialogTransitioning = true
 			transition.to(viewGroup,{time=800,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
