@@ -254,22 +254,11 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 
 	function callUnlockDialog(callBackListener)
 		if not storeData:retrieve("proPurchased") then
-			local holdingClickBg = display.newRect(0,0,_W,_H)
-			viewGroup:insert(holdingClickBg)
-			holdingClickBg.alpha = 0.01
-			local touchClosure = function(event) return true end
-			holdingClickBg:addEventListener("touch", touchClosure)
-	
 			local function purchaseItCallBack( event )
 				if "clicked" == event.action then
 						local i = event.index
 						if 1 == i then
-							local callBackClosure = function()
-								holdingClickBg:removeSelf()
-								holdingClickBg = nil
-								callBackListener()
-							end
-							storeModule.init(callBackClosure)
+							storeModule.init(callBackListener)
 							storeModule.sellingDialog("pro")
 						elseif 2 == i then
 							print('dont want to buy it now!')
@@ -414,9 +403,9 @@ function callCredits(viewGroup,listener)
 	boardIcon.x = _W/2; boardIcon.y = _H/2-board.contentHeight/2+20
 	viewGroup:insert(boardIcon)
 
-	--local content = display.newImageRect("content-howtoplay.png", math.floor(854/2),math.floor(1350/2))
-	--content.x = _W/2; content.y = _H/2+20
-	--viewGroup:insert(content)
+	local content = display.newImageRect("licensing.png", math.floor(1053/2),math.floor(1683/2))
+	content.x = _W/2; content.y = _H/2+20
+	viewGroup:insert(content)
 	
 	function closeButHandler(event)
 		if event.phase == "release" and not dialogTransitioning then

@@ -269,7 +269,7 @@ function scene:enterScene( event )
 	--soundIntro = audio.loadStream("stream-intro.wav")
 	soundElementIn = audio.loadSound("sound-element-in.wav")
 	soundWee = audio.loadSound("sound-wee.wav")
-	defaultClickSound = audio.loadSound("sound-stage-button.wav")	
+	defaultClickSound = audio.loadSound("sound-button.wav")	
 
 	
 	local audioClosure1 = function() if not storyboard.mute then audio.play(soundElementIn) end end

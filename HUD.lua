@@ -528,11 +528,6 @@ end
 
 function callUnlockDialog(callBackListener)
 
-	local holdingClickBg = display.newRect(0,0,_W,_H)
-	HUD:insert(holdingClickBg)
-	holdingClickBg.alpha = 0.01
-	local touchClosure = function(event) return true end
-	holdingClickBg:addEventListener("touch", touchClosure)
 
 	local function purchaseItCallBack( event )
 		if "clicked" == event.action then
