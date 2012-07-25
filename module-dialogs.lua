@@ -300,7 +300,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 					}
 					buttonsGroup:insert(tempLevelBut)
 				else
-					local lockedButtonListener = function()
+					local lockedButtonListener = function(event)
 						if ("release" == event.phase) and (event.id) and not dialogTransitioning then
 							callUnlockDialog(loadLevelButtons)
 						end
