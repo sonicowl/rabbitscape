@@ -232,12 +232,12 @@ function placeObject(cell, object,listener)
 			print("spriteName = "..spriteSheetName)
 			local tempSheet = sprite.newSpriteSheetFromData( imgName, require(spriteSheetName).getSpriteSheetData() )
 			local tempSet = sprite.newSpriteSet(tempSheet,1,8)
-			sprite.add(tempSet,"loop",1,12,1200)
+			sprite.add(tempSet,"loop",2,15,1000)
 			tempObject = sprite.newSprite(tempSet)
 			tempObject:prepare("loop")
 			tempObject:play()
 			tempObject:scale(.4,.4)
-			tempObject.alpha = .7
+			--tempObject.alpha = .7
 		else
 			tempObject = display.newImageRect(imgName,objectType.imgW,objectType.imgH)
 		end
