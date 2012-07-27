@@ -555,7 +555,7 @@ function checkForUpdates(listener)
 			local path2 = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
 			local file1 = io.open( path, "r" )
 			local file2 = io.open( path2, "r" )
-			if file1
+			if file1 then
 				if file2 then		
 					local line1 = file1:read()
 					local line2 = file2:read()
