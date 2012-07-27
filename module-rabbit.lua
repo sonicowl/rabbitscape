@@ -33,6 +33,7 @@ function start(x0,y0)
 		cardinalDirec = "NW"
 		bunnyInstances[i]:prepare("breathingNW")
 		bunnyInstances[i]:play()
+		bunnyInstances[i]:addEventListener("sprite", bunnySpriteListener)
 		--bunnyInstances[i].currentFrame = 4
 		if i > 1 then bunnyInstances[i].alpha = 0 end
 	end
@@ -119,22 +120,23 @@ function loadRabbitSprites()
 	end
 end
 
+function bunnySpriteListener(event)
+	print("event: "..event.phase)
+	if event.phase == "end" then
+		event.target:prepare("breathing"..cardinalDirec)
+		event.target:play()
+		if movingRabbit then movingRabbit = false end
+	end
+end
 
 function bunnyAnimation(event)
 	if not lastLoop then lastLoop = event.time end
 	deltaT = event.time - lastLoop
 	if deltaT > 5000 and not movingRabbit then
 		local perspBlock = mapCreator.getPerspectiveBlock(bunny.x,bunny.y)
-		local tempClosure = function(event) 
-			if event.phase == "end" then
-				bunnyInstances[perspBlock]:prepare("breathing"..cardinalDirec)
-				bunnyInstances[perspBlock]:play()
-			end
-		end
 		local randChoice = math.random(#bunnyAnimations)
 		bunnyInstances[perspBlock]:prepare(bunnyAnimations[randChoice]..cardinalDirec)
 		bunnyInstances[perspBlock]:play()
-		bunnyInstances[perspBlock]:addEventListener("sprite", tempClosure)
 		lastLoop = event.time
 	end
 end
@@ -147,24 +149,17 @@ function moveRabbitTo(x,y,endListener)
 	print("RUNNING RABBIT TO "..cardinalDirec)
 	bunny.x = x+5
 	bunny.y = y+10
-	
+	if endListener then 
+		Runtime:removeEventListener("enterFrame",bunnyAnimation)
+		timer.performWithDelay(600,endListener)
+	end
 	if cardinalDirec then
 		local perspBlock = mapCreator.getPerspectiveBlock(x,y)
-		local tempClosure = function(event) 
-			if event.phase == "end" then
-				if endListener then endListener() end
-				movingRabbit = false
-				bunnyInstances[perspBlock]:prepare("breathing"..cardinalDirec)
-				bunnyInstances[perspBlock]:play()
-			end
-		end
-		
 		for i = 1 , 4 do
 			if i == perspBlock then
 				bunnyInstances[i]:prepare("run"..cardinalDirec)
 				bunnyInstances[i]:play()
 				bunnyInstances[i].alpha = 1
-				bunnyInstances[i]:addEventListener("sprite", tempClosure)
 				rabbitTransition = transition.to(bunnyInstances[i],{x=bunny.x, y=bunny.y ,time=4*80})
 			else
 				bunnyInstances[i].alpha = 0

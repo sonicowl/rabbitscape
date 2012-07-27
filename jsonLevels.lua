@@ -547,6 +547,7 @@ function checkForUpdates(listener)
 	local function serverListener( event )
 		if ( event.isError ) then
 			print ( "Network error - download of "..event.response.." failed" )
+			listener(false)
 		else
 			print ( "Download of " .. event.response.." completed!" )
 			
@@ -554,37 +555,36 @@ function checkForUpdates(listener)
 			local path2 = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
 			local file1 = io.open( path, "r" )
 			local file2 = io.open( path2, "r" )
-			if file1 and file2 then		
-				local line1 = file1:read()
-				local line2 = file2:read()
-				scene1 = json.decode(line1)
-				scene2 = json.decode(line2)
-				print("SERVER VERSION :"..tostring(scene1.version).." DEVICE VERSION :"..tostring(scene2.version))
-				--xprint(line1)
-				if scene2.version and scene1.version and scene1.version > scene2.version then
+			if file1
+				if file2 then		
+					local line1 = file1:read()
+					local line2 = file2:read()
+					scene1 = json.decode(line1)
+					scene2 = json.decode(line2)
+					print("SERVER VERSION :"..tostring(scene1.version).." DEVICE VERSION :"..tostring(scene2.version))
+					--xprint(line1)
+					if scene2.version and scene1.version and scene1.version > scene2.version then
+						listener(true)
+					else
+						listener(false)
+					end
+					
+					io.close( file1 )
+					io.close( file2 )
+				else
 					listener(true)
 				end
-				
-				io.close( file1 )
-				io.close( file2 )
+			else
+				listener(false)
 			end
 		end
 	end
-	
-	local path = system.pathForFile( "downloadedLevels.json", system.DocumentsDirectory )
-	local file = io.open( path, "r" )
-	if file then
-		network.download( 
-			"http://www.sonicowl.com/gameAssets/serverLevels.json", 
-			"GET", 
-			serverListener, 
-			"serverLevels.json", 
-			system.DocumentsDirectory 
-		)
-		io.close(file)
-	else
-		print("NO DOWNLOADS YET")
-		listener(true)
-	end
+	network.download( 
+		"http://www.sonicowl.com/gameAssets/serverLevels.json", 
+		"GET", 
+		serverListener, 
+		"serverLevels.json", 
+		system.DocumentsDirectory 
+	)
 	
 end

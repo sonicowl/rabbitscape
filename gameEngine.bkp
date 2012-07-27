@@ -534,7 +534,7 @@ function moveRabbit()
 			nearExit = findAround(rabbit.x,rabbit.y,"endCell")
 			if nearExit then
 				stopGame()
-				print("YOU LOOSE")
+				print("YOU LOOSE 2")
 				if not storyboard.mute then audio.play(soundLaugh) end
 				if not storyboard.mute then audio.play(soundFail) end
 				local cardinalDirec = getMovingDirection(rabbit.x,rabbit.y,nearExit.x,nearExit.y)
