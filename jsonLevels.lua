@@ -414,6 +414,7 @@ function downloadingAssets(event)
 					if tempScenery then
 						table.insert(filesToDownload,tempScenery.default)
 						table.insert(filesToDownload,tempScenery.over)
+						table.insert(filesToDownload,tempScenery.sound)
 						for i=1, #tempScenery.levels do 
 							local tempTable = tempScenery.levels[i]
 							--GET THE BGS
@@ -521,7 +522,7 @@ end
 function download(file)
 	downloadingFile = true
 	network.download( 
-		"http://www.sonicowl.com/gameAssets/"..file, 
+		"http://catchthebunny.sonicowl.com/gameAssets/"..file, 
 		"GET", 
 		networkListener, 
 		file, 

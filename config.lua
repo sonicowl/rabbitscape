@@ -11,7 +11,7 @@ application = {
 		
 	},
 
-    --[[
+    
     -- Push notifications
 
     notification =
@@ -24,5 +24,5 @@ application = {
             }
         }
     }
-    --]]    
+       
 }

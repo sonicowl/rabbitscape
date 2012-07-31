@@ -12,7 +12,8 @@ local gameStore = require("module-store")
 social = require("module-social")
 require("ice")
 transitioning = true
-
+require "analytics"
+analytics.init( "KMNBCNMPH8XZJ3DG99Z8" )
 
 
 _W = display.contentWidth;
@@ -24,6 +25,58 @@ _VW0 = (_W-_VW)/2
 hasUpdates = false
 
 audio.reserveChannels( 1 )
+
+
+----------------------------------------------
+----------------------------------------------
+-- PUSH NOTIFICATION FOR IOS
+----------------------------------------------
+----------------------------------------------
+if platform == "iPhone OS" then
+
+
+	local mime = require( "mime" )
+	local json = require( "json" )
+
+
+	-- Function to handle Network Traffic Response from APN Server
+	local function apnNetworkListener( event )
+		if ( event.isError ) then
+			native.showAlert( "Network error!", "Apologies. An error has occurred with the Push Notification Server", {"OK"})
+		else
+		   -- native.showAlert( "APN Response OK", event.response, {"OK"})
+		end
+	end
+
+	-- Function to register device for Urban Airships Services
+	local function registerAPNDevice(deviceToken)
+			local params = {}
+			network.request( "http://www.sonicowl.com/apns/apns.php?task=register&appname=catchthebunny&appversion=1&devicetoken="..deviceToken.."&devicename=iphone&pushbadge=enabled&pushalert=enabled&pushsound=enabled", "GET", apnNetworkListener,  params)
+	end
+
+
+	local launchArgs = ...
+
+
+	if launchArgs and launchArgs.notification then
+		native.showAlert( "Catch the Bunny", launchArgs.notification.alert, { "OK" } )
+	end
+
+	-- notification listener
+	local function onNotification( event )
+		if event.type == "remoteRegistration" then
+			registerAPNDevice(event.token)
+		elseif event.type == "remote" then
+			native.showAlert( "Catch the Bunny", event.alert, { "OK" } )
+		end
+	end
+
+	Runtime:addEventListener( "notification", onNotification )
+
+end
+
+----------------------------------------------
+----------------------------------------------
 
 
 function checkUpdatedListener(bool)

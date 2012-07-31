@@ -26,19 +26,19 @@ function start(x0,y0)
 	for i = 1 , 4 do
 		bunnyInstances[i] = sprite.newSprite(bunnySets[i])
 		bunnyGroup:insert(bunnyInstances[i])
-		bunnyInstances[i].xScale = .7
-		bunnyInstances[i].yScale = .7
+		bunnyInstances[i].xScale = .5
+		bunnyInstances[i].yScale = .5
 		bunnyInstances[i].x = x0+5
-		bunnyInstances[i].y = y0+5
+		bunnyInstances[i].y = y0+10
 		cardinalDirec = "NW"
-		bunnyInstances[i]:prepare("breathingNW")
-		bunnyInstances[i]:play()
-		bunnyInstances[i]:addEventListener("sprite", bunnySpriteListener)
-		--bunnyInstances[i].currentFrame = 4
+		bunnyInstances[i]:prepare("runNW")
+		--bunnyInstances[i]:play()
+		--bunnyInstances[i]:addEventListener("sprite", bunnySpriteListener)
+		bunnyInstances[i].currentFrame = 4
 		if i > 1 then bunnyInstances[i].alpha = 0 end
 	end
 	
-	Runtime:addEventListener("enterFrame",bunnyAnimation)
+	--Runtime:addEventListener("enterFrame",bunnyAnimation)
 	
 end
 
@@ -51,7 +51,7 @@ function stop()
 			bunnyInstances[i] = nil
 		end
 	end
-	Runtime:removeEventListener("enterFrame",bunnyAnimation)
+	--Runtime:removeEventListener("enterFrame",bunnyAnimation)
 end
 
 
@@ -61,14 +61,15 @@ function loadRabbitSprites()
 		print("persp"..i)
 		local tempSheet = sprite.newSpriteSheetFromData( i..".png", require(i).getSpriteSheetData() )
 		
-		bunnySets[i] = sprite.newSpriteSet(tempSheet,1,348)
-		sprite.add(bunnySets[i],"runS",			1,7,3*80,1)
-		sprite.add(bunnySets[i],"runSW",		8,7,3*80,1)
-		sprite.add(bunnySets[i],"runN",			15,7,3*80,1)
-		sprite.add(bunnySets[i],"runNW",		22,7,3*80,1)
-		sprite.add(bunnySets[i],"runNE",		29,7,3*80,1)
-		sprite.add(bunnySets[i],"runSE",		36,7,3*80,1)
+		bunnySets[i] = sprite.newSpriteSet(tempSheet,1,42)
+		sprite.add(bunnySets[i],"runS",			1,4,3*80,1)
+		sprite.add(bunnySets[i],"runSW",		8,4,3*80,1)
+		sprite.add(bunnySets[i],"runN",			15,4,3*80,1)
+		sprite.add(bunnySets[i],"runNW",		22,4,3*80,1)
+		sprite.add(bunnySets[i],"runNE",		29,4,3*80,1)
+		sprite.add(bunnySets[i],"runSE",		36,4,3*80,1)
 		
+		--[[
 		sprite.add(bunnySets[i],"lookAroundS",	43 + 51*0 +0  ,12		,12*80,-1)
 		sprite.add(bunnySets[i],"lookingUpS",	43 + 51*0 +12 ,8		,8*80,1)
 		sprite.add(bunnySets[i],"breathingS",	43 + 51*0 +20 ,2		,2*80,-2)
@@ -116,7 +117,7 @@ function loadRabbitSprites()
 		sprite.add(bunnySets[i],"cleaningSE",	43 + 51*5 +29 ,7		,7*80,2)
 		sprite.add(bunnySets[i],"ear2SE",		43 + 51*5 +36 ,13		,13*80,1)
 		sprite.add(bunnySets[i],"eatingSE",		43 + 51*5 +49 ,2		,2*80,20)
-	
+	]]--
 	end
 end
 
@@ -150,7 +151,7 @@ function moveRabbitTo(x,y,endListener)
 	bunny.x = x+5
 	bunny.y = y+10
 	if endListener then 
-		Runtime:removeEventListener("enterFrame",bunnyAnimation)
+		--Runtime:removeEventListener("enterFrame",bunnyAnimation)
 		timer.performWithDelay(600,endListener)
 	end
 	if cardinalDirec then

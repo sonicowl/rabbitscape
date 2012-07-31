@@ -82,7 +82,7 @@ function scene:createScene( event )
 	end
 	
 	gameEngine.startGame()
-	
+	analytics.logEvent("Playing Stage "..storyboard.sceneryId..", on level "..storyboard.levelId)
 	blackFadeIn = display.newRect(0,0,_W,_H)
 	blackFadeIn:setFillColor(0,0,0)
 	sceneGroup:insert(blackFadeIn)
@@ -101,7 +101,13 @@ function scene:enterScene( event )
 	local sceneGroup = self.view
 	storyboard.purgeScene( lastScene )
 
-	soundAmbience = audio.loadStream("stream-scenery1.wav")
+	if storyboard.getFromResources then
+		soundAmbience = audio.loadStream(jsonMap.sound)
+	else
+		soundAmbience = audio.loadStream(jsonMap.sound,system.DocumentsDirectory)
+	end
+	
+	
 	soundJump = audio.loadSound("sound-jump.wav")
 	soundCarrot = audio.loadSound("sound-carrot.wav")
 	soundPlaceObject = audio.loadSound("sound-objects.wav")
