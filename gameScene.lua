@@ -57,6 +57,7 @@ function scene:createScene( event )
 		if storyboard.getFromResources then
 			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId,system.ResourceDirectory)
 			print("scene: "..storyboard.sceneryId.." level:"..storyboard.levelId)
+			ambienceSoundName = jsonMap.sound	
 		else
 			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId)
 		end
@@ -100,11 +101,12 @@ end
 function scene:enterScene( event )
 	local sceneGroup = self.view
 	storyboard.purgeScene( lastScene )
-
+		print("ambience sound: "..ambienceSoundName)
+		
 	if storyboard.getFromResources then
-		soundAmbience = audio.loadStream(jsonMap.sound)
+		soundAmbience = audio.loadStream(ambienceSoundName)
 	else
-		soundAmbience = audio.loadStream(jsonMap.sound,system.DocumentsDirectory)
+		soundAmbience = audio.loadStream(ambienceSoundName,system.DocumentsDirectory)
 	end
 	
 	

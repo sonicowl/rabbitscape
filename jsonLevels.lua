@@ -141,7 +141,7 @@ function loadLevelsTable(fileName)
 		io.close( file )
 		return levelsTable
 	else
-		print("file not found")
+		print("lvls table: json file not found")
 	end
 	return false
 end
@@ -195,7 +195,7 @@ function loadSceneryTable()
 		sceneriesTable.resources = false
 		return sceneriesTable
 	else
-		print("file not found")
+		print("stages table: file not found")
 			local path = system.pathForFile( "gameLevels.json", system.ResourceDirectory )
 			local file = io.open( path )
 			if file then
@@ -245,7 +245,7 @@ function loadSceneryLevels(scenery,baseDir)
 		io.close( file )
 		return levelsTable
 	else
-		print("file not found")
+		print("stage levels: file not found")
 	end
 	return false
 end
@@ -269,6 +269,7 @@ function loadSceneryMap(scenery,row,baseDir)
 				if tempScenery then
 					if scenery == tempScenery.sceneryId then
 						level = deepcopy(tempScenery.levels[row])
+						level.sound = deepcopy(tempScenery.sound)
 					end
 				end
 			end
@@ -440,7 +441,7 @@ function downloadingAssets(event)
 				syncPhase = 3
 			else
 				--TODO: DO SOMETHING WHEN DOWNLOAD THE TABLES WENT WRONG
-				print("sceneriesFile not found")
+				print("sceneries File not found")
 			end
 		end
 	end
