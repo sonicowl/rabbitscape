@@ -201,6 +201,9 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 		if ("release" == event.phase) and (event.id) and not dialogTransitioning then
 			print( "USER CLICKED LEVEL "..event.id)
 			storyboard.levelId = event.id
+			audio.stop()
+			audio.dispose(storyboard.bgMusic)
+			storyboard.bgMusic = nil
 			if not storyboard.mute then audio.play(soundStageButton) end
 			
 			local blackFade = display.newRect(0,0,_W,_H*2)
@@ -221,7 +224,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 			transition.to(viewGroup,{time=700,y=-display.contentHeight,transition = easing.inExpo,onComplete = closeClosure})
 		end
 	end
-		
+	
 	local closeBut = ui.newButton{
 		default = "close-off.png",
 		over = "close-on.png",
@@ -256,13 +259,13 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 		if not storeData:retrieve("proPurchased") then
 			local function purchaseItCallBack( event )
 				if "clicked" == event.action then
-						local i = event.index
-						if 1 == i then
-							storeModule.init(callBackListener)
-							storeModule.sellingDialog("pro")
-						elseif 2 == i then
-							print('dont want to buy it now!')
-						end
+					local i = event.index
+					if 1 == i then
+						storeModule.init(callBackListener)
+						storeModule.sellingDialog("pro")
+					elseif 2 == i then
+						print('dont want to buy it now!')
+					end
 				end
 			end
 	

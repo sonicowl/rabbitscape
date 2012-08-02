@@ -213,6 +213,7 @@ function escapeRabbit(nextX,nextY,endingListener)
 	deltaY = nextY - bunny.y
 
 	timer.performWithDelay(5*80, function() moveRabbitTo(nextX,nextY) end )
-	timer.performWithDelay(10*80, function() moveRabbitTo(nextX+deltaX,nextY+deltaY,endingListener) end)
+	timer.performWithDelay(10*80, function() moveRabbitTo(nextX+deltaX,nextY+deltaY) end)
+	timer.performWithDelay(15*80, function() moveRabbitTo(nextX+deltaX*2,nextY+deltaY*2,endingListener) end)
 
 end

@@ -33,20 +33,13 @@ function scene:createScene( event )
 	bg.y = _H/2
 	group:insert(bg)
 	
-
-	
-	
 end
 
 -- Called BEFORE scene has moved onscreen:
 function scene:willEnterScene( event )
         local group = self.view
         
-        -----------------------------------------------------------------------------
 
-        --      This event requires build 2012.782 or later.
-        
-        -----------------------------------------------------------------------------
         lastScene = storyboard.getPrevious()
 		print("COMING FROM "..tostring(lastScene))
 end
@@ -69,7 +62,6 @@ function scene:enterScene( event )
 		audio.play(storyboard.bgMusic,{loops=-1,channel = 1}) 
 	end
 	
-
 	--soundSceneries = audio.loadStream("stream-internal1.wav")
 	--soundSlide = audio.loadSound("sound-slide.wav")
 	--if not storyboard.mute then audio.play(soundSceneries,{loops=-1}) end	
@@ -85,9 +77,6 @@ function scene:exitScene( event )
         --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
         
         -----------------------------------------------------------------------------
-	audio.stop()
-	audio.dispose(storyboard.bgMusic)
-	storyboard.bgMusic = nil
 	--audio.dispose(soundSceneries)
 	--audio.dispose(soundSlide)
 	--soundSceneries = nil
