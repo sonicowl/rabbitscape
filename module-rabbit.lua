@@ -3,6 +3,9 @@
 -- Version 1.0
 -- Author: Thiago Ramos
 -- Functions:
+--	init
+--	start
+--	stop
 -----------------------------------------
 
 
