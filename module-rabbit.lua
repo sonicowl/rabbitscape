@@ -19,26 +19,35 @@ function init(viewGroup,storyb)
 	bunnyGroup = viewGroup
 	loadRabbitSprites()
 	bunnyAnimations = {"lookAround", "lookingUp", "ear1", "cleaning", "ear2"}
+	xOffSet = 0
+	yOffSet = 0
 end
 
 function start(x0,y0)	
+	x0 = math.floor(x0)
+	y0 = math.floor(y0)
 	bunny = {x=x0,y=y0}
 	for i = 1 , 4 do
 		bunnyInstances[i] = sprite.newSprite(bunnySets[i])
 		bunnyGroup:insert(bunnyInstances[i])
-		bunnyInstances[i].xScale = .5
-		bunnyInstances[i].yScale = .5
-		bunnyInstances[i].x = x0+5
-		bunnyInstances[i].y = y0+10
+		bunnyInstances[i].xScale = .7
+		bunnyInstances[i].yScale = .7
+		bunnyInstances[i].x = x0+xOffSet
+		bunnyInstances[i].y = y0+yOffSet
 		cardinalDirec = "NW"
 		bunnyInstances[i]:prepare("runNW")
-		--bunnyInstances[i]:play()
-		--bunnyInstances[i]:addEventListener("sprite", bunnySpriteListener)
+		
+		--BUNNY V2
+		bunnyInstances[i]:play()
+		bunnyInstances[i]:addEventListener("sprite", bunnySpriteListener)
+		
+		
 		bunnyInstances[i].currentFrame = 4
 		if i > 1 then bunnyInstances[i].alpha = 0 end
 	end
 	
-	--Runtime:addEventListener("enterFrame",bunnyAnimation)
+	--BUNNY V2
+	Runtime:addEventListener("enterFrame",bunnyAnimation)
 	
 end
 
@@ -51,25 +60,27 @@ function stop()
 			bunnyInstances[i] = nil
 		end
 	end
-	--Runtime:removeEventListener("enterFrame",bunnyAnimation)
+	
+	--BUNNY V2
+	Runtime:removeEventListener("enterFrame",bunnyAnimation)
 end
 
 
---rabbitsGroup
+
 function loadRabbitSprites()
 	for i = 1 , 4 do
 		print("persp"..i)
 		local tempSheet = sprite.newSpriteSheetFromData( i..".png", require(i).getSpriteSheetData() )
 		
 		bunnySets[i] = sprite.newSpriteSet(tempSheet,1,42)
-		sprite.add(bunnySets[i],"runS",			1,4,3*80,1)
-		sprite.add(bunnySets[i],"runSW",		8,4,3*80,1)
-		sprite.add(bunnySets[i],"runN",			15,4,3*80,1)
-		sprite.add(bunnySets[i],"runNW",		22,4,3*80,1)
-		sprite.add(bunnySets[i],"runNE",		29,4,3*80,1)
-		sprite.add(bunnySets[i],"runSE",		36,4,3*80,1)
+		sprite.add(bunnySets[i],"runS",			1,7,3*80,1)
+		sprite.add(bunnySets[i],"runSW",		8,7,3*80,1)
+		sprite.add(bunnySets[i],"runN",			15,7,3*80,1)
+		sprite.add(bunnySets[i],"runNW",		22,7,3*80,1)
+		sprite.add(bunnySets[i],"runNE",		29,7,3*80,1)
+		sprite.add(bunnySets[i],"runSE",		36,7,3*80,1)
 		
-		--[[
+		--BUNNY V2
 		sprite.add(bunnySets[i],"lookAroundS",	43 + 51*0 +0  ,12		,12*80,-1)
 		sprite.add(bunnySets[i],"lookingUpS",	43 + 51*0 +12 ,8		,8*80,1)
 		sprite.add(bunnySets[i],"breathingS",	43 + 51*0 +20 ,2		,2*80,-2)
@@ -117,7 +128,6 @@ function loadRabbitSprites()
 		sprite.add(bunnySets[i],"cleaningSE",	43 + 51*5 +29 ,7		,7*80,2)
 		sprite.add(bunnySets[i],"ear2SE",		43 + 51*5 +36 ,13		,13*80,1)
 		sprite.add(bunnySets[i],"eatingSE",		43 + 51*5 +49 ,2		,2*80,20)
-	]]--
 	end
 end
 
@@ -145,13 +155,16 @@ end
 
 
 function moveRabbitTo(x,y,endListener)
-
-	cardinalDirec = getMovingDirection(bunny.x,bunny.y,x+5,y+10)
-	print("RUNNING RABBIT TO "..cardinalDirec)
-	bunny.x = x+5
-	bunny.y = y+10
+	x = math.floor(x)
+	y = math.floor(y)
+	cardinalDirec = getMovingDirection(bunny.x,bunny.y,x+xOffSet,y+yOffSet)
+	print("RUNNING RABBIT from:"..(bunny.x)..","..(bunny.y).." to:"..(x+xOffSet)..","..(y+yOffSet).." direc:"..cardinalDirec)
+	bunny.x = x+xOffSet
+	bunny.y = y+yOffSet
 	if endListener then 
-		--Runtime:removeEventListener("enterFrame",bunnyAnimation)
+		--BUNNY V2
+		Runtime:removeEventListener("enterFrame",bunnyAnimation)
+		
 		timer.performWithDelay(600,endListener)
 	end
 	if cardinalDirec then
@@ -182,8 +195,8 @@ end
 --- WORK WITH REAL X,Y COORDS
 function getMovingDirection(x0,y0,x,y)
 
-	local deltaX = x-x0
-	local deltaY = y-y0
+	local deltaX = math.floor((x-x0)/10)*10
+	local deltaY =  math.floor((y-y0)/10)*10
 	
 	if     deltaY < 0 and deltaX == 0 then return "N"
 	elseif deltaY < 0 and deltaX < 0 then return "NW"
@@ -209,8 +222,8 @@ end
 
 function escapeRabbit(nextX,nextY,endingListener)
 	
-	deltaX = nextX - bunny.x
-	deltaY = nextY - bunny.y
+	deltaX = nextX - bunny.x +xOffSet
+	deltaY = nextY - bunny.y+yOffSet
 
 	timer.performWithDelay(5*80, function() moveRabbitTo(nextX,nextY) end )
 	timer.performWithDelay(10*80, function() moveRabbitTo(nextX+deltaX,nextY+deltaY) end)

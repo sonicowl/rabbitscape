@@ -180,6 +180,7 @@ function scene:createScene( event )
 	gameData:storeIfNew( "unlocked-".."The Park".."-".."1", true )
 	gameData:storeIfNew( "free-".."The Park".."-".."1", true )
 	gameData:storeIfNew( "free-".."The Park".."-".."2", true )
+	gameData:storeIfNew( "free-".."The Park".."-".."3", true )
 	gameData:storeIfNew( "gridVisible", true )
 	
 	gameData:save()
