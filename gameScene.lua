@@ -60,6 +60,8 @@ function scene:createScene( event )
 			ambienceSoundName = jsonMap.sound
 		else
 			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId)
+			print("scene: "..storyboard.sceneryId.." level:"..storyboard.levelId)
+			ambienceSoundName = jsonMap.sound
 		end
 		if jsonMap then
 			for i=1, #jsonMap.backgrounds do gameEngine.insertBg(jsonMap.backgrounds[i]) end
