@@ -57,7 +57,7 @@ function scene:createScene( event )
 		if storyboard.getFromResources then
 			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId,system.ResourceDirectory)
 			print("scene: "..storyboard.sceneryId.." level:"..storyboard.levelId)
-			ambienceSoundName = jsonMap.sound	
+			ambienceSoundName = jsonMap.sound
 		else
 			jsonMap = jsonLevels.loadSceneryMap(storyboard.sceneryId,storyboard.levelId)
 		end

@@ -582,7 +582,7 @@ function checkForUpdates(listener)
 		end
 	end
 	network.download( 
-		"http://www.sonicowl.com/gameAssets/serverLevels.json", 
+		"http://catchthebunny.sonicowl.com/gameAssets/serverLevels.json", 
 		"GET", 
 		serverListener, 
 		"serverLevels.json", 
