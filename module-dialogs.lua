@@ -269,7 +269,7 @@ function callLevelSelector(viewGroup,storyboard,closeListener)
 				end
 			end
 	
-			local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play all levels!", 
+			local alert = native.showAlert( "Unlock extra levels!", "Upgrade to the pro version to play full game!", 
 				{ "Buy it!", "Not now!" }, purchaseItCallBack )
 		end
 	end	
