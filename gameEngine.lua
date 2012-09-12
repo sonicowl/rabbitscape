@@ -492,6 +492,7 @@ function startGame()
 			local menuClosure = function(event)
 				Runtime:addEventListener( "touch", gameClickListener )
 				Runtime:addEventListener("enterFrame",updateScore)
+				gameStartTime = system.getTimer()
 			end
 			dialogsModule.callHowToPlay(dialogGroup,menuClosure)
 			gameData:store("neverPlayed", false)
@@ -499,6 +500,7 @@ function startGame()
 		else
 			Runtime:addEventListener( "touch", gameClickListener )
 			Runtime:addEventListener("enterFrame",updateScore)
+			gameStartTime = system.getTimer()
 		end
 	else
 		print("no start point")
