@@ -118,6 +118,8 @@ function scene:enterScene( event )
 	soundBlocked = audio.loadSound("sound-blocked.wav")
 	soundFail = audio.loadSound("sound-fail.mp3")
 	soundVictory = audio.loadSound("sound-victory.mp3")
+	--soundFail = audio.loadSound("bunny-escaped-action.wav")
+	--soundVictory = audio.loadSound("bunny-is-safe-action.wav")	
 	soundLaugh = audio.loadSound("sound-laugh.wav")
 	
 	

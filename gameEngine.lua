@@ -34,6 +34,7 @@ function newLevel(params)
 	mapCreator = require("mapCreator")
 	jsonLevels = require("jsonLevels")
 	rabbitModule = require("module-rabbit")
+	dialogsModule = require("module-dialogs")
 	jsonLevels.init()
 	storyboard = params.storyBoard
 	sceneGroup = params.viewGroup
@@ -484,8 +485,21 @@ function startGame()
 
 		HUD.loadScreenUI()
 		mapCreator.updateHexGrid(levelMap)
-		Runtime:addEventListener( "touch", gameClickListener )
-		Runtime:addEventListener("enterFrame",updateScore)
+		
+		if gameData:retrieve("neverPlayed") then
+			local dialogGroup = display.newGroup()
+			sceneGroup:insert(dialogGroup)
+			local menuClosure = function(event)
+				Runtime:addEventListener( "touch", gameClickListener )
+				Runtime:addEventListener("enterFrame",updateScore)
+			end
+			dialogsModule.callHowToPlay(dialogGroup,menuClosure)
+			gameData:store("neverPlayed", false)
+			gameData:save()
+		else
+			Runtime:addEventListener( "touch", gameClickListener )
+			Runtime:addEventListener("enterFrame",updateScore)
+		end
 	else
 		print("no start point")
 		return false
